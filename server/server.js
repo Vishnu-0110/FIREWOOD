@@ -6,7 +6,7 @@ const rateLimit = require('express-rate-limit');
 const hpp = require('hpp');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-
+const seedAdmin = require("./scripts/seedAdmin");
 dotenv.config();
 require('./config/validateEnv');
 

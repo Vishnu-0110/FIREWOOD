@@ -1,52 +1,71 @@
 # Vijaya Lakshmi Firewood Billing & Load Management System
 
-Production-ready full-stack billing and load management platform for firewood supply operations.
+Full-stack billing and load management platform for firewood supply operations.
 
 ## Stack
-- Frontend: React + Vite, Bootstrap 5, React Router, React Hook Form, Axios, Recharts, jsPDF
-- Backend: Node.js, Express, MongoDB Atlas, Mongoose, JWT, bcrypt, Helmet, rate limiting, validation
+- Frontend: React + Vite, Bootstrap, React Router, Redux Toolkit, Axios, Recharts
+- Backend: Node.js, Express, MongoDB Atlas, Mongoose, JWT, bcrypt, Helmet
 
-## Features
-- JWT authentication with protected routes and auto logout on token expiry
-- Customer management (CRUD with soft delete)
-- Invoice management (create/edit/delete/history/search/date filtering/pagination)
-- Auto invoice number generation with duplicate prevention
-- Net weight and total billing auto-calculation
-- Indian currency amount-in-words generation
-- Professional A4 invoice PDF generation and print support
-- Dashboard analytics (summary cards, line/bar/pie charts, top customers, recent invoices)
-- Invoice Excel export (client-side and server-side)
-- Backup endpoint for customer/invoice/audit snapshots
-- Audit log tracking for key actions
-- Dark mode toggle
+## Local Setup
+1. Clone the repo.
+2. Backend setup:
+   - `cd server`
+   - copy `server/.env.example` to `server/.env`
+   - fill all values in `.env`
+   - install and run:
+     - `npm install`
+     - `npm run seed` (creates admin user if missing)
+     - `npm run dev`
+3. Frontend setup:
+   - `cd client`
+   - copy `client/.env.example` to `client/.env`
+   - install and run:
+     - `npm install`
+     - `npm run dev`
+4. Open `http://localhost:5173`
 
-## Project Structure
-- `server/` Express API + MongoDB models and controllers
-- `client/` React frontend
-
-## Backend Setup
-1. `cd server`
-2. `cp .env.example .env` (or create `.env` manually)
-3. Fill env values:
-   - `PORT=5000`
-   - `MONGO_URI=<mongo atlas uri>`
-   - `JWT_SECRET=<strong secret>`
-   - `JWT_EXPIRE=1d`
-   - `CORS_ORIGIN=http://localhost:5173`
-4. Seed admin user (optional): `npm run seed`
-5. Start API: `npm run dev`
-
-## Frontend Setup
-1. `cd client`
-2. `cp .env.example .env`
-3. Set `VITE_API_URL=http://localhost:5000/api`
-4. Start app: `npm run dev`
+## Deploy Step By Step (Render + Vercel)
+1. Push code to GitHub.
+2. Deploy backend on Render:
+   - Create `Web Service`
+   - Select repo and set `Root Directory` = `server`
+   - Build command: `npm install`
+   - Start command: `npm start`
+   - Add env vars:
+     - `MONGO_URI`
+     - `JWT_SECRET`
+     - `JWT_EXPIRE=1d`
+     - `CORS_ORIGIN=https://<your-vercel-domain>`
+     - `SEED_ADMIN_NAME`
+     - `SEED_ADMIN_EMAIL`
+     - `SEED_ADMIN_PASSWORD`
+     - `NODE_ENV=production`
+   - Deploy and verify:
+     - `https://<render-service>.onrender.com/health`
+     - `https://<render-service>.onrender.com/api/health`
+3. Seed admin on Render (one time):
+   - Open Render service shell
+   - Run `npm run seed`
+4. Deploy frontend on Vercel:
+   - Create project from same repo
+   - Set `Root Directory` = `client`
+   - Add env var:
+     - `VITE_API_URL=https://<render-service>.onrender.com/api`
+   - Deploy
+5. Update backend CORS to final frontend URL:
+   - In Render env vars, set `CORS_ORIGIN=https://<final-vercel-domain>`
+   - Redeploy backend
+6. Final verification:
+   - Login from Vercel URL
+   - Open Dashboard, Customers, Invoices
+   - Confirm requests return `200` in browser network tab
 
 ## API Routes
 ### Auth
 - `POST /api/auth/register`
 - `POST /api/auth/login`
 - `GET /api/auth/me`
+- `POST /api/auth/logout`
 
 ### Customers
 - `POST /api/customers`
@@ -67,9 +86,3 @@ Production-ready full-stack billing and load management platform for firewood su
 
 ### Backup
 - `GET /api/backup/db`
-
-## Build for Production
-- Frontend: `cd client && npm run build`
-- Backend: `cd server && npm start`
-
-Deploy backend on Render and frontend on Vercel/Netlify with env variables configured.

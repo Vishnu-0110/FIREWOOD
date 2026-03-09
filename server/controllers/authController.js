@@ -37,7 +37,10 @@ const login = async (req, res) => {
   const token = generateToken(user._id);
   res.cookie('token', token, cookieOptions);
 
-  return res.json({ user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+  return res.json({
+    user: { id: user._id, name: user.name, email: user.email, role: user.role },
+    token
+  });
 };
 
 const me = async (req, res) => {

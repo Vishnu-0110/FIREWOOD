@@ -41,7 +41,15 @@ const DashboardPage = () => {
   }, []);
 
   if (loading) return <LoadingSpinner full />;
-  if (!data) return null;
+  if (!data) {
+    return (
+      <AppLayout>
+        <div className="alert alert-warning mb-0" role="alert">
+          Dashboard data could not be loaded. Please sign in again.
+        </div>
+      </AppLayout>
+    );
+  }
 
   const cards = [
     { label: 'Total Revenue', value: formatCurrency(data.summary.totalRevenue) },

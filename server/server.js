@@ -34,7 +34,7 @@ const app = express();
 /* =========================
    CORS CONFIGURATION
 ========================= */
-const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173,http://127.0.0.1:5173')
   .split(',')
   .map(origin => origin.trim());
 
@@ -42,7 +42,8 @@ app.use(
   cors({
     credentials: true,
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      const isLocalDevOrigin = Boolean(origin) && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+      if (!origin || allowedOrigins.includes(origin) || (process.env.NODE_ENV !== 'production' && isLocalDevOrigin)) {
         return callback(null, true);
       }
       return callback(new Error('CORS policy blocked this origin'));

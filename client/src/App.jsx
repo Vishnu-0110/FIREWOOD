@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
@@ -8,10 +10,46 @@ import InvoiceFormPage from './pages/InvoiceFormPage';
 import InvoiceHistoryPage from './pages/InvoiceHistoryPage';
 import InvoiceViewPage from './pages/InvoiceViewPage';
 import ProfilePage from './pages/ProfilePage';
+import api from './api/axiosClient';
+import { clearCredentials, setCredentials } from './features/authSlice';
 
 const NotFound = () => <div className="p-4">Page not found</div>;
 
 function App() {
+  const dispatch = useDispatch();
+  const { isAuthenticated, token } = useSelector((state) => state.auth);
+  const [checkingSession, setCheckingSession] = useState(Boolean(isAuthenticated && token));
+
+  useEffect(() => {
+    let active = true;
+
+    const verifySession = async () => {
+      if (!isAuthenticated || !token) {
+        if (active) setCheckingSession(false);
+        return;
+      }
+
+      try {
+        const response = await api.get('/auth/me');
+        dispatch(setCredentials({ user: response.data.user, token }));
+      } catch {
+        dispatch(clearCredentials());
+      } finally {
+        if (active) setCheckingSession(false);
+      }
+    };
+
+    verifySession();
+
+    return () => {
+      active = false;
+    };
+  }, [dispatch, isAuthenticated, token]);
+
+  if (checkingSession) {
+    return <div className="d-flex justify-content-center align-items-center min-vh-100">Loading session...</div>;
+  }
+
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />

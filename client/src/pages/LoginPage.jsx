@@ -20,6 +20,9 @@ const LoginPage = () => {
   const onSubmit = async (data) => {
     try {
       const response = await api.post('/auth/login', data);
+      if (!response.data?.token || !response.data?.user) {
+        throw new Error('Invalid login response from server');
+      }
       dispatch(setCredentials(response.data));
       toast.success('Login successful');
       navigate('/');

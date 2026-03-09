@@ -1,0 +1,14 @@
+{
+  "name": "firewood",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "install:all": "npm ci --prefix server && npm ci --prefix client",
+    "build": "npm run build --prefix client",
+    "start": "npm start --prefix server",
+    "seed": "npm run seed --prefix server",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "deploy:check": "npm run deploy:check --prefix server && npm run build --prefix client"
+  }
+}

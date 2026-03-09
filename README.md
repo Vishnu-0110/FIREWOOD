@@ -8,57 +8,51 @@ Full-stack billing and load management platform for firewood supply operations.
 
 ## Local Setup
 1. Clone the repo.
-2. Backend setup:
-   - `cd server`
+2. Install all dependencies from root:
+   - `npm run install:all`
+3. Backend setup:
    - copy `server/.env.example` to `server/.env`
    - fill all values in `.env`
-   - install and run:
-     - `npm install`
-     - `npm run seed` (creates admin user if missing)
-     - `npm run dev`
-3. Frontend setup:
-   - `cd client`
+   - run `npm run dev:server`
+4. Frontend setup:
    - copy `client/.env.example` to `client/.env`
-   - install and run:
-     - `npm install`
-     - `npm run dev`
-4. Open `http://localhost:5173`
+   - run `npm run dev:client`
+5. Open `http://localhost:5173`
 
-## Deploy Step By Step (Render + Vercel)
+## Pre-Deploy Validation
+Run this before every deployment from repo root:
+- `npm run deploy:check`
+
+This validates backend environment variables and builds the frontend bundle.
+
+## Deploy Option A (Render API + Vercel Frontend)
 1. Push code to GitHub.
-2. Deploy backend on Render:
-   - Create `Web Service`
-   - Select repo and set `Root Directory` = `server`
-   - Build command: `npm install`
-   - Start command: `npm start`
-   - Add env vars:
-     - `MONGO_URI`
-     - `JWT_SECRET`
-     - `JWT_EXPIRE=1d`
-     - `CORS_ORIGIN=https://<your-vercel-domain>`
-     - `SEED_ADMIN_NAME`
-     - `SEED_ADMIN_EMAIL`
-     - `SEED_ADMIN_PASSWORD`
-     - `NODE_ENV=production`
-   - Deploy and verify:
-     - `https://<render-service>.onrender.com/health`
-     - `https://<render-service>.onrender.com/api/health`
-3. Seed admin on Render (one time):
-   - Open Render service shell
-   - Run `npm run seed`
-4. Deploy frontend on Vercel:
-   - Create project from same repo
-   - Set `Root Directory` = `client`
-   - Add env var:
-     - `VITE_API_URL=https://<render-service>.onrender.com/api`
-   - Deploy
-5. Update backend CORS to final frontend URL:
-   - In Render env vars, set `CORS_ORIGIN=https://<final-vercel-domain>`
-   - Redeploy backend
-6. Final verification:
-   - Login from Vercel URL
-   - Open Dashboard, Customers, Invoices
-   - Confirm requests return `200` in browser network tab
+2. Deploy backend on Render using `render.yaml` (Blueprint) or manual setup with `Root Directory=server`.
+3. Set required backend env vars:
+   - `MONGO_URI`
+   - `JWT_SECRET` (minimum 32 chars)
+   - `JWT_EXPIRE=1d`
+   - `CORS_ORIGIN=https://<your-vercel-domain>`
+   - `SEED_ADMIN_NAME`
+   - `SEED_ADMIN_EMAIL`
+   - `SEED_ADMIN_PASSWORD`
+   - `NODE_ENV=production`
+4. Deploy frontend on Vercel with `Root Directory=client` and:
+   - `VITE_API_URL=https://<render-service>.onrender.com/api`
+5. Seed admin once on backend:
+   - `npm run seed` (from Render shell)
+6. Verify:
+   - `https://<render-service>.onrender.com/health`
+   - `https://<render-service>.onrender.com/ready`
+   - Login and load dashboard/customers/invoices from frontend.
+
+## Deploy Option B (Docker)
+1. Configure `server/.env` with production values.
+2. Run:
+   - `docker compose up --build -d`
+3. Verify:
+   - API: `http://localhost:5000/health`
+   - Frontend: `http://localhost:8080`
 
 ## API Routes
 ### Auth

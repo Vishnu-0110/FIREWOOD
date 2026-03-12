@@ -29,12 +29,17 @@ if (process.env.JWT_SECRET && process.env.JWT_SECRET.length < 32) {
 }
 
 if (process.env.CORS_ORIGIN) {
-  const invalidOrigins = process.env.CORS_ORIGIN
+  const origins = process.env.CORS_ORIGIN
     .split(',')
     .map((origin) => origin.trim())
-    .filter(Boolean)
+    .filter(Boolean);
+
+  if (origins.includes('*')) {
+    errors.push('CORS_ORIGIN cannot contain "*" because credentials are enabled');
+  }
+
+  const invalidOrigins = origins
     .filter((origin) => {
-      if (origin === '*') return false;
       try {
         const parsed = new URL(origin);
         return !['http:', 'https:'].includes(parsed.protocol);
@@ -50,6 +55,29 @@ if (process.env.CORS_ORIGIN) {
 
 if (process.env.PORT && Number.isNaN(Number(process.env.PORT))) {
   errors.push('PORT must be a valid number');
+}
+
+if (process.env.RATE_LIMIT_WINDOW_MINUTES && (!Number.isInteger(Number(process.env.RATE_LIMIT_WINDOW_MINUTES)) || Number(process.env.RATE_LIMIT_WINDOW_MINUTES) <= 0)) {
+  errors.push('RATE_LIMIT_WINDOW_MINUTES must be a positive integer');
+}
+
+if (process.env.RATE_LIMIT_MAX && (!Number.isInteger(Number(process.env.RATE_LIMIT_MAX)) || Number(process.env.RATE_LIMIT_MAX) <= 0)) {
+  errors.push('RATE_LIMIT_MAX must be a positive integer');
+}
+
+if (process.env.SHUTDOWN_TIMEOUT_MS && (!Number.isInteger(Number(process.env.SHUTDOWN_TIMEOUT_MS)) || Number(process.env.SHUTDOWN_TIMEOUT_MS) <= 0)) {
+  errors.push('SHUTDOWN_TIMEOUT_MS must be a positive integer');
+}
+
+if (process.env.TRUST_PROXY) {
+  const value = process.env.TRUST_PROXY.toLowerCase();
+  const isBooleanText = value === 'true' || value === 'false';
+  const numeric = Number(process.env.TRUST_PROXY);
+  const isPositiveNumber = Number.isInteger(numeric) && numeric > 0;
+
+  if (!isBooleanText && !isPositiveNumber) {
+    errors.push('TRUST_PROXY must be true, false, or a positive integer');
+  }
 }
 
 const clientDistPath = process.env.CLIENT_DIST_PATH

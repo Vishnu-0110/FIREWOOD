@@ -1,0 +1,37 @@
+name: Deploy Readiness
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: production
+      MONGO_URI: mongodb+srv://user:password@cluster0.example.mongodb.net/firewood
+      JWT_SECRET: 12345678901234567890123456789012
+      JWT_EXPIRE: 1d
+      CORS_ORIGIN: https://example.com
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            client/package-lock.json
+
+      - name: Install server dependencies
+        run: npm ci --prefix server
+
+      - name: Install client dependencies
+        run: npm ci --prefix client
+
+      - name: Run deployment checks
+        run: npm run deploy:check

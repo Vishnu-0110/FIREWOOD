@@ -25,6 +25,14 @@ Run this before every deployment from repo root:
 
 This validates backend environment variables and builds the frontend bundle.
 
+## Production Checklist
+- Use Node.js `22` (see `.nvmrc`).
+- Set `JWT_SECRET` to at least 32 characters.
+- Set `CORS_ORIGIN` to exact frontend URL(s), comma-separated. Do not use `*`.
+- Verify readiness endpoints after deploy:
+  - `/health`
+  - `/ready`
+
 ## Deploy Option A (Render API + Vercel Frontend)
 1. Push code to GitHub.
 2. Deploy backend on Render using `render.yaml` (Blueprint) or manual setup with `Root Directory=server`.
@@ -53,6 +61,11 @@ This validates backend environment variables and builds the frontend bundle.
 3. Verify:
    - API: `http://localhost:5000/health`
    - Frontend: `http://localhost:8080`
+   - Container health: `docker compose ps`
+
+## CI Deployment Guard
+- GitHub Actions workflow: `.github/workflows/deploy-readiness.yml`
+- It runs install + `npm run deploy:check` on pushes/PRs to prevent broken deployment config from being merged.
 
 ## API Routes
 ### Auth

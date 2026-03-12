@@ -4,3 +4,5 @@ dist
 .gitignore
 README.md
 npm-debug.log*
+.env
+.env.*

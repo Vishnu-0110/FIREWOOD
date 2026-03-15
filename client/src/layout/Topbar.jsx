@@ -33,12 +33,12 @@ const Topbar = ({ collapsed, onToggleSidebar }) => {
         >
           {collapsed ? '☰' : '✕'}
         </button>
-        <div>
-        <h6 className="mb-0">Vijaya Lakshmi Firewood Supplier</h6>
-        <small className="text-muted">GST Billing & Load Management</small>
+        <div className="topbar-title">
+          <h6 className="mb-0">Vijaya Lakshmi Firewood Supplier</h6>
+          <small className="text-muted">GST Billing & Load Management</small>
         </div>
       </div>
-      <div className="d-flex align-items-center gap-2">
+      <div className="d-flex align-items-center gap-2 topbar-actions">
         <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => dispatch(toggleTheme())}>
           {user?.theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
         </button>

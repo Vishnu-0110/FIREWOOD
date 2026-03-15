@@ -85,28 +85,32 @@ a {
     radial-gradient(circle at 0% 0%, rgba(34, 211, 238, 0.28), transparent 35%),
     linear-gradient(190deg, #0f172a, #0b3b54 78%);
   border-right: 1px solid rgba(255, 255, 255, 0.12);
-  transition: width 0.25s ease, padding 0.25s ease, opacity 0.2s ease;
+  transition: width 0.25s ease, padding 0.25s ease, opacity 0.2s ease, transform 0.25s ease;
   overflow: hidden;
+  position: relative;
+  z-index: 1040;
 }
 
-.app-sidebar.collapsed {
-  width: 0;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  opacity: 0.25;
-  pointer-events: none;
-}
+@media (min-width: 992px) {
+  .app-sidebar.collapsed {
+    width: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    opacity: 0.25;
+    pointer-events: none;
+  }
 
-.app-sidebar.collapsed .brand-block {
-  display: none !important;
-}
+  .app-sidebar.collapsed .brand-block {
+    display: none !important;
+  }
 
-.app-sidebar.collapsed .sidebar-link {
-  display: none !important;
-}
+  .app-sidebar.collapsed .sidebar-link {
+    display: none !important;
+  }
 
-.app-sidebar.collapsed .sidebar-link-text {
-  display: none;
+  .app-sidebar.collapsed .sidebar-link-text {
+    display: none;
+  }
 }
 
 .brand-block {
@@ -151,12 +155,40 @@ a {
   min-width: 0;
 }
 
+.app-content {
+  width: 100%;
+}
+
 .app-topbar {
   border-bottom: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(10px);
   gap: 0.75rem;
   flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+.topbar-title {
+  min-width: 0;
+}
+
+.topbar-title h6 {
+  font-size: 1rem;
+}
+
+.topbar-title small {
+  font-size: 0.78rem;
+}
+
+.topbar-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.app-sidebar-backdrop {
+  display: none;
 }
 
 .sidebar-toggle-btn {
@@ -407,32 +439,49 @@ a {
 }
 
 @media (max-width: 992px) {
-  .app-shell {
-    flex-direction: column;
+  .app-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    display: block;
+    background: rgba(2, 6, 23, 0.5);
+    backdrop-filter: blur(1px);
+    opacity: 0;
+    pointer-events: none;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    z-index: 1035;
+    transition: opacity 0.2s ease;
+  }
+
+  .app-sidebar-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .app-sidebar {
-    width: 100%;
-    max-height: 360px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: min(82vw, 300px);
+    max-width: 300px;
+    max-height: none;
     overflow-y: auto;
-    padding-top: 0.75rem !important;
-    padding-bottom: 0.75rem !important;
+    transform: translateX(0);
+    box-shadow: 0 20px 45px rgba(2, 6, 23, 0.42);
   }
 
   .app-sidebar.collapsed {
-    width: 100%;
-    max-height: 0;
-    opacity: 0;
+    width: min(82vw, 300px);
+    max-width: 300px;
+    transform: translateX(-108%);
+    opacity: 1;
     pointer-events: none;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
   }
 
-  .app-sidebar.collapsed .sidebar-link-text {
-    display: none;
-  }
-
-  .app-main .container-fluid {
+  .app-main .container-fluid,
+  .app-content {
     padding-left: 0.75rem !important;
     padding-right: 0.75rem !important;
   }
@@ -440,14 +489,19 @@ a {
   .app-topbar {
     padding-left: 0.75rem !important;
     padding-right: 0.75rem !important;
+    align-items: flex-start !important;
   }
 
-  .app-topbar h6 {
+  .topbar-title h6 {
     font-size: 0.95rem;
   }
 
-  .app-topbar small {
+  .topbar-title small {
     font-size: 0.74rem;
+  }
+
+  .topbar-actions {
+    width: 100%;
   }
 
   .sidebar-toggle-btn {
@@ -478,6 +532,23 @@ a {
     padding: 0.45rem 0.65rem;
   }
 
+  .card-header.d-flex,
+  .card-footer.d-flex {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 0.5rem;
+  }
+
+  .card-header.d-flex > .d-flex,
+  .card-footer.d-flex > .d-flex {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .table td.d-flex {
+    flex-wrap: wrap;
+  }
+
   .table th,
   .table td {
     white-space: nowrap;
@@ -494,13 +565,8 @@ a {
     font-size: 14px;
   }
 
-  .app-topbar {
-    justify-content: center !important;
-  }
-
-  .app-topbar > div {
-    width: 100%;
-    justify-content: space-between;
+  .topbar-actions .btn {
+    flex: 1 1 48%;
   }
 
   .brand-logo {

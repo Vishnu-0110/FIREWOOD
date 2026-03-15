@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 
-const Sidebar = ({ collapsed = false }) => {
+const Sidebar = ({ collapsed = false, onNavigate }) => {
   const { pathname } = useLocation();
   const menu = [
     { key: 'dashboard', to: '/', label: 'Dashboard' },
@@ -29,7 +29,7 @@ const Sidebar = ({ collapsed = false }) => {
     <aside className={`app-sidebar p-3 ${collapsed ? 'collapsed' : ''}`}>
       <div className="brand-block mb-4">
         <div className="brand-logo">VL</div>
-        <div className={`brand-text ${collapsed ? 'd-none' : ''}`}>
+        <div className="brand-text">
           <h5 className="fw-bold text-white mb-0">Vijaya Lakshmi</h5>
           <p className="text-light small mb-0">Firewood Billing</p>
         </div>
@@ -41,6 +41,7 @@ const Sidebar = ({ collapsed = false }) => {
             to={item.to}
             className={`sidebar-link ${activeKey === item.key ? 'active' : ''}`}
             title={collapsed ? item.label : ''}
+            onClick={onNavigate}
           >
             <span className="sidebar-link-text">{item.label}</span>
           </Link>

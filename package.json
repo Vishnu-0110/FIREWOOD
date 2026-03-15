@@ -9,6 +9,10 @@
     "seed": "npm run seed --prefix server",
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
-    "deploy:check": "npm run deploy:check --prefix server && npm run build --prefix client"
+    "deploy:check": "npm run deploy:check --prefix server && npm run build --prefix client",
+    "audit:deploy": "node scripts/deploymentAudit.js",
+    "audit:deploy:strict": "node scripts/deploymentAudit.js --strict",
+    "audit:deploy:live": "node scripts/deploymentAudit.js --strict --require-live",
+    "deploy:gate": "npm run audit:deploy:live"
   }
 }

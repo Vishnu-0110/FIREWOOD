@@ -33,5 +33,5 @@ jobs:
       - name: Install client dependencies
         run: npm ci --prefix client
 
-      - name: Run deployment checks
-        run: npm run deploy:check
+      - name: Run deployment audit
+        run: npm run audit:deploy

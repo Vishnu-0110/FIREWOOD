@@ -15,7 +15,7 @@ services:
       - key: JWT_SECRET
         sync: false
       - key: JWT_EXPIRE
-        value: 1d
+        value: 10m
       - key: CORS_ORIGIN
         sync: false
       - key: TRUST_PROXY

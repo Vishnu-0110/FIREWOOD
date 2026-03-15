@@ -67,7 +67,7 @@ The audit writes a JSON report to `reports/deployment-audit-report.json`.
 3. Set required backend env vars:
    - `MONGO_URI`
    - `JWT_SECRET` (minimum 32 chars)
-   - `JWT_EXPIRE=1d`
+   - `JWT_EXPIRE=10m`
    - `CORS_ORIGIN=https://<your-vercel-domain>`
    - `SEED_ADMIN_NAME`
    - `SEED_ADMIN_EMAIL`
@@ -135,7 +135,7 @@ You can use Blueprint (`render.yaml`) or manual setup. Blueprint is easier here.
 5. Open the new service and set environment variables:
    - `MONGO_URI` = your Atlas URI
    - `JWT_SECRET` = long random string (32+ chars)
-   - `JWT_EXPIRE` = `1d`
+   - `JWT_EXPIRE` = `10m`
    - `CORS_ORIGIN` = your Vercel URL (set after frontend deploy; temporary value allowed first)
    - `SEED_ADMIN_NAME`
    - `SEED_ADMIN_EMAIL`

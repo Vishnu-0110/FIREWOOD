@@ -45,7 +45,7 @@ const escapeHtml = (value = '') =>
     .replaceAll("'", '&#039;');
 
 const buildInvoiceHTML = (invoice, { template = false } = {}) => {
-  const placeholder = template ? '________' : '-';
+  const placeholder = '';
   const textFallback = (value) => {
     const raw = String(value ?? '').trim();
     return raw ? escapeHtml(raw) : placeholder;

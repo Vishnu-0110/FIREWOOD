@@ -44,12 +44,36 @@ const escapeHtml = (value = '') =>
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#039;');
 
-const buildInvoiceHTML = (invoice) => {
-  const factoryName = escapeHtml(invoice.customer?.factoryName || invoice.customer?.customerName || '-');
-  const customerAddress = escapeHtml(invoice.customer?.address || '-');
-  const customerGst = escapeHtml(invoice.customer?.gstNumber || '-');
-  const amountWords = escapeHtml(invoice.amountInWords || '-');
-  const vehicle = escapeHtml(invoice.vehicleNumber || '-');
+const buildInvoiceHTML = (invoice, { template = false } = {}) => {
+  const placeholder = template ? '________' : '-';
+  const textFallback = (value) => {
+    const raw = String(value ?? '').trim();
+    return raw ? escapeHtml(raw) : placeholder;
+  };
+  const formatNumber = (value, formatter) => {
+    if (value === null || value === undefined || value === '') return placeholder;
+    const num = Number(value);
+    if (Number.isNaN(num)) return placeholder;
+    return formatter(num);
+  };
+  const formatDate = (value) => {
+    if (template) return placeholder;
+    const parsed = dayjs(value);
+    return parsed.isValid() ? parsed.format('DD-MMM-YYYY') : placeholder;
+  };
+
+  const factoryName = textFallback(invoice.customer?.factoryName || invoice.customer?.customerName);
+  const customerAddress = textFallback(invoice.customer?.address);
+  const customerGst = textFallback(invoice.customer?.gstNumber);
+  const amountWords = textFallback(invoice.amountInWords);
+  const vehicle = textFallback(invoice.vehicleNumber);
+  const invoiceNumberText = template ? placeholder : invoiceNo(invoice.invoiceNumber);
+  const invoiceDateText = formatDate(invoice.date);
+  const grossText = formatNumber(invoice.grossWeight, qty);
+  const tareText = formatNumber(invoice.tareWeight, qty);
+  const netText = formatNumber(invoice.netWeight, qty);
+  const rateText = formatNumber(invoice.ratePerTon, rateValue);
+  const totalText = formatNumber(invoice.totalAmount, money);
 
   return `
     <div id="invoice-root" style="
@@ -107,8 +131,8 @@ const buildInvoiceHTML = (invoice) => {
           </div>
 
           <div style="width: 250px; background: #f3f3f3; border: 1px solid #b3b3b3; padding: 8px 10px; font-size: 14px; line-height: 1.6;">
-            <div style="display:flex; align-items:flex-start; gap:8px;"><span style="font-weight:600; width:80px;">Invoice No:</span><span style="font-weight:500;">${invoiceNo(invoice.invoiceNumber)}</span></div>
-            <div style="display:flex; align-items:flex-start; gap:8px;"><span style="font-weight:600; width:80px;">Invoice Date:</span><span style="font-weight:500;">${dayjs(invoice.date).format('DD-MMM-YYYY')}</span></div>
+            <div style="display:flex; align-items:flex-start; gap:8px;"><span style="font-weight:600; width:80px;">Invoice No:</span><span style="font-weight:500;">${invoiceNumberText}</span></div>
+            <div style="display:flex; align-items:flex-start; gap:8px;"><span style="font-weight:600; width:80px;">Invoice Date:</span><span style="font-weight:500;">${invoiceDateText}</span></div>
             <div style="display:flex; align-items:flex-start; gap:8px;"><span style="font-weight:600; width:80px;">Vehicle No:</span><span style="font-weight:500;">${vehicle}</span></div>
           </div>
         </div>
@@ -133,11 +157,11 @@ const buildInvoiceHTML = (invoice) => {
             <tr>
               <td style="border:1px solid #000; padding:10px 6px; text-align:center;">1</td>
               <td style="border:1px solid #000; padding:10px 6px;">Firewood Load</td>
-              <td style="border:1px solid #000; padding:10px 6px; text-align:right;">${qty(invoice.grossWeight)}</td>
-              <td style="border:1px solid #000; padding:10px 6px; text-align:right;">${qty(invoice.tareWeight)}</td>
-              <td style="border:1px solid #000; padding:10px 6px; text-align:right;">${qty(invoice.netWeight)}</td>
-              <td style="border:1px solid #000; padding:10px 6px; text-align:right; font-weight:600;">${rateValue(invoice.ratePerTon)}</td>
-              <td style="border:1px solid #000; padding:10px 6px; text-align:right; font-weight:600;">${money(invoice.totalAmount)}</td>
+              <td style="border:1px solid #000; padding:10px 6px; text-align:right;">${grossText}</td>
+              <td style="border:1px solid #000; padding:10px 6px; text-align:right;">${tareText}</td>
+              <td style="border:1px solid #000; padding:10px 6px; text-align:right;">${netText}</td>
+              <td style="border:1px solid #000; padding:10px 6px; text-align:right; font-weight:600;">${rateText}</td>
+              <td style="border:1px solid #000; padding:10px 6px; text-align:right; font-weight:600;">${totalText}</td>
             </tr>
           </tbody>
         </table>
@@ -147,7 +171,7 @@ const buildInvoiceHTML = (invoice) => {
             <strong>Amount in Words:</strong> ${amountWords}
           </div>
           <div style="width:180px; border:2px solid #7B4F2C; padding:8px 10px; text-align:right; font-size:19px; font-weight:600; display:flex; align-items:center; justify-content:flex-end;">
-            INR ${money(invoice.totalAmount)}
+            INR ${totalText}
           </div>
         </div>
 
@@ -180,13 +204,13 @@ const buildInvoiceHTML = (invoice) => {
   `;
 };
 
-const createInvoiceNode = (invoice) => {
+const createInvoiceNode = (invoice, options) => {
   const host = document.createElement('div');
   host.style.position = 'fixed';
   host.style.left = '-100000px';
   host.style.top = '0';
   host.style.zIndex = '-1';
-  host.innerHTML = buildInvoiceHTML(invoice);
+  host.innerHTML = buildInvoiceHTML(invoice, options);
   document.body.appendChild(host);
   return host.firstElementChild;
 };
@@ -221,6 +245,17 @@ export const downloadInvoicePdf = async (invoice) => {
 
   try {
     await buildWorker(node, buildInvoiceFilename(invoice)).save();
+  } finally {
+    node.parentElement?.remove();
+  }
+};
+
+export const downloadInvoiceTemplatePdf = async () => {
+  const node = createInvoiceNode({}, { template: true });
+
+  try {
+    const datePart = dayjs().format('DDMMYYYY');
+    await buildWorker(node, `INVOICE TEMPLATE ${datePart}.pdf`).save();
   } finally {
     node.parentElement?.remove();
   }

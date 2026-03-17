@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
 import { formatCurrency } from '../utils/format';
+import { downloadInvoiceTemplatePdf } from '../utils/pdf';
 
 const InvoiceFormPage = () => {
   const { id } = useParams();
@@ -66,10 +67,19 @@ const InvoiceFormPage = () => {
     }
   };
 
+  const downloadTemplate = async () => {
+    await downloadInvoiceTemplatePdf();
+  };
+
   return (
     <AppLayout>
       <div className="card shadow-sm">
-        <div className="card-header">{isEdit ? 'Edit Invoice' : 'Generate Invoice'}</div>
+        <div className="card-header d-flex justify-content-between align-items-center">
+          <span>{isEdit ? 'Edit Invoice' : 'Generate Invoice'}</span>
+          <button type="button" className="btn btn-sm btn-outline-secondary" onClick={downloadTemplate}>
+            Download Template
+          </button>
+        </div>
         <div className="card-body">
           <form className="row g-3" onSubmit={handleSubmit(onSubmit)}>
             <div className="col-md-4">

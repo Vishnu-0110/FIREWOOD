@@ -17,7 +17,11 @@ router.post(
   '/',
   [
     body('customerName').trim().notEmpty().withMessage('Customer name is required'),
-    body('phone').optional().isLength({ min: 10, max: 15 }).withMessage('Phone must be 10-15 characters')
+    body('phone')
+      .optional({ values: 'falsy' })
+      .trim()
+      .isLength({ min: 10, max: 15 })
+      .withMessage('Phone must be 10-15 characters')
   ],
   handleValidation,
   addCustomer

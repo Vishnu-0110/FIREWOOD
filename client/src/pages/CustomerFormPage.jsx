@@ -36,7 +36,11 @@ const CustomerFormPage = () => {
       }
       navigate('/customers');
     } catch (error) {
-      toast.error(error?.response?.data?.message || 'Failed to save factory');
+      const apiError =
+        error?.response?.data?.errors?.[0]?.message ||
+        error?.response?.data?.message ||
+        'Failed to save factory';
+      toast.error(apiError);
     }
   };
 

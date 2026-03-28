@@ -21,9 +21,16 @@ const AppLayout = ({ children }) => {
     if (typeof window === 'undefined') return undefined;
 
     const media = window.matchMedia('(max-width: 991.98px)');
-    const onChange = (event) => setIsMobileView(event.matches);
-
-    setIsMobileView(media.matches);
+    const onChange = (event) => {
+      const mobileView = event.matches;
+      setIsMobileView(mobileView);
+      if (mobileView) {
+        setCollapsed(true);
+        return;
+      }
+      const savedCollapsed = localStorage.getItem('sidebar_collapsed') === '1';
+      setCollapsed(savedCollapsed);
+    };
 
     if (typeof media.addEventListener === 'function') {
       media.addEventListener('change', onChange);
@@ -38,16 +45,6 @@ const AppLayout = ({ children }) => {
     if (isMobileView) return;
     localStorage.setItem('sidebar_collapsed', collapsed ? '1' : '0');
   }, [collapsed, isMobileView]);
-
-  useEffect(() => {
-    if (isMobileView) {
-      setCollapsed(true);
-      return;
-    }
-
-    const savedCollapsed = localStorage.getItem('sidebar_collapsed') === '1';
-    setCollapsed(savedCollapsed);
-  }, [isMobileView]);
 
   const handleToggleSidebar = () => {
     setCollapsed((prev) => !prev);

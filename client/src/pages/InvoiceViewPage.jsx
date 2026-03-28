@@ -5,6 +5,7 @@ import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { formatCurrency, formatDate } from '../utils/format';
+import { isSilentAuthError } from '../utils/apiErrors';
 import { downloadInvoicePdf, printInvoicePdf } from '../utils/pdf';
 
 const InvoiceViewPage = () => {
@@ -12,7 +13,10 @@ const InvoiceViewPage = () => {
   const [invoice, setInvoice] = useState(null);
 
   useEffect(() => {
-    api.get(`/invoices/${id}`).then((res) => setInvoice(res.data)).catch(() => toast.error('Failed to load invoice'));
+    api.get(`/invoices/${id}`).then((res) => setInvoice(res.data)).catch((error) => {
+      if (isSilentAuthError(error)) return;
+      toast.error('Failed to load invoice');
+    });
   }, [id]);
 
   if (!invoice) return <LoadingSpinner full />;

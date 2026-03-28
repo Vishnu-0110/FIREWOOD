@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
+import { isSilentAuthError } from '../utils/apiErrors';
 
 const CustomerFormPage = () => {
   const { id } = useParams();
@@ -20,6 +21,9 @@ const CustomerFormPage = () => {
             setValue(field, customer[field] || '');
           });
         }
+      }).catch((error) => {
+        if (isSilentAuthError(error)) return;
+        toast.error('Failed to load factory details');
       });
     }
   }, [id, isEdit, setValue]);
@@ -36,6 +40,7 @@ const CustomerFormPage = () => {
       }
       navigate('/customers');
     } catch (error) {
+      if (isSilentAuthError(error)) return;
       const apiError =
         error?.response?.data?.errors?.[0]?.message ||
         error?.response?.data?.message ||

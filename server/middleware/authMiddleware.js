@@ -1,6 +1,21 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+const authCookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+};
+
+const authFailure = (req, res, message, code, shouldClearCookie = false) => {
+  if (shouldClearCookie) {
+    res.clearCookie('token', authCookieOptions);
+  }
+
+  console.warn(`[AUTH] ${code} ${req.method} ${req.originalUrl} ip=${req.ip}`);
+  return res.status(401).json({ message, code });
+};
+
 const protect = async (req, res, next) => {
   const cookieToken = req.cookies?.token;
   const authHeader = req.headers.authorization || '';
@@ -8,7 +23,7 @@ const protect = async (req, res, next) => {
   const token = cookieToken || bearerToken;
 
   if (!token) {
-    return res.status(401).json({ message: 'Not authorized, token missing' });
+    return authFailure(req, res, 'Not authorized, token missing', 'TOKEN_MISSING');
   }
 
   try {
@@ -16,13 +31,16 @@ const protect = async (req, res, next) => {
     const user = await User.findById(decoded.id).select('-password');
 
     if (!user) {
-      return res.status(401).json({ message: 'Not authorized, user not found' });
+      return authFailure(req, res, 'Not authorized, user not found', 'USER_NOT_FOUND', Boolean(cookieToken));
     }
 
     req.user = user;
     return next();
   } catch (error) {
-    return res.status(401).json({ message: 'Not authorized, token invalid or expired' });
+    if (error?.name === 'TokenExpiredError') {
+      return authFailure(req, res, 'Session expired, please login again', 'TOKEN_EXPIRED', Boolean(cookieToken));
+    }
+    return authFailure(req, res, 'Not authorized, token invalid', 'TOKEN_INVALID', Boolean(cookieToken));
   }
 };
 

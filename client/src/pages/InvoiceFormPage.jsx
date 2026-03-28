@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
 import { formatCurrency } from '../utils/format';
+import { isSilentAuthError } from '../utils/apiErrors';
 import { downloadInvoiceTemplatePdf } from '../utils/pdf';
 
 const InvoiceFormPage = () => {
@@ -43,7 +44,10 @@ const InvoiceFormPage = () => {
         setValue('grossWeight', inv.grossWeight);
         setValue('tareWeight', inv.tareWeight);
         setValue('ratePerTon', inv.ratePerTon);
-      }).catch(() => toast.error('Failed to load invoice'));
+      }).catch((error) => {
+        if (isSilentAuthError(error)) return;
+        toast.error('Failed to load invoice');
+      });
     }
   }, [id, isEdit, setValue]);
 
@@ -63,6 +67,7 @@ const InvoiceFormPage = () => {
       }
       navigate('/invoices');
     } catch (error) {
+      if (isSilentAuthError(error)) return;
       toast.error(error?.response?.data?.message || 'Failed to save invoice');
     }
   };

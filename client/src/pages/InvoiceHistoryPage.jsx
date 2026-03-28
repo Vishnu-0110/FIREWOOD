@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
 import { formatCurrency, formatDate, queryParams } from '../utils/format';
+import { isSilentAuthError } from '../utils/apiErrors';
 
 const InvoiceHistoryPage = () => {
   const [factories, setFactories] = useState([]);
@@ -16,6 +17,7 @@ const InvoiceHistoryPage = () => {
       const response = await api.get(`/invoices?${queryParams(next)}`);
       setData(response.data);
     } catch (error) {
+      if (isSilentAuthError(error)) return;
       toast.error(error?.response?.data?.message || 'Failed to load invoices');
     }
   };
@@ -30,6 +32,7 @@ const InvoiceHistoryPage = () => {
         setFactories(factoriesRes.data.items);
         setData(invoicesRes.data);
       } catch (error) {
+        if (isSilentAuthError(error)) return;
         toast.error(error?.response?.data?.message || 'Failed to load invoices');
       }
     };
@@ -50,6 +53,7 @@ const InvoiceHistoryPage = () => {
       toast.success('Invoice deleted');
       load(filters);
     } catch (error) {
+      if (isSilentAuthError(error)) return;
       toast.error(error?.response?.data?.message || 'Failed to delete invoice');
     }
   };
@@ -81,6 +85,7 @@ const InvoiceHistoryPage = () => {
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
+      if (isSilentAuthError(error)) return;
       toast.error(error?.response?.data?.message || 'Failed to export from server');
     }
   };

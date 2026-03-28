@@ -18,6 +18,7 @@ import AppLayout from '../layout/AppLayout';
 import LoadingSpinner from '../components/LoadingSpinner';
 import api from '../api/axiosClient';
 import { formatCurrency, formatDate } from '../utils/format';
+import { isSilentAuthError } from '../utils/apiErrors';
 
 const COLORS = ['#e67e22', '#8b5e3c', '#f39c12', '#d35400', '#f1c27d'];
 
@@ -31,6 +32,7 @@ const DashboardPage = () => {
         const response = await api.get('/dashboard/stats');
         setData(response.data);
       } catch (error) {
+        if (isSilentAuthError(error)) return;
         toast.error(error?.response?.data?.message || 'Failed to load dashboard');
       } finally {
         setLoading(false);

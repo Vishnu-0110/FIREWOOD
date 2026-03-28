@@ -31,6 +31,6 @@ router.post(
 );
 
 router.get('/me', protect, me);
-router.post('/logout', protect, logout);
+router.post('/logout', logout);
 
 module.exports = router;

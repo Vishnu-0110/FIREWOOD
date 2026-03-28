@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const jwt = require('jsonwebtoken');
 const generateToken = require('../utils/generateToken');
 const { logAudit } = require('../utils/audit');
 
@@ -48,8 +49,26 @@ const me = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  if (req.user?._id) {
-    await logAudit({ user: req.user._id, action: 'LOGOUT', module: 'AUTH' });
+  let auditUserId = req.user?._id;
+  if (!auditUserId) {
+    const cookieToken = req.cookies?.token;
+    const authHeader = req.headers.authorization || '';
+    const bearerToken = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+    const token = cookieToken || bearerToken;
+
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id).select('_id');
+        auditUserId = user?._id;
+      } catch {
+        // Best-effort only. Logout must continue even with stale tokens.
+      }
+    }
+  }
+
+  if (auditUserId) {
+    await logAudit({ user: auditUserId, action: 'LOGOUT', module: 'AUTH' });
   }
 
   res.clearCookie('token', {

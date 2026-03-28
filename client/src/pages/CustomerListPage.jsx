@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
 import { formatCurrency } from '../utils/format';
+import { isSilentAuthError } from '../utils/apiErrors';
 
 const CustomerListPage = () => {
   const [state, setState] = useState({ items: [], page: 1, pages: 1, total: 0 });
@@ -14,6 +15,7 @@ const CustomerListPage = () => {
       const response = await api.get(`/customers?q=${encodeURIComponent(search)}&page=${page}&limit=10`);
       setState(response.data);
     } catch (error) {
+      if (isSilentAuthError(error)) return;
       toast.error(error?.response?.data?.message || 'Failed to load factories');
     }
   };
@@ -24,6 +26,7 @@ const CustomerListPage = () => {
         const response = await api.get('/customers?q=&page=1&limit=10');
         setState(response.data);
       } catch (error) {
+        if (isSilentAuthError(error)) return;
         toast.error(error?.response?.data?.message || 'Failed to load factories');
       }
     };
@@ -38,6 +41,7 @@ const CustomerListPage = () => {
       toast.success('Factory deleted');
       load(state.page, q);
     } catch (error) {
+      if (isSilentAuthError(error)) return;
       toast.error(error?.response?.data?.message || 'Failed to delete factory');
     }
   };

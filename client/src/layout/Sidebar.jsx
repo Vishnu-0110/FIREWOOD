@@ -3,12 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 const Sidebar = ({ collapsed = false, onNavigate }) => {
   const { pathname } = useLocation();
   const menu = [
-    { key: 'dashboard', to: '/', label: 'Dashboard' },
-    { key: 'customers', to: '/customers', label: 'Factories' },
-    { key: 'addCustomer', to: '/customers/new', label: 'Add Factory' },
-    { key: 'generateInvoice', to: '/invoices/new', label: 'Generate Invoice' },
-    { key: 'invoiceHistory', to: '/invoices', label: 'Invoice History' },
-    { key: 'profile', to: '/profile', label: 'Profile' }
+    { key: 'dashboard', to: '/', label: 'Dashboard', icon: 'DB' },
+    { key: 'customers', to: '/customers', label: 'Factories', icon: 'FC' },
+    { key: 'addCustomer', to: '/customers/new', label: 'Add Factory', icon: 'AF' },
+    { key: 'generateInvoice', to: '/invoices/new', label: 'Generate Invoice', icon: 'GI' },
+    { key: 'invoiceHistory', to: '/invoices', label: 'Invoice History', icon: 'IH' },
+    { key: 'profile', to: '/profile', label: 'Profile', icon: 'PR' }
   ];
 
   const getActiveKey = () => {
@@ -31,7 +31,7 @@ const Sidebar = ({ collapsed = false, onNavigate }) => {
         <div className="brand-logo">VL</div>
         <div className="brand-text">
           <h5 className="fw-bold text-white mb-0">Vijaya Lakshmi</h5>
-          <p className="text-light small mb-0">Firewood Billing</p>
+          <p className="text-light small mb-0">Billing Command Center</p>
         </div>
       </div>
       <nav className="d-flex flex-column gap-2">
@@ -43,6 +43,7 @@ const Sidebar = ({ collapsed = false, onNavigate }) => {
             title={collapsed ? item.label : ''}
             onClick={onNavigate}
           >
+            <span className="sidebar-link-icon" aria-hidden="true">{item.icon}</span>
             <span className="sidebar-link-text">{item.label}</span>
           </Link>
         ))}

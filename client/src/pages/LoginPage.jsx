@@ -38,7 +38,11 @@ const LoginPage = () => {
   return (
     <div className="login-page d-flex align-items-center justify-content-center min-vh-100">
       <div className="card shadow-sm p-4 login-card">
-        <h4 className="text-center mb-4">Vijaya Lakshmi Billing</h4>
+        <div className="login-card-header text-center mb-4">
+          <p className="login-overline mb-1">Secure Access</p>
+          <h4 className="mb-1">Vijaya Lakshmi Billing</h4>
+          <small className="text-muted">Sign in to continue to your workspace</small>
+        </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-3">
             <label className="form-label">Email</label>

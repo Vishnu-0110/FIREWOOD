@@ -28,7 +28,11 @@ const LoginPage = () => {
       navigate('/');
     } catch (error) {
       if (!error?.response) {
-        toast.error('Server unreachable. Check backend/MongoDB connection.');
+        if (error?.code === 'ECONNABORTED') {
+          toast.error('Server is taking too long to respond. Please wait a moment and try again.');
+        } else {
+          toast.error('Server unreachable. Check backend status and VITE_API_URL deployment value.');
+        }
         return;
       }
       toast.error(error.response.data?.message || 'Login failed');

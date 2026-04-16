@@ -2,15 +2,28 @@ import axios from "axios";
 import { store } from "../app/store";
 import { clearCredentials } from "../features/authSlice";
 
+const stripTrailingSlash = (value) => String(value || "").replace(/\/+$/, "");
+
 const resolveBaseUrl = () => {
-  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  const envBaseUrl = stripTrailingSlash(import.meta.env.VITE_API_URL);
+  if (envBaseUrl) return envBaseUrl;
+
   if (typeof window !== "undefined") {
-    return `${window.location.protocol}//${window.location.hostname}:5000/api`;
+    const hostname = window.location.hostname;
+    const isLocalDevHost = /^(localhost|127\.0\.0\.1)$/i.test(hostname);
+
+    if (isLocalDevHost) {
+      return `${window.location.protocol}//${hostname}:5000/api`;
+    }
+
+    return `${window.location.origin}/api`;
   }
+
   return "http://localhost:5000/api";
 };
 
 const baseURL = resolveBaseUrl();
+const apiTimeoutMs = Number.parseInt(import.meta.env.VITE_API_TIMEOUT_MS || "20000", 10);
 const AUTH_ERROR_CODES = new Set(["TOKEN_MISSING", "TOKEN_INVALID", "TOKEN_EXPIRED", "USER_NOT_FOUND"]);
 
 const decodeTokenPayload = (token) => {
@@ -50,6 +63,7 @@ const redirectToLogin = () => {
 const api = axios.create({
   baseURL,
   withCredentials: true,
+  timeout: Number.isFinite(apiTimeoutMs) && apiTimeoutMs > 0 ? apiTimeoutMs : 20000,
 });
 
 api.interceptors.request.use((config) => {

@@ -20,7 +20,7 @@ const register = async (req, res) => {
   }
 
   const user = await User.create({ name, email, password });
-  await logAudit({ user: user._id, action: 'REGISTER', module: 'AUTH', metadata: { email: user.email } });
+  void logAudit({ user: user._id, action: 'REGISTER', module: 'AUTH', metadata: { email: user.email } });
 
   return res.status(201).json({ user: { id: user._id, name: user.name, email: user.email, role: user.role } });
 };
@@ -34,7 +34,7 @@ const login = async (req, res) => {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
-  await logAudit({ user: user._id, action: 'LOGIN', module: 'AUTH' });
+  void logAudit({ user: user._id, action: 'LOGIN', module: 'AUTH' });
   const token = generateToken(user._id);
   res.cookie('token', token, cookieOptions);
 
@@ -68,7 +68,7 @@ const logout = async (req, res) => {
   }
 
   if (auditUserId) {
-    await logAudit({ user: auditUserId, action: 'LOGOUT', module: 'AUTH' });
+    void logAudit({ user: auditUserId, action: 'LOGOUT', module: 'AUTH' });
   }
 
   res.clearCookie('token', {

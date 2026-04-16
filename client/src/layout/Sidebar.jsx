@@ -28,7 +28,19 @@ const Sidebar = ({ collapsed = false, onNavigate }) => {
   return (
     <aside className={`app-sidebar p-3 ${collapsed ? 'collapsed' : ''}`}>
       <div className="brand-block mb-4">
-        <div className="brand-logo">VL</div>
+        <div className="brand-logo" aria-label="Vijaya Lakshmi logo">
+          <img
+            src="/invoice-logo.png"
+            alt="Vijaya Lakshmi logo"
+            onLoad={(e) => {
+              e.currentTarget.parentElement?.classList.add('has-logo');
+            }}
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+          <span className="brand-logo-fallback" aria-hidden="true">VL</span>
+        </div>
         <div className="brand-text">
           <h5 className="fw-bold text-white mb-0">Vijaya Lakshmi</h5>
           <p className="text-light small mb-0">Billing Command Center</p>

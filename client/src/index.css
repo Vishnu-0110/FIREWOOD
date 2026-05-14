@@ -272,6 +272,15 @@ a {
   background: rgba(255, 255, 255, 0.85);
 }
 
+.topbar-company-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 8px 18px rgba(33, 32, 38, 0.12);
+}
+
 .topbar-user-avatar {
   width: 28px;
   height: 28px;

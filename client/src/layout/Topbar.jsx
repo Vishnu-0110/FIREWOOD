@@ -41,6 +41,14 @@ const Topbar = ({ collapsed, onToggleSidebar }) => {
       </div>
       <div className="d-flex align-items-center gap-2 topbar-actions">
         <div className="topbar-user-chip" title={user?.email || ''}>
+          <img
+            className="topbar-company-logo"
+            src="/invoice-logo.png"
+            alt="Vijaya Lakshmi logo"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
           <span className="topbar-user-avatar" aria-hidden="true">{userInitial}</span>
           <span className="topbar-user-meta">
             <strong>{user?.name || 'User'}</strong>

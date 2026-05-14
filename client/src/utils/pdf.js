@@ -32,7 +32,8 @@ const buildInvoiceFilename = (invoice) => {
   const rawName = String(invoice?.customer?.factoryName || invoice?.customer?.customerName || '').trim();
   const firstWord = rawName ? rawName.split(/\s+/)[0] : 'INVOICE';
   const safeWord = firstWord.replace(/[^A-Za-z0-9]/g, '').toUpperCase() || 'INVOICE';
-  const datePart = dayjs().format('DDMMYYYY');
+  const invoiceDate = dayjs(invoice?.date);
+  const datePart = invoiceDate.isValid() ? invoiceDate.format('DDMMYYYY') : dayjs().format('DDMMYYYY');
   return `${safeWord} ${datePart}.pdf`;
 };
 

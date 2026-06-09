@@ -33,17 +33,6 @@ const Topbar = ({ collapsed, onToggleSidebar }) => {
         >
           {collapsed ? '☰' : '✕'}
         </button>
-        <div className="topbar-brand" title="Vijaya Lakshmi Firewood Supplier">
-          <img
-            className="topbar-company-logo topbar-brand-logo"
-            src="/invoice-logo.png"
-            alt="Vijaya Lakshmi logo"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
-          />
-          <span className="visually-hidden">Vijaya Lakshmi Firewood Supplier</span>
-        </div>
       </div>
       <div className="d-flex align-items-center gap-2 topbar-actions">
         <button
@@ -66,6 +55,17 @@ const Topbar = ({ collapsed, onToggleSidebar }) => {
           <span className="topbar-icon-btn-symbol" aria-hidden="true">⎋</span>
           <span className="topbar-icon-btn-label">Logout</span>
         </button>
+        <div className="topbar-brand" title="Vijaya Lakshmi Firewood Supplier">
+          <img
+            className="topbar-company-logo topbar-brand-logo"
+            src="/invoice-logo.png"
+            alt="Vijaya Lakshmi logo"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+          <span className="visually-hidden">Vijaya Lakshmi Firewood Supplier</span>
+        </div>
       </div>
     </header>
   );

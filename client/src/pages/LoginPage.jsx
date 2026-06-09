@@ -6,6 +6,13 @@ import { toast } from 'react-toastify';
 import api from '../api/axiosClient';
 import { setCredentials } from '../features/authSlice';
 
+const LOGIN_TIMEOUT_MS = 60000;
+const LOGIN_RETRY_DELAY_MS = 1500;
+
+const wait = (ms) => new Promise((resolve) => {
+  window.setTimeout(resolve, ms);
+});
+
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
@@ -19,7 +26,20 @@ const LoginPage = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await api.post('/auth/login', data);
+      let response;
+
+      try {
+        response = await api.post('/auth/login', data, { timeout: LOGIN_TIMEOUT_MS });
+      } catch (error) {
+        if (error?.code !== 'ECONNABORTED') {
+          throw error;
+        }
+
+        toast.info('Server is waking up. Retrying login...');
+        await wait(LOGIN_RETRY_DELAY_MS);
+        response = await api.post('/auth/login', data, { timeout: LOGIN_TIMEOUT_MS });
+      }
+
       if (!response.data?.token || !response.data?.user) {
         throw new Error('Invalid login response from server');
       }
@@ -29,7 +49,7 @@ const LoginPage = () => {
     } catch (error) {
       if (!error?.response) {
         if (error?.code === 'ECONNABORTED') {
-          toast.error('Server is taking too long to respond. Please wait a moment and try again.');
+          toast.error('Server is still waking up. Please wait a moment and try again.');
         } else {
           toast.error('Server unreachable. Check backend status and VITE_API_URL deployment value.');
         }

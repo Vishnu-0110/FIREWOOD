@@ -35,6 +35,7 @@ const Topbar = ({ collapsed, onToggleSidebar }) => {
           {collapsed ? '☰' : '✕'}
         </button>
         <div className="topbar-title">
+          <span className="topbar-kicker">Billing Workspace</span>
           <h6 className="mb-0">Vijaya Lakshmi Firewood Supplier</h6>
           <small className="text-muted">Operations, Billing and Dispatch</small>
         </div>

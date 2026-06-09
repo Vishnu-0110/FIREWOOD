@@ -46,6 +46,7 @@ const Sidebar = ({ collapsed = false, onNavigate }) => {
           <p className="text-light small mb-0">Billing Command Center</p>
         </div>
       </div>
+      <div className="sidebar-section-label">Workspace</div>
       <nav className="d-flex flex-column gap-2">
         {menu.map((item) => (
           <Link

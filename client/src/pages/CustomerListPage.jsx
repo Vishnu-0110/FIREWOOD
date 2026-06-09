@@ -48,10 +48,18 @@ const CustomerListPage = () => {
 
   return (
     <AppLayout>
+      <section className="page-hero mb-3">
+        <div>
+          <span className="page-eyebrow">Factories</span>
+          <h1 className="page-title mb-1">Factory Directory</h1>
+          <p className="page-subtitle mb-0">Search, update and organize your billing factories quickly on any screen size.</p>
+        </div>
+      </section>
+
       <div className="card shadow-sm">
         <div className="card-header d-flex justify-content-between align-items-center">
           <span>Factory List</span>
-          <div className="d-flex gap-2">
+          <div className="d-flex gap-2 page-actions-row">
             <input
               className="form-control form-control-sm"
               placeholder="Search"
@@ -64,7 +72,7 @@ const CustomerListPage = () => {
           </div>
         </div>
         <div className="table-responsive">
-          <table className="table table-striped mb-0">
+          <table className="table table-striped table-mobile-stack mb-0">
             <thead>
               <tr>
                 <th>Factory</th>
@@ -76,10 +84,10 @@ const CustomerListPage = () => {
             <tbody>
               {state.items.map((item) => (
                 <tr key={item._id}>
-                  <td>{item.factoryName || item.customerName || '-'}</td>
-                  <td>{item.totalLoadsSent}</td>
-                  <td>{formatCurrency(item.totalAmountPaid)}</td>
-                  <td className="d-flex gap-1">
+                  <td data-label="Factory">{item.factoryName || item.customerName || '-'}</td>
+                  <td data-label="Total Loads">{item.totalLoadsSent}</td>
+                  <td data-label="Total Revenue">{formatCurrency(item.totalAmountPaid)}</td>
+                  <td data-label="Actions" className="d-flex gap-1 action-cell">
                     <Link className="btn btn-sm btn-outline-primary" to={`/customers/${item._id}/edit`}>Edit</Link>
                     <button className="btn btn-sm btn-outline-danger" onClick={() => onDelete(item._id)}>Delete</button>
                   </td>

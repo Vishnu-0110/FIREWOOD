@@ -67,6 +67,14 @@ const DashboardPage = () => {
 
   return (
     <AppLayout>
+      <section className="page-hero mb-3">
+        <div>
+          <span className="page-eyebrow">Overview</span>
+          <h1 className="page-title mb-1">Business Dashboard</h1>
+          <p className="page-subtitle mb-0">Track revenue, factory activity and recent invoices in one modern workspace.</p>
+        </div>
+      </section>
+
       <div className="row g-3 mb-3">
         {cards.map((card) => (
           <div className="col-12 col-md-6 col-xl-3" key={card.label}>
@@ -155,7 +163,7 @@ const DashboardPage = () => {
             <div className="card-header">Recent 10 Invoices</div>
             <div className="card-body p-0">
               <div className="table-responsive">
-                <table className="table table-sm mb-0">
+                <table className="table table-sm table-mobile-stack mb-0">
                   <thead>
                     <tr>
                       <th>No</th>
@@ -166,11 +174,11 @@ const DashboardPage = () => {
                   </thead>
                   <tbody>
                     {data.recentInvoices.map((item) => (
-                      <tr key={item._id}>
-                        <td>{item.invoiceNumber}</td>
-                        <td>{formatDate(item.date)}</td>
-                        <td>{item.customer?.factoryName || item.customer?.customerName || '-'}</td>
-                        <td>{formatCurrency(item.totalAmount)}</td>
+                    <tr key={item._id}>
+                        <td data-label="No">{item.invoiceNumber}</td>
+                        <td data-label="Date">{formatDate(item.date)}</td>
+                        <td data-label="Factory">{item.customer?.factoryName || item.customer?.customerName || '-'}</td>
+                        <td data-label="Total">{formatCurrency(item.totalAmount)}</td>
                       </tr>
                     ))}
                   </tbody>

@@ -78,25 +78,36 @@ const InvoiceFormPage = () => {
 
   return (
     <AppLayout>
-      <div className="card shadow-sm">
-        <div className="card-header d-flex justify-content-between align-items-center">
-          <span>{isEdit ? 'Edit Invoice' : 'Generate Invoice'}</span>
-          <button type="button" className="btn btn-sm btn-outline-secondary" onClick={downloadTemplate}>
+      <section className="page-hero mb-3">
+        <div>
+          <span className="page-eyebrow">{isEdit ? 'Update Invoice' : 'Create Invoice'}</span>
+          <h1 className="page-title mb-1">{isEdit ? 'Edit Invoice' : 'Generate Invoice'}</h1>
+          <p className="page-subtitle mb-0">Fast entry, mobile-friendly layout and live totals while you work.</p>
+        </div>
+        <div className="hero-actions">
+          <button type="button" className="btn btn-outline-secondary" onClick={downloadTemplate}>
             Download Template
           </button>
         </div>
+      </section>
+
+      <div className="card shadow-sm">
+        <div className="card-header d-flex justify-content-between align-items-center">
+          <span>{isEdit ? 'Edit Invoice' : 'Generate Invoice'}</span>
+          <span className="status-pill">Live total enabled</span>
+        </div>
         <div className="card-body">
           <form className="row g-3" onSubmit={handleSubmit(onSubmit)}>
-            <div className="col-md-4">
+            <div className="col-12 col-lg-4">
               <label className="form-label">Invoice Number (optional, per factory)</label>
               <input className="form-control" {...register('invoiceNumber')} />
               <small className="text-muted">If left empty, next number is auto-generated from this factory's previous invoice.</small>
             </div>
-            <div className="col-md-4">
+            <div className="col-6 col-lg-4">
               <label className="form-label">Date</label>
               <input type="date" className="form-control" {...register('date', { required: true })} />
             </div>
-            <div className="col-md-4">
+            <div className="col-6 col-lg-4">
               <label className="form-label">Factory</label>
               <select className="form-select" {...register('customer', { required: 'Factory is required' })}>
                 <option value="">Select factory</option>
@@ -106,26 +117,26 @@ const InvoiceFormPage = () => {
               </select>
               {errors.customer && <small className="text-danger">{errors.customer.message}</small>}
             </div>
-            <div className="col-md-4">
+            <div className="col-12 col-lg-4">
               <label className="form-label">Vehicle Number</label>
               <input className="form-control" {...register('vehicleNumber', { required: 'Vehicle number is required' })} />
               {errors.vehicleNumber && <small className="text-danger">{errors.vehicleNumber.message}</small>}
             </div>
-            <div className="col-md-4">
+            <div className="col-6 col-lg-4">
               <label className="form-label">Gross Weight</label>
               <input type="number" step="0.001" className="form-control" {...register('grossWeight', { required: true, min: 0.001 })} />
             </div>
-            <div className="col-md-4">
+            <div className="col-6 col-lg-4">
               <label className="form-label">Tare Weight</label>
               <input type="number" step="0.001" className="form-control" {...register('tareWeight', { required: true, min: 0 })} />
             </div>
-            <div className="col-md-4">
+            <div className="col-12 col-lg-4">
               <label className="form-label">Rate / Ton</label>
               <input type="number" step="0.01" className="form-control" {...register('ratePerTon', { required: true, min: 0.01 })} />
               <small className="text-muted">Example: 4500 will be applied as 4.5 x Net Weight.</small>
             </div>
-            <div className="col-md-8">
-              <div className="invoice-calc p-3 rounded">
+            <div className="col-12 col-lg-8">
+              <div className="invoice-calc p-3 rounded modern-highlight-card">
                 <div className="d-flex justify-content-between">
                   <span>Net Weight</span>
                   <strong>{net > 0 ? net : 0}</strong>
@@ -140,7 +151,7 @@ const InvoiceFormPage = () => {
                 </div>
               </div>
             </div>
-            <div className="col-12 d-flex gap-2">
+            <div className="col-12 d-flex gap-2 form-action-row">
               <button disabled={isSubmitting} className="btn btn-warning" type="submit">
                 {isSubmitting ? 'Saving...' : isEdit ? 'Update Invoice' : 'Save Invoice'}
               </button>

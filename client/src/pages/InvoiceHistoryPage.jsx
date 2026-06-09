@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import * as XLSX from 'xlsx';
 import { toast } from 'react-toastify';
 import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
@@ -58,7 +57,7 @@ const InvoiceHistoryPage = () => {
     }
   };
 
-  const exportCurrent = () => {
+  const exportCurrent = async () => {
     const rows = data.items.map((item) => ({
       invoiceNumber: item.invoiceNumber,
       date: formatDate(item.date),
@@ -67,6 +66,7 @@ const InvoiceHistoryPage = () => {
       netWeight: item.netWeight,
       totalAmount: item.totalAmount
     }));
+    const XLSX = await import('xlsx');
     const ws = XLSX.utils.json_to_sheet(rows);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Invoices');
@@ -92,11 +92,19 @@ const InvoiceHistoryPage = () => {
 
   return (
     <AppLayout>
+      <section className="page-hero mb-3">
+        <div>
+          <span className="page-eyebrow">Invoices</span>
+          <h1 className="page-title mb-1">Invoice History</h1>
+          <p className="page-subtitle mb-0">Filter, export and manage every invoice from one place.</p>
+        </div>
+      </section>
+
       <div className="card shadow-sm">
-        <div className="card-header">Invoice History</div>
+        <div className="card-header">Search and Filters</div>
         <div className="card-body border-bottom">
-          <div className="row g-2">
-            <div className="col-md-3">
+          <div className="row g-2 align-items-end">
+            <div className="col-12 col-lg-3">
               <input
                 className="form-control"
                 placeholder="Search invoice/factory/vehicle"
@@ -105,19 +113,19 @@ const InvoiceHistoryPage = () => {
                 onKeyDown={(e) => e.key === 'Enter' && updateFilters({ q: filters.q, page: 1 })}
               />
             </div>
-            <div className="col-md-2">
+            <div className="col-6 col-lg-2">
               <select className="form-select" value={filters.customer} onChange={(e) => updateFilters({ customer: e.target.value, page: 1 })}>
                 <option value="">All Factories</option>
                 {factories.map((c) => <option key={c._id} value={c._id}>{c.factoryName || c.customerName}</option>)}
               </select>
             </div>
-            <div className="col-md-2">
+            <div className="col-6 col-lg-2">
               <input type="date" className="form-control" value={filters.startDate} onChange={(e) => updateFilters({ startDate: e.target.value, page: 1 })} />
             </div>
-            <div className="col-md-2">
+            <div className="col-6 col-lg-2">
               <input type="date" className="form-control" value={filters.endDate} onChange={(e) => updateFilters({ endDate: e.target.value, page: 1 })} />
             </div>
-            <div className="col-md-3 d-flex gap-2">
+            <div className="col-12 col-lg-3 d-flex gap-2 page-actions-row">
               <button className="btn btn-warning" onClick={() => updateFilters({ q: filters.q, page: 1 })}>Filter</button>
               <button className="btn btn-outline-success" onClick={exportCurrent}>Export Excel</button>
               <button className="btn btn-outline-dark" onClick={downloadServerExcel}>Server Export</button>
@@ -125,7 +133,7 @@ const InvoiceHistoryPage = () => {
           </div>
         </div>
         <div className="table-responsive">
-          <table className="table table-striped mb-0">
+          <table className="table table-striped table-mobile-stack mb-0">
             <thead>
               <tr>
                 <th>No</th>
@@ -140,13 +148,13 @@ const InvoiceHistoryPage = () => {
             <tbody>
               {data.items.map((item) => (
                 <tr key={item._id}>
-                  <td>{item.invoiceNumber}</td>
-                  <td>{formatDate(item.date)}</td>
-                  <td>{item.customer?.factoryName || item.customer?.customerName || '-'}</td>
-                  <td>{item.vehicleNumber}</td>
-                  <td>{item.netWeight}</td>
-                  <td>{formatCurrency(item.totalAmount)}</td>
-                  <td className="d-flex gap-1">
+                  <td data-label="No">{item.invoiceNumber}</td>
+                  <td data-label="Date">{formatDate(item.date)}</td>
+                  <td data-label="Factory">{item.customer?.factoryName || item.customer?.customerName || '-'}</td>
+                  <td data-label="Vehicle">{item.vehicleNumber}</td>
+                  <td data-label="Net Weight">{item.netWeight}</td>
+                  <td data-label="Total">{formatCurrency(item.totalAmount)}</td>
+                  <td data-label="Actions" className="d-flex gap-1 action-cell">
                     <Link className="btn btn-sm btn-outline-dark" to={`/invoices/${item._id}`}>View</Link>
                     <Link className="btn btn-sm btn-outline-primary" to={`/invoices/${item._id}/edit`}>Edit</Link>
                     <button className="btn btn-sm btn-outline-danger" onClick={() => deleteInvoice(item._id)}>Delete</button>

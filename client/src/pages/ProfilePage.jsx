@@ -6,12 +6,31 @@ const ProfilePage = () => {
 
   return (
     <AppLayout>
+      <section className="page-hero mb-3">
+        <div>
+          <span className="page-eyebrow">Account</span>
+          <h1 className="page-title mb-1">Profile</h1>
+          <p className="page-subtitle mb-0">Your workspace identity and access details.</p>
+        </div>
+      </section>
+
       <div className="card shadow-sm">
-        <div className="card-header">Profile</div>
+        <div className="card-header">Profile Details</div>
         <div className="card-body">
-          <p><strong>Name:</strong> {user?.name}</p>
-          <p><strong>Email:</strong> {user?.email}</p>
-          <p><strong>Role:</strong> {user?.role}</p>
+          <div className="info-grid info-grid-compact">
+            <div className="info-tile">
+              <span className="detail-label">Name</span>
+              <strong>{user?.name || '-'}</strong>
+            </div>
+            <div className="info-tile">
+              <span className="detail-label">Email</span>
+              <strong>{user?.email || '-'}</strong>
+            </div>
+            <div className="info-tile">
+              <span className="detail-label">Role</span>
+              <strong>{user?.role || '-'}</strong>
+            </div>
+          </div>
         </div>
       </div>
     </AppLayout>

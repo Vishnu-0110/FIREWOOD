@@ -241,6 +241,17 @@ const buildWorker = (node, filename) => {
   return html2pdf().set(options).from(node);
 };
 
+const createInvoicePdfBlob = async (invoice) => {
+  const node = createInvoiceNode(invoice);
+
+  try {
+    const worker = buildWorker(node, buildInvoiceFilename(invoice));
+    return await worker.outputPdf('blob');
+  } finally {
+    node.parentElement?.remove();
+  }
+};
+
 export const downloadInvoicePdf = async (invoice) => {
   const node = createInvoiceNode(invoice);
 
@@ -263,22 +274,37 @@ export const downloadInvoiceTemplatePdf = async () => {
 };
 
 export const printInvoicePdf = async (invoice) => {
-  const node = createInvoiceNode(invoice);
+  const blob = await createInvoicePdfBlob(invoice);
+  const url = URL.createObjectURL(blob);
+  const printWindow = window.open(url, '_blank');
 
-  try {
-    const worker = buildWorker(node, buildInvoiceFilename(invoice));
-    const blob = await worker.outputPdf('blob');
-    const url = URL.createObjectURL(blob);
-    const printWindow = window.open(url, '_blank');
-
-    if (printWindow) {
-      printWindow.addEventListener('load', () => {
-        printWindow.print();
-      });
-    }
-
-    setTimeout(() => URL.revokeObjectURL(url), 120000);
-  } finally {
-    node.parentElement?.remove();
+  if (printWindow) {
+    printWindow.addEventListener('load', () => {
+      printWindow.print();
+    });
   }
+
+  setTimeout(() => URL.revokeObjectURL(url), 120000);
+};
+
+export const shareInvoicePdf = async (invoice) => {
+  if (typeof navigator === 'undefined' || typeof navigator.share !== 'function') {
+    return false;
+  }
+
+  const blob = await createInvoicePdfBlob(invoice);
+  const filename = buildInvoiceFilename(invoice);
+  const file = new File([blob], filename, { type: 'application/pdf' });
+
+  if (typeof navigator.canShare === 'function' && !navigator.canShare({ files: [file] })) {
+    return false;
+  }
+
+  await navigator.share({
+    title: `Invoice ${invoiceNo(invoice?.invoiceNumber)}`,
+    text: `Invoice for ${invoice?.customer?.factoryName || invoice?.customer?.customerName || 'factory'}`,
+    files: [file]
+  });
+
+  return true;
 };

@@ -42,8 +42,8 @@ const Sidebar = ({ collapsed = false, onNavigate }) => {
           <span className="brand-logo-fallback" aria-hidden="true">VL</span>
         </div>
         <div className="brand-text">
-          <h5 className="fw-bold text-white mb-0">Vijaya Lakshmi</h5>
-          <p className="text-light small mb-0">Billing Command Center</p>
+          <h5 className="sidebar-brand-title fw-bold mb-0">Vijaya Lakshmi</h5>
+          <p className="sidebar-brand-subtitle small mb-0">Billing Command Center</p>
         </div>
       </div>
       <div className="sidebar-section-label">Workspace</div>

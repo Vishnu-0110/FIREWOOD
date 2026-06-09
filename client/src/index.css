@@ -348,6 +348,21 @@ a {
   color: var(--muted);
 }
 
+.topbar-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.topbar-icon-btn-symbol {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.topbar-icon-btn-label {
+  line-height: 1;
+}
+
 .app-content {
   width: 100%;
 }
@@ -836,11 +851,13 @@ small,
   .topbar-actions {
     width: 100%;
     justify-content: flex-start;
+    align-items: center;
   }
 
   .topbar-user-chip {
     order: 3;
-    width: 100%;
+    width: auto;
+    max-width: 100%;
     justify-content: flex-start;
   }
 }
@@ -893,13 +910,73 @@ small,
     font-size: 14px;
   }
 
+  .app-topbar {
+    gap: 0.7rem;
+  }
+
+  .topbar-left {
+    width: 100%;
+  }
+
+  .topbar-actions {
+    width: 100%;
+    display: grid !important;
+    grid-template-columns: 44px 44px minmax(0, 1fr);
+    align-items: center;
+    gap: 0.6rem !important;
+  }
+
   .topbar-actions .btn {
-    flex: 1 1 48%;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+    padding: 0 !important;
+    border-radius: 14px;
+    flex: 0 0 44px;
+  }
+
+  .topbar-icon-btn {
+    justify-content: center;
+  }
+
+  .topbar-icon-btn-label {
+    display: none;
   }
 
   .topbar-user-chip {
-    flex-wrap: wrap;
-    border-radius: 12px;
+    width: 100%;
+    min-width: 0;
+    flex-wrap: nowrap;
+    border-radius: 14px;
+    padding: 0.35rem 0.55rem;
+    gap: 0.45rem;
+  }
+
+  .topbar-user-chip-compact .topbar-company-logo {
+    width: 24px;
+    height: 24px;
+  }
+
+  .topbar-user-chip-compact .topbar-user-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.78rem;
+  }
+
+  .topbar-user-chip-compact .topbar-user-meta {
+    min-width: 0;
+  }
+
+  .topbar-user-chip-compact .topbar-user-meta strong {
+    font-size: 0.78rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .topbar-user-chip-compact .topbar-user-meta small {
+    font-size: 0.58rem;
   }
 
   .brand-logo {
@@ -1286,7 +1363,6 @@ small,
   .page-actions-row .btn,
   .form-action-row .btn,
   .topbar-actions .btn {
-    flex: 1 1 100%;
     width: 100%;
   }
 
@@ -1705,5 +1781,18 @@ textarea:focus-visible,
 
   .table-mobile-stack td + td {
     border-top-color: rgba(255, 255, 255, 0.06) !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .topbar-actions .topbar-icon-btn {
+    width: 44px !important;
+    min-width: 44px !important;
+    max-width: 44px !important;
+    flex: 0 0 44px !important;
+  }
+
+  .topbar-actions .topbar-user-chip {
+    width: 100% !important;
   }
 }

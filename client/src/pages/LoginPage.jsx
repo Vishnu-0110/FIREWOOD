@@ -105,63 +105,19 @@ const LoginPage = () => {
       onPointerMove={updatePointer}
       onPointerLeave={resetPointer}
     >
+      <div className="login-backdrop" aria-hidden="true">
+        <span className="login-backdrop-orbit login-backdrop-orbit-a" />
+        <span className="login-backdrop-orbit login-backdrop-orbit-b" />
+        <span className="login-backdrop-orbit login-backdrop-orbit-c" />
+        <span className="login-backdrop-grid" />
+        <span className="login-backdrop-trace login-backdrop-trace-a" />
+        <span className="login-backdrop-trace login-backdrop-trace-b" />
+        <span className="login-backdrop-node login-backdrop-node-a" />
+        <span className="login-backdrop-node login-backdrop-node-b" />
+        <span className="login-backdrop-node login-backdrop-node-c" />
+      </div>
+
       <div className="login-shell">
-        <section className="login-showcase" aria-hidden="true">
-          <div className="login-showcase-badge">Live operations</div>
-          <h1>Billing, dispatch, and factory flow in one motion.</h1>
-          <p>
-            Watch the workflow pulse as trucks arrive, invoices clear, and settlements move through the queue.
-          </p>
-
-          <div className="login-flow-map">
-            <div className="login-flow-line" />
-            <div className="login-flow-step">
-              <span className="login-flow-step-index">01</span>
-              <strong>Inbound loads</strong>
-              <small>Truck lane active</small>
-            </div>
-            <div className="login-flow-step">
-              <span className="login-flow-step-index">02</span>
-              <strong>Billing pass</strong>
-              <small>Rates and totals updating</small>
-            </div>
-            <div className="login-flow-step">
-              <span className="login-flow-step-index">03</span>
-              <strong>Dispatch out</strong>
-              <small>Ledger and delivery synced</small>
-            </div>
-          </div>
-
-          <div className="login-hud-grid">
-            <article className="login-hud-card login-hud-card-wide">
-              <span className="login-hud-label">Today</span>
-              <strong>08 invoices cleared</strong>
-              <div className="login-hud-track">
-                <span />
-              </div>
-            </article>
-            <article className="login-hud-card">
-              <span className="login-hud-label">Revenue</span>
-              <strong>Live</strong>
-              <div className="login-hud-pulse" />
-            </article>
-            <article className="login-hud-card">
-              <span className="login-hud-label">Dispatch</span>
-              <strong>On time</strong>
-              <div className="login-hud-pulse login-hud-pulse-alt" />
-            </article>
-          </div>
-
-          <div className="login-orbit">
-            <span className="login-orbit-core" />
-            <span className="login-orbit-ring login-orbit-ring-a" />
-            <span className="login-orbit-ring login-orbit-ring-b" />
-            <span className="login-orbit-node login-orbit-node-a" />
-            <span className="login-orbit-node login-orbit-node-b" />
-            <span className="login-orbit-node login-orbit-node-c" />
-          </div>
-        </section>
-
         <div className="card shadow-sm p-4 login-card">
           <div className="login-card-header text-center mb-4">
             <p className="login-overline mb-1">Secure Access</p>

@@ -633,331 +633,175 @@ textarea::placeholder {
 }
 
 .login-shell {
-  width: min(1180px, 100%);
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr);
-  gap: 1.25rem;
-  align-items: stretch;
-  perspective: 1400px;
+  width: min(540px, 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
   --pointer-x: 50%;
   --pointer-y: 42%;
   --tilt-x: 0deg;
   --tilt-y: 0deg;
 }
 
-.login-showcase {
+.login-backdrop {
   position: relative;
   overflow: hidden;
-  min-height: 640px;
-  padding: 1.5rem;
-  border-radius: 34px;
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  background:
-    radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(99, 102, 241, 0.2), transparent 24%),
-    radial-gradient(circle at 84% 18%, rgba(15, 118, 110, 0.16), transparent 22%),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(243, 247, 255, 0.86));
-  box-shadow: var(--shadow-hard);
-  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
-  transform-style: preserve-3d;
-  transition: transform 180ms ease, background 220ms ease;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
 }
 
-.login-showcase::before {
+.login-backdrop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(99, 102, 241, 0.18), transparent 18%),
+    radial-gradient(circle at 78% 22%, rgba(15, 118, 110, 0.16), transparent 22%),
+    radial-gradient(circle at 20% 82%, rgba(245, 158, 11, 0.14), transparent 18%);
+  filter: blur(8px);
+  opacity: 0.95;
+}
+
+.login-backdrop::after {
   content: '';
   position: absolute;
   inset: 0;
   background-image:
     linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
     linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
-  background-size: 100% 58px, 58px 100%;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 92%);
+  background-size: 100% 42px, 42px 100%;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.75), transparent 94%);
   pointer-events: none;
 }
 
-.login-showcase::after {
-  content: '';
-  position: absolute;
-  inset: 1rem;
-  border-radius: 28px;
-  background:
-    radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(255, 255, 255, 0.62), transparent 20%),
-    radial-gradient(circle at 50% 18%, rgba(99, 102, 241, 0.1), transparent 32%);
-  mix-blend-mode: screen;
-  opacity: 0.72;
-  pointer-events: none;
-}
-
-.login-showcase > * {
+.login-backdrop > * {
   position: relative;
   z-index: 1;
 }
 
-.login-showcase-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.32rem 0.72rem;
+.login-backdrop-orbit {
+  position: absolute;
   border-radius: 999px;
-  border: 1px solid rgba(99, 102, 241, 0.16);
-  background: rgba(255, 255, 255, 0.78);
-  color: #1e3a8a;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  animation: login-orbit 18s linear infinite;
 }
 
-.login-showcase h1 {
-  margin: 1rem 0 0.75rem;
-  max-width: 12ch;
-  color: #0f172a;
-  font-size: clamp(2rem, 1.2rem + 2vw, 3.7rem);
-  line-height: 0.96;
-  letter-spacing: -0.05em;
+.login-backdrop-orbit-a {
+  inset: 10% auto auto 6%;
+  width: 10rem;
+  height: 10rem;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.14), transparent 72%);
 }
 
-.login-showcase p {
-  max-width: 56ch;
-  margin-bottom: 1.2rem;
-  color: #475569;
-  font-size: 0.98rem;
-  line-height: 1.65;
-}
-
-.login-flow-map {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.9rem;
-  margin-bottom: 1rem;
-  padding: 1.1rem;
-  border-radius: 26px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-}
-
-.login-flow-line {
-  position: absolute;
-  left: 1.4rem;
-  right: 1.4rem;
-  top: 50%;
-  height: 2px;
-  transform: translateY(-50%);
-  background: linear-gradient(90deg, rgba(99, 102, 241, 0.12), rgba(99, 102, 241, 0.42), rgba(15, 118, 110, 0.22));
-  opacity: 0.8;
-}
-
-.login-flow-line::after {
-  content: '';
-  position: absolute;
-  inset: -6px 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(99, 102, 241, 0.36) 50%, transparent 100%);
-  animation: login-trace 2.8s linear infinite;
-}
-
-.login-flow-step {
-  position: relative;
-  padding: 0.95rem;
-  border-radius: 20px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background: rgba(255, 255, 255, 0.88);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  transform: translateY(0);
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
-  animation: login-float 5.8s ease-in-out infinite;
-}
-
-.login-flow-step:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.login-flow-step:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-.login-flow-step:hover {
-  transform: translateY(-4px) scale(1.02);
-  border-color: rgba(99, 102, 241, 0.26);
-  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
-}
-
-.login-flow-step-index {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  margin-bottom: 0.7rem;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #6366f1 0%, #4f8dff 58%, #0f766e 100%);
-  color: #fff;
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-}
-
-.login-flow-step strong {
-  display: block;
-  color: #0f172a;
-  font-size: 1rem;
-  font-weight: 800;
-}
-
-.login-flow-step small {
-  display: block;
-  margin-top: 0.35rem;
-  color: #64748b;
-  font-size: 0.8rem;
-}
-
-.login-hud-grid {
-  display: grid;
-  grid-template-columns: 1.3fr 0.85fr 0.85fr;
-  gap: 0.85rem;
-}
-
-.login-hud-card {
-  position: relative;
-  overflow: hidden;
-  padding: 1rem 1rem 0.95rem;
-  min-height: 122px;
-  border-radius: 22px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  background:
-    radial-gradient(circle at 100% 0%, rgba(99, 102, 241, 0.15), transparent 40%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(246, 248, 252, 0.92));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
-}
-
-.login-hud-card::after {
-  content: '';
-  position: absolute;
-  inset: auto -18px -18px auto;
-  width: 74px;
-  height: 74px;
-  border-radius: 999px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.24), transparent 68%);
-  animation: login-pulse 3.4s ease-in-out infinite;
-}
-
-.login-hud-card-wide {
-  min-height: 122px;
-}
-
-.login-hud-label {
-  display: inline-flex;
-  margin-bottom: 0.3rem;
-  color: #64748b;
-  font-size: 0.66rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.login-hud-card strong {
-  display: block;
-  color: #0f172a;
-  font-size: 1.02rem;
-  line-height: 1.25;
-}
-
-.login-hud-track {
-  position: relative;
-  height: 8px;
-  margin-top: 1rem;
-  border-radius: 999px;
-  overflow: hidden;
-  background: rgba(148, 163, 184, 0.16);
-}
-
-.login-hud-track span {
-  position: absolute;
-  inset: 0;
-  width: 62%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, #6366f1 0%, #4f8dff 50%, #0f766e 100%);
-  animation: login-trace 2.9s ease-in-out infinite;
-}
-
-.login-hud-pulse {
-  width: 18px;
-  height: 18px;
-  margin-top: 0.9rem;
-  border-radius: 999px;
-  background: #4f8dff;
-  box-shadow: 0 0 0 0 rgba(79, 141, 255, 0.45);
-  animation: login-pulse 2.2s ease-in-out infinite;
-}
-
-.login-hud-pulse-alt {
-  background: #0f766e;
-  box-shadow: 0 0 0 0 rgba(15, 118, 110, 0.45);
-  animation-delay: 0.35s;
-}
-
-.login-orbit {
-  position: absolute;
-  right: -10px;
-  bottom: -10px;
-  width: min(42vw, 430px);
-  aspect-ratio: 1;
-  pointer-events: none;
-  transform: translate3d(calc((var(--pointer-x) - 50%) * 0.1), calc((var(--pointer-y) - 50%) * 0.1), 0);
-}
-
-.login-orbit-core {
-  position: absolute;
-  inset: 34%;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2) 38%, transparent 60%),
-    linear-gradient(145deg, rgba(99, 102, 241, 0.95), rgba(79, 141, 255, 0.72));
-  box-shadow: 0 0 0 22px rgba(99, 102, 241, 0.08), 0 0 0 46px rgba(15, 118, 110, 0.05);
-  animation: login-breathe 4.8s ease-in-out infinite;
-}
-
-.login-orbit-ring {
-  position: absolute;
-  inset: 10%;
-  border-radius: 50%;
-  border: 1px dashed rgba(99, 102, 241, 0.24);
-  animation: login-spin 24s linear infinite;
-}
-
-.login-orbit-ring-b {
-  inset: 18%;
-  animation-duration: 18s;
+.login-backdrop-orbit-b {
+  inset: auto 8% 12% auto;
+  width: 14rem;
+  height: 14rem;
+  background: radial-gradient(circle, rgba(15, 118, 110, 0.12), transparent 72%);
   animation-direction: reverse;
 }
 
-.login-orbit-node {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #f59e0b, #fb7185);
-  box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.1), 0 12px 30px rgba(15, 23, 42, 0.1);
+.login-backdrop-orbit-c {
+  inset: 14% 32% auto auto;
+  width: 6rem;
+  height: 6rem;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.18), transparent 72%);
+  animation-duration: 13s;
 }
 
-.login-orbit-node-a {
-  top: 11%;
-  left: 46%;
+.login-backdrop-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+  opacity: 0.35;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.68), transparent 92%);
+}
+
+.login-backdrop-trace {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(99, 102, 241, 0.45) 50%, transparent 100%);
+  opacity: 0.5;
+  animation: login-trace 3.4s linear infinite;
+}
+
+.login-backdrop-trace-a {
+  top: 24%;
+}
+
+.login-backdrop-trace-b {
+  top: 68%;
+  animation-delay: 0.45s;
+}
+
+.login-backdrop-node {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f59e0b, #fb7185);
+  box-shadow: 0 0 0 10px rgba(245, 158, 11, 0.08);
   animation: login-node 4.2s ease-in-out infinite;
 }
 
-.login-orbit-node-b {
-  top: 46%;
-  right: 8%;
-  background: linear-gradient(135deg, #4f8dff, #818cf8);
-  animation: login-node 5.3s ease-in-out infinite reverse;
+.login-backdrop-node-a {
+  top: 22%;
+  left: 18%;
 }
 
-.login-orbit-node-c {
-  bottom: 14%;
-  left: 24%;
+.login-backdrop-node-b {
+  top: 56%;
+  right: 16%;
+  background: linear-gradient(135deg, #4f8dff, #818cf8);
+  animation-delay: 0.35s;
+}
+
+.login-backdrop-node-c {
+  bottom: 18%;
+  left: 30%;
   background: linear-gradient(135deg, #0f766e, #14b8a6);
-  animation: login-node 4.8s ease-in-out infinite;
+  animation-delay: 0.55s;
+}
+
+.login-card {
+  width: min(460px, 100%);
+  margin: 0 auto;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 28px;
+  box-shadow: var(--shadow-hard);
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(20px);
+  position: relative;
+  z-index: 2;
+}
+
+/* legacy login showcase classes retained for compatibility */
+.login-showcase,
+.login-showcase-badge,
+.login-flow-map,
+.login-flow-line,
+.login-flow-step,
+.login-flow-step-index,
+.login-hud-grid,
+.login-hud-card,
+.login-hud-label,
+.login-hud-track,
+.login-hud-pulse,
+.login-orbit,
+.login-orbit-core,
+.login-orbit-ring,
+.login-orbit-node {
+  display: none;
 }
 
 .login-ops-strip {

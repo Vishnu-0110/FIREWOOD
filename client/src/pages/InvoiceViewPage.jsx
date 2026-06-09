@@ -16,7 +16,7 @@ const InvoiceViewPage = () => {
   useEffect(() => {
     api.get(`/invoices/${id}`).then((res) => setInvoice(res.data)).catch((error) => {
       if (isSilentAuthError(error)) return;
-      toast.error('Failed to load invoice');
+      toast.error('Could not load invoice');
     });
   }, [id]);
 
@@ -35,11 +35,11 @@ const InvoiceViewPage = () => {
     try {
       const shared = await shareInvoicePdf(invoice);
       if (!shared) {
-        toast.info('Share is not supported on this device. Download the PDF and share it manually.');
+        toast.info('Sharing not available here.');
       }
     } catch (error) {
       if (error?.name !== 'AbortError') {
-        toast.error('Unable to share the invoice right now.');
+        toast.error('Could not share invoice.');
       }
     } finally {
       setSharing(false);

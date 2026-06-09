@@ -23,7 +23,7 @@ const CustomerFormPage = () => {
         }
       }).catch((error) => {
         if (isSilentAuthError(error)) return;
-        toast.error('Failed to load factory details');
+        toast.error('Could not load factory');
       });
     }
   }, [id, isEdit, setValue]);
@@ -33,10 +33,10 @@ const CustomerFormPage = () => {
     try {
       if (isEdit) {
         await api.put(`/customers/${id}`, payload);
-        toast.success('Factory updated');
+        toast.success('Updated');
       } else {
         await api.post('/customers', payload);
-        toast.success('Factory added');
+        toast.success('Saved');
       }
       navigate('/customers');
     } catch (error) {
@@ -44,7 +44,7 @@ const CustomerFormPage = () => {
       const apiError =
         error?.response?.data?.errors?.[0]?.message ||
         error?.response?.data?.message ||
-        'Failed to save factory';
+        'Save failed';
       toast.error(apiError);
     }
   };
@@ -66,7 +66,7 @@ const CustomerFormPage = () => {
             <div className="col-12 col-lg-8">
               <label className="form-label">Factory Name</label>
               <input className="form-control" {...register('factoryName', { required: 'Factory name is required' })} />
-              {errors.factoryName && <small className="text-danger">{errors.factoryName.message}</small>}
+              {errors.factoryName && <small className="field-error">{errors.factoryName.message}</small>}
             </div>
             <div className="col-12 col-lg-4">
               <label className="form-label">GST Number</label>

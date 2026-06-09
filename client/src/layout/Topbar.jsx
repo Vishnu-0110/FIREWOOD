@@ -16,7 +16,7 @@ const Topbar = ({ collapsed, onToggleSidebar }) => {
       // Proceed with local logout even if request fails.
     } finally {
       dispatch(clearCredentials());
-      toast.info('Logged out');
+      toast.success('Signed out');
       navigate('/login');
     }
   };

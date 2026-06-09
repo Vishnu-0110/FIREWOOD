@@ -16,7 +16,7 @@ const CustomerListPage = () => {
       setState(response.data);
     } catch (error) {
       if (isSilentAuthError(error)) return;
-      toast.error(error?.response?.data?.message || 'Failed to load factories');
+      toast.error(error?.response?.data?.message || 'Could not load factories');
     }
   };
 
@@ -27,7 +27,7 @@ const CustomerListPage = () => {
         setState(response.data);
       } catch (error) {
         if (isSilentAuthError(error)) return;
-        toast.error(error?.response?.data?.message || 'Failed to load factories');
+        toast.error(error?.response?.data?.message || 'Could not load factories');
       }
     };
 
@@ -38,11 +38,11 @@ const CustomerListPage = () => {
     if (!window.confirm('Delete this factory?')) return;
     try {
       await api.delete(`/customers/${id}`);
-      toast.success('Factory deleted');
+      toast.success('Deleted');
       load(state.page, q);
     } catch (error) {
       if (isSilentAuthError(error)) return;
-      toast.error(error?.response?.data?.message || 'Failed to delete factory');
+      toast.error(error?.response?.data?.message || 'Delete failed');
     }
   };
 

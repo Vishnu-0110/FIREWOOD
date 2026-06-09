@@ -46,29 +46,29 @@ const InvoiceFormPage = () => {
         setValue('ratePerTon', inv.ratePerTon);
       }).catch((error) => {
         if (isSilentAuthError(error)) return;
-        toast.error('Failed to load invoice');
+        toast.error('Could not load invoice');
       });
     }
   }, [id, isEdit, setValue]);
 
   const onSubmit = async (data) => {
     if (Number(data.grossWeight) <= Number(data.tareWeight)) {
-      toast.error('Gross weight must be greater than tare weight');
+      toast.error('Gross must be greater than tare');
       return;
     }
 
     try {
       if (isEdit) {
         await api.put(`/invoices/${id}`, data);
-        toast.success('Invoice updated');
+        toast.success('Updated');
       } else {
         await api.post('/invoices', data);
-        toast.success('Invoice created');
+        toast.success('Saved');
       }
       navigate('/invoices');
     } catch (error) {
       if (isSilentAuthError(error)) return;
-      toast.error(error?.response?.data?.message || 'Failed to save invoice');
+      toast.error(error?.response?.data?.message || 'Save failed');
     }
   };
 
@@ -105,7 +105,8 @@ const InvoiceFormPage = () => {
             </div>
             <div className="col-6 col-lg-4">
               <label className="form-label">Date</label>
-              <input type="date" className="form-control" {...register('date', { required: true })} />
+              <input type="date" className="form-control" {...register('date', { required: 'Date is required' })} />
+              {errors.date && <small className="field-error">{errors.date.message}</small>}
             </div>
             <div className="col-6 col-lg-4">
               <label className="form-label">Factory</label>
@@ -115,24 +116,51 @@ const InvoiceFormPage = () => {
                   <option key={item._id} value={item._id}>{item.factoryName || item.customerName}</option>
                 ))}
               </select>
-              {errors.customer && <small className="text-danger">{errors.customer.message}</small>}
+              {errors.customer && <small className="field-error">{errors.customer.message}</small>}
             </div>
             <div className="col-12 col-lg-4">
               <label className="form-label">Vehicle Number</label>
               <input className="form-control" {...register('vehicleNumber', { required: 'Vehicle number is required' })} />
-              {errors.vehicleNumber && <small className="text-danger">{errors.vehicleNumber.message}</small>}
+              {errors.vehicleNumber && <small className="field-error">{errors.vehicleNumber.message}</small>}
             </div>
             <div className="col-6 col-lg-4">
               <label className="form-label">Gross Weight</label>
-              <input type="number" step="0.001" className="form-control" {...register('grossWeight', { required: true, min: 0.001 })} />
+              <input
+                type="number"
+                step="0.001"
+                className="form-control"
+                {...register('grossWeight', {
+                  required: 'Gross weight is required',
+                  min: { value: 0.001, message: 'Enter a valid gross weight' }
+                })}
+              />
+              {errors.grossWeight && <small className="field-error">{errors.grossWeight.message}</small>}
             </div>
             <div className="col-6 col-lg-4">
               <label className="form-label">Tare Weight</label>
-              <input type="number" step="0.001" className="form-control" {...register('tareWeight', { required: true, min: 0 })} />
+              <input
+                type="number"
+                step="0.001"
+                className="form-control"
+                {...register('tareWeight', {
+                  required: 'Tare weight is required',
+                  min: { value: 0, message: 'Enter a valid tare weight' }
+                })}
+              />
+              {errors.tareWeight && <small className="field-error">{errors.tareWeight.message}</small>}
             </div>
             <div className="col-12 col-lg-4">
               <label className="form-label">Rate / Ton</label>
-              <input type="number" step="0.01" className="form-control" {...register('ratePerTon', { required: true, min: 0.01 })} />
+              <input
+                type="number"
+                step="0.01"
+                className="form-control"
+                {...register('ratePerTon', {
+                  required: 'Rate is required',
+                  min: { value: 0.01, message: 'Enter a valid rate' }
+                })}
+              />
+              {errors.ratePerTon && <small className="field-error">{errors.ratePerTon.message}</small>}
               <small className="text-muted">Example: 4500 will be applied as 4.5 x Net Weight.</small>
             </div>
             <div className="col-12 col-lg-8">

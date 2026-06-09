@@ -74,7 +74,7 @@ const LoginPage = () => {
           throw error;
         }
 
-        toast.info('Server is waking up. Retrying login...');
+        toast.info('Trying again...');
         await wait(LOGIN_RETRY_DELAY_MS);
         response = await api.post('/auth/login', data, { timeout: LOGIN_TIMEOUT_MS });
       }
@@ -83,18 +83,18 @@ const LoginPage = () => {
         throw new Error('Invalid login response from server');
       }
       dispatch(setCredentials(response.data));
-      toast.success('Login successful');
+      toast.success('Signed in');
       navigate('/');
     } catch (error) {
       if (!error?.response) {
         if (error?.code === 'ECONNABORTED') {
-          toast.error('Server is still waking up. Please wait a moment and try again.');
+          toast.error('Server busy. Try again.');
         } else {
-          toast.error('Server unreachable. Check backend status and VITE_API_URL deployment value.');
+          toast.error('Server unreachable.');
         }
         return;
       }
-      toast.error(error.response.data?.message || 'Login failed');
+      toast.error(error.response.data?.message || 'Sign-in failed');
     }
   };
 
@@ -128,7 +128,7 @@ const LoginPage = () => {
             <div className="mb-3">
               <label className="form-label">Email</label>
               <input className="form-control" {...register('email', { required: 'Email is required' })} />
-              {errors.email && <small className="text-danger">{errors.email.message}</small>}
+              {errors.email && <small className="field-error">{errors.email.message}</small>}
             </div>
             <div className="mb-3">
               <label className="form-label">Password</label>
@@ -148,7 +148,7 @@ const LoginPage = () => {
                   {showPassword ? 'Hide' : 'Show'}
                 </button>
               </div>
-              {errors.password && <small className="text-danger">{errors.password.message}</small>}
+              {errors.password && <small className="field-error">{errors.password.message}</small>}
             </div>
             <button disabled={isSubmitting} className="btn btn-warning w-100" type="submit">
               {isSubmitting ? 'Signing in...' : 'Login'}

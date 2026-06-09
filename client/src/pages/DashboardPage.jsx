@@ -53,7 +53,7 @@ const DashboardPage = () => {
         setData(response.data);
       } catch (error) {
         if (isSilentAuthError(error)) return;
-        toast.error(error?.response?.data?.message || 'Failed to load dashboard');
+        toast.error(error?.response?.data?.message || 'Could not load dashboard');
       } finally {
         setLoading(false);
       }

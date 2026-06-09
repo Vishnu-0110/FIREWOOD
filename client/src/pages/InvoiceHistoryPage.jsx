@@ -17,7 +17,7 @@ const InvoiceHistoryPage = () => {
       setData(response.data);
     } catch (error) {
       if (isSilentAuthError(error)) return;
-      toast.error(error?.response?.data?.message || 'Failed to load invoices');
+      toast.error(error?.response?.data?.message || 'Could not load invoices');
     }
   };
 
@@ -32,7 +32,7 @@ const InvoiceHistoryPage = () => {
         setData(invoicesRes.data);
       } catch (error) {
         if (isSilentAuthError(error)) return;
-        toast.error(error?.response?.data?.message || 'Failed to load invoices');
+        toast.error(error?.response?.data?.message || 'Could not load invoices');
       }
     };
 
@@ -49,11 +49,11 @@ const InvoiceHistoryPage = () => {
     if (!window.confirm('Delete this invoice?')) return;
     try {
       await api.delete(`/invoices/${id}`);
-      toast.success('Invoice deleted');
+      toast.success('Deleted');
       load(filters);
     } catch (error) {
       if (isSilentAuthError(error)) return;
-      toast.error(error?.response?.data?.message || 'Failed to delete invoice');
+      toast.error(error?.response?.data?.message || 'Delete failed');
     }
   };
 
@@ -86,7 +86,7 @@ const InvoiceHistoryPage = () => {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       if (isSilentAuthError(error)) return;
-      toast.error(error?.response?.data?.message || 'Failed to export from server');
+      toast.error(error?.response?.data?.message || 'Export failed');
     }
   };
 

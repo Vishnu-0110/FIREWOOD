@@ -49,11 +49,16 @@ const AppLayout = ({ children }) => {
   useEffect(() => {
     if (typeof document === 'undefined') return undefined;
 
-    document.body.classList.remove('auth-screen', 'app-theme-light', 'app-theme-dark');
-    document.body.classList.add(isDark ? 'app-theme-dark' : 'app-theme-light');
+    const { body } = document;
+    const previousOverflow = body.style.overflow;
+
+    body.classList.remove('auth-screen', 'app-theme-light', 'app-theme-dark');
+    body.classList.add(isDark ? 'app-theme-dark' : 'app-theme-light');
+    body.style.overflow = 'hidden';
 
     return () => {
-      document.body.classList.remove('app-theme-light', 'app-theme-dark');
+      body.classList.remove('app-theme-light', 'app-theme-dark');
+      body.style.overflow = previousOverflow;
     };
   }, [isDark]);
 
@@ -66,7 +71,7 @@ const AppLayout = ({ children }) => {
   };
 
   return (
-    <div className={isDark ? 'theme-dark' : 'theme-light'}>
+    <div className={isDark ? 'theme-dark app-layout' : 'theme-light app-layout'}>
       <div className="app-shell">
         <Sidebar collapsed={collapsed} onNavigate={handleCloseMobileSidebar} />
         {isMobileView ? (

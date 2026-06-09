@@ -80,6 +80,23 @@ const LoginPage = () => {
           <h4 className="mb-1">Vijaya Lakshmi Billing</h4>
           <small className="text-muted">Sign in to continue to your workspace</small>
         </div>
+        <div className="login-ops-strip mb-4" aria-hidden="true">
+          <div className="login-ops-card">
+            <span className="login-ops-label">Factory queue</span>
+            <strong>08 Ready</strong>
+            <span className="login-ops-bar"><span /></span>
+          </div>
+          <div className="login-ops-card">
+            <span className="login-ops-label">Billing sync</span>
+            <strong>Live Updates</strong>
+            <span className="login-ops-bar"><span /></span>
+          </div>
+          <div className="login-ops-card">
+            <span className="login-ops-label">Dispatch flow</span>
+            <strong>On Track</strong>
+            <span className="login-ops-bar"><span /></span>
+          </div>
+        </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-3">
             <label className="form-label">Email</label>

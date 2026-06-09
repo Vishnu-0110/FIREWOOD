@@ -20,7 +20,27 @@ import api from '../api/axiosClient';
 import { formatCurrency, formatDate } from '../utils/format';
 import { isSilentAuthError } from '../utils/apiErrors';
 
-const COLORS = ['#e67e22', '#8b5e3c', '#f39c12', '#d35400', '#f1c27d'];
+const COLORS = ['#6366F1', '#818CF8', '#4F46E5', '#A5B4FC', '#C7D2FE'];
+const GRID_COLOR = 'rgba(148, 163, 184, 0.16)';
+const AXIS_COLOR = '#94A3B8';
+const TOOLTIP_STYLE = {
+  background: 'rgba(17, 24, 39, 0.96)',
+  border: '1px solid rgba(255,255,255,0.08)',
+  borderRadius: '16px',
+  boxShadow: '0 20px 45px rgba(2, 6, 23, 0.32)',
+  color: '#F8FAFC'
+};
+
+const truncateLabel = (value = '', max = 10) => {
+  const label = String(value);
+  return label.length > max ? `${label.slice(0, max)}...` : label;
+};
+
+const compactCurrency = (value = 0) =>
+  new Intl.NumberFormat('en-IN', {
+    notation: 'compact',
+    maximumFractionDigits: 1
+  }).format(Number(value) || 0);
 
 const DashboardPage = () => {
   const [data, setData] = useState(null);
@@ -64,6 +84,7 @@ const DashboardPage = () => {
     ...item,
     fill: COLORS[index % COLORS.length]
   }));
+  const factoryRevenueData = data.charts.customerRevenue.slice(0, 8);
 
   return (
     <AppLayout>
@@ -92,14 +113,41 @@ const DashboardPage = () => {
         <div className="col-12 col-xl-6">
           <div className="card shadow-sm h-100">
             <div className="card-header">Monthly Revenue</div>
-            <div className="card-body" style={{ height: 280 }}>
+            <div className="card-body dashboard-chart-card" style={{ height: 320 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={data.charts.monthlyRevenue}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="label" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line dataKey="revenue" stroke="#e67e22" strokeWidth={2} />
+                <LineChart
+                  data={data.charts.monthlyRevenue}
+                  margin={{ top: 8, right: 18, left: 50, bottom: 8 }}
+                >
+                  <CartesianGrid stroke={GRID_COLOR} strokeDasharray="3 3" vertical={false} />
+                  <XAxis
+                    dataKey="label"
+                    tick={{ fill: AXIS_COLOR, fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={{ stroke: GRID_COLOR }}
+                  />
+                  <YAxis
+                    width={86}
+                    tickFormatter={compactCurrency}
+                    tick={{ fill: AXIS_COLOR, fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <Tooltip
+                    contentStyle={TOOLTIP_STYLE}
+                    cursor={{ stroke: 'rgba(99, 102, 241, 0.28)', strokeWidth: 1 }}
+                    formatter={(value) => [formatCurrency(value), 'Revenue']}
+                    labelStyle={{ color: '#F8FAFC', fontWeight: 700 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="revenue"
+                    stroke="#6366F1"
+                    strokeWidth={3}
+                    dot={false}
+                    activeDot={{ r: 5, strokeWidth: 0, fill: '#818CF8' }}
+                    animationDuration={900}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -108,16 +156,59 @@ const DashboardPage = () => {
         <div className="col-12 col-xl-6">
           <div className="card shadow-sm h-100">
             <div className="card-header">Factory Revenue</div>
-            <div className="card-body" style={{ height: 280 }}>
+            <div className="card-body dashboard-chart-card" style={{ height: 320 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data.charts.customerRevenue.slice(0, 8)}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="revenue" fill="#8b5e3c" />
+                <BarChart
+                  data={factoryRevenueData}
+                  margin={{ top: 8, right: 18, left: 18, bottom: 72 }}
+                  barCategoryGap="24%"
+                >
+                  <CartesianGrid stroke={GRID_COLOR} strokeDasharray="3 3" vertical={false} />
+                  <XAxis
+                    dataKey="name"
+                    interval={0}
+                    angle={-35}
+                    textAnchor="end"
+                    height={76}
+                    tick={{ fill: AXIS_COLOR, fontSize: 12 }}
+                    tickFormatter={(value) => truncateLabel(value, 12)}
+                    tickLine={false}
+                    axisLine={{ stroke: GRID_COLOR }}
+                  />
+                  <YAxis
+                    width={72}
+                    tickFormatter={compactCurrency}
+                    tick={{ fill: AXIS_COLOR, fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <Tooltip
+                    contentStyle={TOOLTIP_STYLE}
+                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
+                    formatter={(value) => [formatCurrency(value), 'Revenue']}
+                    labelFormatter={(value) => String(value)}
+                    labelStyle={{ color: '#F8FAFC', fontWeight: 700 }}
+                  />
+                  <Bar
+                    dataKey="revenue"
+                    fill="#6366F1"
+                    radius={[10, 10, 4, 4]}
+                    maxBarSize={40}
+                    animationDuration={850}
+                    activeBar={{ fill: '#818CF8' }}
+                  />
                 </BarChart>
               </ResponsiveContainer>
+            </div>
+            <div className="px-3 pb-3">
+              <div className="custom-chart-legend">
+                {factoryRevenueData.map((item) => (
+                  <div key={item.name} className="custom-chart-legend-item" title={item.name}>
+                    <span className="custom-chart-legend-color" style={{ backgroundColor: '#6366F1' }} />
+                    <span className="custom-chart-legend-text">{truncateLabel(item.name, 22)}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -138,12 +229,17 @@ const DashboardPage = () => {
                       outerRadius={88}
                       innerRadius={20}
                       label={false}
+                      animationDuration={850}
                     >
                     {pieData.map((entry, index) => (
                       <Cell key={entry.name} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip
+                    contentStyle={TOOLTIP_STYLE}
+                    formatter={(value) => [formatCurrency(value), 'Revenue']}
+                    labelStyle={{ color: '#F8FAFC', fontWeight: 700 }}
+                  />
                 </PieChart>
                 </ResponsiveContainer>
               </div>

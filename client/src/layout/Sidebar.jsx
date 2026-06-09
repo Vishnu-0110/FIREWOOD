@@ -54,6 +54,7 @@ const Sidebar = ({ collapsed = false, onNavigate }) => {
             to={item.to}
             className={`sidebar-link ${activeKey === item.key ? 'active' : ''}`}
             title={collapsed ? item.label : ''}
+            aria-current={activeKey === item.key ? 'page' : undefined}
             onClick={onNavigate}
           >
             <span className="sidebar-link-icon" aria-hidden="true">{item.icon}</span>

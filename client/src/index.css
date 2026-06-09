@@ -265,6 +265,17 @@ a {
   min-width: 0;
 }
 
+.topbar-brand {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.topbar-brand-logo {
+  width: 36px;
+  height: 36px;
+}
+
 .topbar-title h6 {
   margin: 0;
   font-size: 1.06rem;
@@ -2256,11 +2267,11 @@ body.app-theme-dark .app-shell {
     padding-inline: 0.7rem;
   }
 
-  body.app-theme-light .topbar-user-chip,
-  body.app-theme-dark .topbar-user-chip {
-    padding: 0.28rem 0.55rem;
-    gap: 0.5rem;
-  }
+body.app-theme-light .topbar-user-chip,
+body.app-theme-dark .topbar-user-chip {
+  padding: 0.28rem 0.55rem;
+  gap: 0.5rem;
+}
 
   body.app-theme-light .topbar-company-logo,
   body.app-theme-dark .topbar-company-logo,

@@ -8,7 +8,6 @@ const Topbar = ({ collapsed, onToggleSidebar }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
-  const userInitial = String(user?.name || 'U').trim().charAt(0).toUpperCase();
 
   const handleLogout = async () => {
     try {
@@ -34,10 +33,16 @@ const Topbar = ({ collapsed, onToggleSidebar }) => {
         >
           {collapsed ? '☰' : '✕'}
         </button>
-        <div className="topbar-title">
-          <span className="topbar-kicker">Billing Workspace</span>
-          <h6 className="mb-0">Vijaya Lakshmi Firewood Supplier</h6>
-          <small className="text-muted">Operations, Billing and Dispatch</small>
+        <div className="topbar-brand" title="Vijaya Lakshmi Firewood Supplier">
+          <img
+            className="topbar-company-logo topbar-brand-logo"
+            src="/invoice-logo.png"
+            alt="Vijaya Lakshmi logo"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+          <span className="visually-hidden">Vijaya Lakshmi Firewood Supplier</span>
         </div>
       </div>
       <div className="d-flex align-items-center gap-2 topbar-actions">
@@ -47,7 +52,7 @@ const Topbar = ({ collapsed, onToggleSidebar }) => {
           onClick={() => dispatch(toggleTheme())}
           aria-label={user?.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           title={user?.theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-        >
+          >
           <span className="topbar-icon-btn-symbol" aria-hidden="true">{user?.theme === 'dark' ? '☀' : '☾'}</span>
           <span className="topbar-icon-btn-label">{user?.theme === 'dark' ? 'Light' : 'Dark'}</span>
         </button>
@@ -61,21 +66,6 @@ const Topbar = ({ collapsed, onToggleSidebar }) => {
           <span className="topbar-icon-btn-symbol" aria-hidden="true">⎋</span>
           <span className="topbar-icon-btn-label">Logout</span>
         </button>
-        <div className="topbar-user-chip topbar-user-chip-compact" title={user?.email || ''}>
-          <img
-            className="topbar-company-logo"
-            src="/invoice-logo.png"
-            alt="Vijaya Lakshmi logo"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
-          />
-          <span className="topbar-user-avatar" aria-hidden="true">{userInitial}</span>
-          <span className="topbar-user-meta">
-            <strong>{user?.name || 'User'}</strong>
-            <small>{user?.role || 'member'}</small>
-          </span>
-        </div>
       </div>
     </header>
   );

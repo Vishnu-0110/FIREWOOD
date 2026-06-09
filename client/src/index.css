@@ -1796,3 +1796,289 @@ textarea:focus-visible,
     width: 100% !important;
   }
 }
+
+body.auth-screen {
+  background:
+    radial-gradient(circle at top left, rgba(99, 102, 241, 0.16), transparent 22%),
+    radial-gradient(circle at 100% 100%, rgba(129, 140, 248, 0.1), transparent 20%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+}
+
+body.auth-screen::before {
+  opacity: 0.24;
+  background-image:
+    linear-gradient(180deg, rgba(99, 102, 241, 0.04) 0%, transparent 32%),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.025) 0%, transparent 28%);
+}
+
+body.auth-screen .login-page {
+  background: transparent;
+}
+
+body.auth-screen .login-card {
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 30px 70px rgba(99, 102, 241, 0.12);
+}
+
+body.auth-screen .login-card,
+body.auth-screen .login-card h4,
+body.auth-screen .login-card .form-label {
+  color: #0f172a;
+}
+
+body.auth-screen .login-card .text-muted,
+body.auth-screen .login-card small,
+body.auth-screen .login-card .small {
+  color: #64748b !important;
+}
+
+body.auth-screen .login-card .form-control,
+body.auth-screen .login-card .form-select,
+body.auth-screen .login-card textarea {
+  color: #0f172a;
+  background: rgba(248, 250, 252, 0.98);
+  border-color: rgba(15, 23, 42, 0.1);
+}
+
+body.auth-screen .login-card .form-control:focus,
+body.auth-screen .login-card .form-select:focus,
+body.auth-screen .login-card textarea:focus {
+  color: #0f172a;
+  background: #ffffff;
+  border-color: #818CF8;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.14);
+}
+
+body.auth-screen .login-card .btn-outline-secondary {
+  color: #334155;
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+}
+
+body.auth-screen .login-card .btn-outline-secondary:hover {
+  color: #0f172a;
+  background: #eef2ff;
+  border-color: rgba(99, 102, 241, 0.24);
+}
+
+body.app-theme-light {
+  --bg: #f8fafc;
+  --bg-soft: #eef2ff;
+  --paper: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --primary: #6366F1;
+  --primary-strong: #818CF8;
+  --secondary: #e2e8f0;
+  --accent: #F59E0B;
+  --line: rgba(15, 23, 42, 0.08);
+  --line-strong: rgba(15, 23, 42, 0.14);
+  --ring: rgba(99, 102, 241, 0.18);
+  background:
+    radial-gradient(circle at top left, rgba(99, 102, 241, 0.1), transparent 22%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+}
+
+body.app-theme-light::before {
+  opacity: 0.2;
+  background-image:
+    linear-gradient(180deg, rgba(99, 102, 241, 0.04) 0%, transparent 32%),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.025) 0%, transparent 28%);
+}
+
+body.app-theme-light .app-main,
+body.app-theme-light .theme-light .app-main {
+  background:
+    radial-gradient(circle at top right, rgba(99, 102, 241, 0.08), transparent 18%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  color: #0f172a;
+}
+
+body.app-theme-light .app-topbar {
+  background: rgba(255, 255, 255, 0.78);
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+body.app-theme-light .topbar-title h6,
+body.app-theme-light .topbar-user-meta strong,
+body.app-theme-light .page-title,
+body.app-theme-light .detail-value,
+body.app-theme-light .info-tile strong,
+body.app-theme-light .invoice-total-value,
+body.app-theme-light .kpi-card h4,
+body.app-theme-light .brand-text h5,
+body.app-theme-light .card-header,
+body.app-theme-light .table,
+body.app-theme-light .table td,
+body.app-theme-light .table th {
+  color: #0f172a;
+}
+
+body.app-theme-light .topbar-user-chip {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(15, 23, 42, 0.08);
+}
+
+body.app-theme-light .sidebar-toggle-btn {
+  color: #334155 !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+body.app-theme-light .sidebar-toggle-btn:hover {
+  color: #ffffff !important;
+  background: #6366F1 !important;
+  border-color: #6366F1 !important;
+}
+
+body.app-theme-light .card,
+body.app-theme-light .table,
+body.app-theme-light .table th,
+body.app-theme-light .table td {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+}
+
+body.app-theme-light .card-header {
+  background: rgba(99, 102, 241, 0.02);
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+body.app-theme-light .table thead th {
+  background: rgba(99, 102, 241, 0.03);
+  color: #64748b;
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+body.app-theme-light .table > :not(caption) > * > * {
+  border-bottom-color: rgba(15, 23, 42, 0.06);
+}
+
+body.app-theme-light .table tbody tr:hover {
+  background: rgba(99, 102, 241, 0.025);
+}
+
+body.app-theme-light .table-striped > tbody > tr:nth-of-type(odd) > * {
+  color: #0f172a;
+  background-color: rgba(99, 102, 241, 0.015);
+}
+
+body.app-theme-light .page-hero,
+body.app-theme-light .kpi-card,
+body.app-theme-light .invoice-calc,
+body.app-theme-light .modern-highlight-card,
+body.app-theme-light .info-tile,
+body.app-theme-light .invoice-total-card {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+}
+
+body.app-theme-light .invoice-total-card {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(99, 102, 241, 0.08), transparent 32%),
+    rgba(255, 255, 255, 0.94);
+}
+
+body.app-theme-light .page-subtitle,
+body.app-theme-light .detail-label,
+body.app-theme-light .topbar-title small,
+body.app-theme-light .topbar-user-meta small,
+body.app-theme-light .custom-chart-legend-text,
+body.app-theme-light .text-muted,
+body.app-theme-light small,
+body.app-theme-light .small {
+  color: #64748b !important;
+}
+
+body.app-theme-light .form-control,
+body.app-theme-light .form-select,
+body.app-theme-light textarea {
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(15, 23, 42, 0.12);
+}
+
+body.app-theme-light .form-control:focus,
+body.app-theme-light .form-select:focus,
+body.app-theme-light textarea:focus {
+  color: #0f172a;
+  background: #ffffff;
+  border-color: #818CF8;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.14);
+}
+
+body.app-theme-light .form-control::placeholder,
+body.app-theme-light textarea::placeholder {
+  color: #94a3b8;
+}
+
+body.app-theme-light .btn-outline-secondary,
+body.app-theme-light .btn-outline-primary,
+body.app-theme-light .btn-outline-success,
+body.app-theme-light .btn-outline-danger,
+body.app-theme-light .btn-outline-dark,
+body.app-theme-light .topbar-ghost-btn {
+  color: #334155;
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.1);
+}
+
+body.app-theme-light .btn-outline-secondary:hover,
+body.app-theme-light .btn-outline-primary:hover,
+body.app-theme-light .btn-outline-success:hover,
+body.app-theme-light .btn-outline-danger:hover,
+body.app-theme-light .btn-outline-dark:hover,
+body.app-theme-light .topbar-ghost-btn:hover {
+  color: #0f172a;
+  background: #eef2ff;
+  border-color: rgba(99, 102, 241, 0.24);
+}
+
+body.app-theme-light .app-sidebar {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border-right-color: rgba(15, 23, 42, 0.08);
+  box-shadow: inset -1px 0 0 rgba(15, 23, 42, 0.02);
+}
+
+body.app-theme-light .app-sidebar::after {
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.02) 0%, transparent 14%, rgba(15, 23, 42, 0.01) 100%);
+}
+
+body.app-theme-light .brand-logo {
+  background: rgba(99, 102, 241, 0.08);
+  border-color: rgba(99, 102, 241, 0.12);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.08);
+}
+
+body.app-theme-light .sidebar-section-label {
+  color: #64748b !important;
+}
+
+body.app-theme-light .sidebar-link {
+  color: #0f172a;
+}
+
+body.app-theme-light .sidebar-link:hover {
+  background: rgba(99, 102, 241, 0.04);
+  border-color: rgba(99, 102, 241, 0.08);
+}
+
+body.app-theme-light .sidebar-link.active {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.16);
+  color: #312e81;
+}
+
+body.app-theme-light .sidebar-link.active .sidebar-link-icon,
+body.app-theme-light .sidebar-link-icon {
+  background: rgba(99, 102, 241, 0.06);
+  border-color: rgba(99, 102, 241, 0.08);
+}
+
+body.app-theme-light .custom-chart-legend-color {
+  border-color: rgba(15, 23, 42, 0.08);
+}

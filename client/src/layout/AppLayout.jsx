@@ -46,6 +46,17 @@ const AppLayout = ({ children }) => {
     localStorage.setItem('sidebar_collapsed', collapsed ? '1' : '0');
   }, [collapsed, isMobileView]);
 
+  useEffect(() => {
+    if (typeof document === 'undefined') return undefined;
+
+    document.body.classList.remove('auth-screen', 'app-theme-light', 'app-theme-dark');
+    document.body.classList.add(isDark ? 'app-theme-dark' : 'app-theme-light');
+
+    return () => {
+      document.body.classList.remove('app-theme-light', 'app-theme-dark');
+    };
+  }, [isDark]);
+
   const handleToggleSidebar = () => {
     setCollapsed((prev) => !prev);
   };

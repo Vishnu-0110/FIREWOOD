@@ -3,6 +3,7 @@
 :root {
   --font-ui: 'Outfit', 'Segoe UI', sans-serif;
   --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --app-viewport-height: 100vh;
 
   --bg: #f4f7fb;
   --bg-soft: #eef3f8;
@@ -24,6 +25,12 @@
   --radius-lg: 24px;
   --shadow-soft: 0 14px 38px rgba(15, 23, 42, 0.08);
   --shadow-hard: 0 30px 80px rgba(15, 23, 42, 0.16);
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --app-viewport-height: 100dvh;
+  }
 }
 
 *,
@@ -270,6 +277,8 @@ a {
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
+  margin-left: auto;
+  min-width: 0;
 }
 
 .topbar-brand-logo {
@@ -308,9 +317,10 @@ a {
 }
 
 .topbar-actions {
-  margin-left: auto;
+  margin-left: 0;
   flex-wrap: wrap;
   justify-content: flex-end;
+  min-width: 0;
 }
 
 .topbar-user-chip {
@@ -371,6 +381,7 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
+  min-width: 0;
 }
 
 .topbar-icon-btn-symbol {
@@ -384,6 +395,12 @@ a {
   background: rgba(255, 255, 255, 0.92);
   font-size: 0.95rem;
   line-height: 1;
+}
+
+.topbar-icon-btn-symbol svg {
+  width: 1rem;
+  height: 1rem;
+  display: block;
 }
 
 .topbar-icon-btn-label {
@@ -504,6 +521,10 @@ textarea::placeholder {
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+.btn-close {
+  flex-shrink: 0;
 }
 
 .btn:hover {
@@ -1308,29 +1329,46 @@ body.app-theme-dark .app-toast-body {
   }
 
   .app-topbar {
-    gap: 0.7rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'left brand'
+      'actions actions';
+    gap: 0.7rem 0.75rem;
   }
 
   .topbar-left {
-    width: 100%;
+    grid-area: left;
+    width: auto;
+  }
+
+  .topbar-brand {
+    grid-area: brand;
+    margin-left: 0;
+    justify-self: end;
+    align-self: center;
   }
 
   .topbar-actions {
+    grid-area: actions;
     width: 100%;
     display: grid !important;
-    grid-template-columns: 44px 44px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     align-items: center;
-    gap: 0.6rem !important;
+    gap: 0.55rem !important;
+    margin-left: 0;
   }
 
   .topbar-actions .btn {
-    width: 44px;
-    min-width: 44px;
+    width: 100%;
+    min-width: 0;
     height: 44px;
     min-height: 44px;
-    padding: 0 !important;
+    padding: 0 0.65rem !important;
     border-radius: 14px;
-    flex: 0 0 44px;
+    flex: 1 1 auto;
+    justify-content: center;
+    white-space: nowrap;
   }
 
   .topbar-icon-btn {
@@ -1338,7 +1376,8 @@ body.app-theme-dark .app-toast-body {
   }
 
   .topbar-icon-btn-label {
-    display: none;
+    display: inline;
+    font-size: 0.82rem;
   }
 
   .topbar-user-chip {
@@ -2163,6 +2202,10 @@ textarea::placeholder,
   border-color: rgba(245, 158, 11, 0.22);
 }
 
+body.app-theme-dark .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
@@ -2191,14 +2234,10 @@ textarea:focus-visible,
 
 @media (max-width: 576px) {
   .topbar-actions .topbar-icon-btn {
-    width: 44px !important;
-    min-width: 44px !important;
-    max-width: 44px !important;
-    flex: 0 0 44px !important;
-  }
-
-  .topbar-actions .topbar-user-chip {
     width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    flex: 1 1 auto !important;
   }
 }
 
@@ -2523,17 +2562,20 @@ body.app-theme-dark {
 }
 
 .app-shell {
-  height: 100vh;
+  height: var(--app-viewport-height);
+  min-height: var(--app-viewport-height);
   overflow: hidden;
 }
 
 .app-sidebar {
-  height: 100vh;
+  height: var(--app-viewport-height);
+  min-height: var(--app-viewport-height);
   overflow-y: auto;
 }
 
 .app-main {
-  height: 100vh;
+  height: var(--app-viewport-height);
+  min-height: var(--app-viewport-height);
   overflow: hidden;
   min-height: 0;
 }
@@ -2546,6 +2588,9 @@ body.app-theme-dark {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
 
 body.app-theme-light .app-main {

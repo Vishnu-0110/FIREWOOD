@@ -2221,14 +2221,24 @@ textarea:focus-visible,
 }
 
 @media (max-width: 768px) {
-  .table-mobile-stack tr {
+  body.app-theme-dark .table-mobile-stack tr {
     background: rgba(17, 24, 39, 0.96);
     border-color: var(--line);
     box-shadow: var(--shadow-soft);
   }
 
-  .table-mobile-stack td + td {
+  body.app-theme-light .table-mobile-stack tr {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(15, 23, 42, 0.08);
+    box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+  }
+
+  body.app-theme-dark .table-mobile-stack td + td {
     border-top-color: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  body.app-theme-light .table-mobile-stack td + td {
+    border-top-color: rgba(148, 163, 184, 0.12) !important;
   }
 
   .login-ops-strip {
@@ -2557,7 +2567,7 @@ body,
 }
 
 body.auth-screen {
-  overflow: auto;
+  overflow: hidden;
 }
 
 body.app-theme-light,

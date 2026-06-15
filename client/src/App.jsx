@@ -18,8 +18,26 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 
 function App() {
   const dispatch = useDispatch();
-  const { isAuthenticated, token } = useSelector((state) => state.auth);
+  const { isAuthenticated, token, user } = useSelector((state) => state.auth);
   const [checkingSession, setCheckingSession] = useState(Boolean(isAuthenticated && token));
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return undefined;
+
+    const { body } = document;
+    const themeClass = isAuthenticated || checkingSession
+      ? (user?.theme === 'dark' ? 'app-theme-dark' : 'app-theme-light')
+      : null;
+
+    if (themeClass) {
+      body.classList.remove('auth-screen', 'app-theme-light', 'app-theme-dark');
+      body.classList.add(themeClass);
+    } else {
+      body.classList.remove('app-theme-light', 'app-theme-dark');
+    }
+
+    return undefined;
+  }, [checkingSession, isAuthenticated, user?.theme]);
 
   useEffect(() => {
     let active = true;

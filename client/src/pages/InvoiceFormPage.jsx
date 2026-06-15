@@ -61,11 +61,12 @@ const InvoiceFormPage = () => {
       if (isEdit) {
         await api.put(`/invoices/${id}`, data);
         toast.success('Updated');
+        navigate(`/invoices/${id}`);
       } else {
-        await api.post('/invoices', data);
+        const response = await api.post('/invoices', data);
         toast.success('Saved');
+        navigate(`/invoices/${response.data?._id}`);
       }
-      navigate('/invoices');
     } catch (error) {
       if (isSilentAuthError(error)) return;
       toast.error(error?.response?.data?.message || 'Save failed');

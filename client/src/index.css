@@ -1330,11 +1330,11 @@ body.app-theme-dark .app-toast-body {
 
   .app-topbar {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-areas:
-      'left brand'
-      'actions actions';
-    gap: 0.7rem 0.75rem;
+      'left brand actions';
+    gap: 0.55rem 0.6rem;
+    align-items: center !important;
   }
 
   .topbar-left {
@@ -1345,39 +1345,39 @@ body.app-theme-dark .app-toast-body {
   .topbar-brand {
     grid-area: brand;
     margin-left: 0;
-    justify-self: end;
+    justify-self: center;
     align-self: center;
   }
 
   .topbar-actions {
     grid-area: actions;
-    width: 100%;
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr);
+    width: auto;
+    display: inline-flex !important;
     align-items: center;
-    gap: 0.55rem !important;
-    margin-left: 0;
+    justify-content: flex-end;
+    gap: 0.35rem !important;
+    margin-left: auto;
   }
 
   .topbar-actions .btn {
-    width: 100%;
+    width: auto;
     min-width: 0;
-    height: 44px;
-    min-height: 44px;
-    padding: 0 0.65rem !important;
-    border-radius: 14px;
-    flex: 1 1 auto;
+    height: 40px;
+    min-height: 40px;
+    padding: 0 0.55rem !important;
+    border-radius: 12px;
+    flex: 0 0 auto;
     justify-content: center;
     white-space: nowrap;
   }
 
   .topbar-icon-btn {
     justify-content: center;
+    gap: 0.3rem;
   }
 
   .topbar-icon-btn-label {
-    display: inline;
-    font-size: 0.82rem;
+    display: none;
   }
 
   .topbar-user-chip {
@@ -1800,6 +1800,10 @@ body.app-theme-dark .app-toast-body {
   .form-action-row .btn,
   .topbar-actions .btn {
     width: 100%;
+  }
+
+  .topbar-actions .btn {
+    width: auto;
   }
 
   .topbar-user-chip {
@@ -2234,10 +2238,10 @@ textarea:focus-visible,
 
 @media (max-width: 576px) {
   .topbar-actions .topbar-icon-btn {
-    width: 100% !important;
+    width: auto !important;
     min-width: 0 !important;
     max-width: none !important;
-    flex: 1 1 auto !important;
+    flex: 0 0 auto !important;
   }
 }
 

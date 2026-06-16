@@ -2657,6 +2657,70 @@ body.app-theme-dark {
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
 
+.app-route-indicator {
+  position: sticky;
+  top: 0.35rem;
+  z-index: 15;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.35rem 1rem 0;
+  padding: 0.28rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(99, 102, 241, 0.14);
+  background: rgba(255, 255, 255, 0.74);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+  pointer-events: none;
+}
+
+.app-route-indicator.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.app-route-indicator-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #6366f1, #14b8a6);
+  box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.1);
+  animation: route-indicator-pulse 1.1s ease-in-out infinite;
+}
+
+.app-page-shell {
+  position: relative;
+}
+
+.app-page-surface {
+  min-height: 100%;
+  animation: page-enter 180ms ease both;
+}
+
+.app-page-shell.is-switching .app-page-surface {
+  opacity: 0.75;
+  transform: translateY(4px) scale(0.996);
+}
+
+body.app-theme-light .app-route-indicator,
+.theme-light .app-route-indicator {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(99, 102, 241, 0.14);
+  color: #334155;
+}
+
+body.app-theme-dark .app-route-indicator,
+.theme-dark .app-route-indicator {
+  background: rgba(17, 24, 39, 0.88);
+  border-color: rgba(129, 140, 248, 0.16);
+  color: #e2e8f0;
+}
+
 body.app-theme-light .app-main {
   background:
     radial-gradient(circle at top right, rgba(99, 102, 241, 0.08), transparent 18%),
@@ -3006,6 +3070,31 @@ body.app-theme-dark .sidebar-brand-subtitle {
 
   50% {
     transform: translateY(-10px) scale(1.08);
+  }
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0.35;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes route-indicator-pulse {
+  0%,
+  100% {
+    transform: scale(0.92);
+    box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.08);
+  }
+
+  50% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(99, 102, 241, 0.03);
   }
 }
 

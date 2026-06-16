@@ -38,6 +38,16 @@ const Topbar = ({ collapsed, onToggleSidebar, routeLabel = 'Dashboard' }) => {
         >
           {collapsed ? '☰' : '✕'}
         </button>
+      </div>
+      <div className="topbar-brand" title="Vijaya Lakshmi Firewood Supplier">
+        <img
+          className="topbar-company-logo topbar-brand-logo"
+          src="/invoice-logo.png"
+          alt="Vijaya Lakshmi logo"
+          onError={(e) => {
+            e.currentTarget.style.display = 'none';
+          }}
+        />
         <div className="topbar-title">
           <div className="topbar-kicker">Billing Command Center</div>
           <h6>Vijaya Lakshmi Firewood Supplier</h6>

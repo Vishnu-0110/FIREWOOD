@@ -22,19 +22,6 @@ const LoginPage = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
-    if (typeof document !== 'undefined') {
-      document.body.classList.remove('app-theme-light', 'app-theme-dark');
-      document.body.classList.add('auth-screen');
-    }
-
-    return () => {
-      if (typeof document !== 'undefined') {
-        document.body.classList.remove('auth-screen');
-      }
-    };
-  }, []);
-
-  useEffect(() => {
     if (isAuthenticated) navigate('/');
   }, [isAuthenticated, navigate]);
 

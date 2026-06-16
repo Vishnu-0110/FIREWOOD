@@ -51,16 +51,12 @@ const AppLayout = ({ children }) => {
 
     const { body } = document;
     const previousOverflow = body.style.overflow;
-
-    body.classList.remove('auth-screen', 'app-theme-light', 'app-theme-dark');
-    body.classList.add(isDark ? 'app-theme-dark' : 'app-theme-light');
     body.style.overflow = 'hidden';
 
     return () => {
-      body.classList.remove('app-theme-light', 'app-theme-dark');
       body.style.overflow = previousOverflow;
     };
-  }, [isDark]);
+  }, []);
 
   const handleToggleSidebar = () => {
     setCollapsed((prev) => !prev);

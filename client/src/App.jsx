@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -22,7 +22,7 @@ function App() {
   const [checkingSession, setCheckingSession] = useState(Boolean(isAuthenticated && token));
   const initialSessionCheckDone = useRef(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof document === 'undefined') return undefined;
 
     const { body } = document;

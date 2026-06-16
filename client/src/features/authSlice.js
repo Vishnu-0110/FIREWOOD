@@ -15,6 +15,25 @@ const isStoredTokenExpired = (token) => {
   }
 };
 
+const getStoredTheme = () => {
+  const storedTheme = localStorage.getItem('app_theme');
+  if (storedTheme === 'dark' || storedTheme === 'light') {
+    return storedTheme;
+  }
+
+  const rawUser = localStorage.getItem('user');
+  if (rawUser) {
+    try {
+      const parsedUser = JSON.parse(rawUser);
+      if (parsedUser?.theme === 'dark') return 'dark';
+    } catch {
+      // Ignore malformed persisted user payloads and fall back to light.
+    }
+  }
+
+  return 'light';
+};
+
 const getStoredAuthState = () => {
   const rawToken = localStorage.getItem('token');
   const rawUser = localStorage.getItem('user');
@@ -44,7 +63,14 @@ const getStoredAuthState = () => {
   }
 };
 
-const storedAuth = getStoredAuthState();
+const storedTheme = getStoredTheme();
+if (!localStorage.getItem('app_theme')) {
+  localStorage.setItem('app_theme', storedTheme);
+}
+const storedAuth = {
+  ...getStoredAuthState(),
+  theme: storedTheme
+};
 
 const authSlice = createSlice({
   name: 'auth',
@@ -52,13 +78,19 @@ const authSlice = createSlice({
   reducers: {
     setCredentials: (state, action) => {
       const { user: authUser, token: authToken } = action.payload;
-      state.user = authUser;
+      const nextTheme = authUser?.theme === 'dark' || authUser?.theme === 'light'
+        ? authUser.theme
+        : state.theme || storedTheme;
+
+      state.theme = nextTheme;
+      state.user = authUser ? { ...authUser, theme: nextTheme } : authUser;
       if (authToken) {
         state.token = authToken;
         localStorage.setItem('token', authToken);
       }
       state.isAuthenticated = Boolean(state.user && state.token);
-      localStorage.setItem('user', JSON.stringify(authUser));
+      localStorage.setItem('user', JSON.stringify(state.user));
+      localStorage.setItem('app_theme', nextTheme);
     },
     clearCredentials: (state) => {
       state.user = null;
@@ -68,11 +100,13 @@ const authSlice = createSlice({
       localStorage.removeItem('token');
     },
     toggleTheme: (state) => {
+      const nextTheme = state.theme === 'dark' ? 'light' : 'dark';
+      state.theme = nextTheme;
       if (state.user) {
-        const nextTheme = state.user.theme === 'dark' ? 'light' : 'dark';
         state.user.theme = nextTheme;
         localStorage.setItem('user', JSON.stringify(state.user));
       }
+      localStorage.setItem('app_theme', nextTheme);
     }
   }
 });

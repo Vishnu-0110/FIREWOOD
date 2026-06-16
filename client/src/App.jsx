@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -18,15 +18,16 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 
 function App() {
   const dispatch = useDispatch();
-  const { isAuthenticated, token, user } = useSelector((state) => state.auth);
+  const { isAuthenticated, token, theme } = useSelector((state) => state.auth);
   const [checkingSession, setCheckingSession] = useState(Boolean(isAuthenticated && token));
+  const initialSessionCheckDone = useRef(false);
 
   useEffect(() => {
     if (typeof document === 'undefined') return undefined;
 
     const { body } = document;
     const themeClass = isAuthenticated || checkingSession
-      ? (user?.theme === 'dark' ? 'app-theme-dark' : 'app-theme-light')
+      ? (theme === 'dark' ? 'app-theme-dark' : 'app-theme-light')
       : null;
 
     if (themeClass) {
@@ -37,9 +38,12 @@ function App() {
     }
 
     return undefined;
-  }, [checkingSession, isAuthenticated, user?.theme]);
+  }, [checkingSession, isAuthenticated, theme]);
 
   useEffect(() => {
+    if (initialSessionCheckDone.current) return undefined;
+    initialSessionCheckDone.current = true;
+
     let active = true;
 
     const verifySession = async () => {

@@ -65,10 +65,10 @@ const compactCurrency = (value = 0) =>
   }).format(Number(value) || 0);
 
 const DashboardPage = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { theme } = useSelector((state) => state.auth);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const isDark = user?.theme === 'dark';
+  const isDark = theme === 'dark';
   const tooltipStyles = getTooltipStyles(isDark);
 
   useEffect(() => {

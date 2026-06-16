@@ -9,8 +9,8 @@ const getIsMobileView = () => {
 };
 
 const AppLayout = ({ children }) => {
-  const { user } = useSelector((state) => state.auth);
-  const isDark = user?.theme === 'dark';
+  const { theme } = useSelector((state) => state.auth);
+  const isDark = theme === 'dark';
   const [isMobileView, setIsMobileView] = useState(getIsMobileView);
   const [collapsed, setCollapsed] = useState(() => {
     const savedCollapsed = localStorage.getItem('sidebar_collapsed') === '1';

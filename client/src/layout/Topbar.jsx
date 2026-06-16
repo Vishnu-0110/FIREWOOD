@@ -14,7 +14,7 @@ const PowerIcon = () => (
 const Topbar = ({ collapsed, onToggleSidebar }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.auth);
+  const { theme } = useSelector((state) => state.auth);
 
   const handleLogout = async () => {
     try {
@@ -57,11 +57,11 @@ const Topbar = ({ collapsed, onToggleSidebar }) => {
           type="button"
           className="btn btn-sm btn-outline-secondary topbar-ghost-btn topbar-icon-btn"
           onClick={() => dispatch(toggleTheme())}
-          aria-label={user?.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-          title={user?.theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
           >
-          <span className="topbar-icon-btn-symbol" aria-hidden="true">{user?.theme === 'dark' ? '☀' : '☾'}</span>
-          <span className="topbar-icon-btn-label">{user?.theme === 'dark' ? 'Light' : 'Dark'}</span>
+          <span className="topbar-icon-btn-symbol" aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
+          <span className="topbar-icon-btn-label">{theme === 'dark' ? 'Light' : 'Dark'}</span>
         </button>
         <button
           type="button"

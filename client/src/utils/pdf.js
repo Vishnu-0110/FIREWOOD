@@ -112,17 +112,17 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
           </div>
 
           <div style="min-width: 220px; font-size: 14px; margin-top: 6px; line-height: 1.55;">
-            <div style="display:flex; align-items:flex-start; justify-content:flex-end; gap:6px;">
-              <span style="font-weight:600; width:46px; text-align:left;">Phone:</span>
-              <span style="font-weight:500; min-width:150px; text-align:left;">${COMPANY.phone}</span>
+            <div style="display:grid; grid-template-columns: 62px minmax(0, 1fr); column-gap: 6px; align-items:flex-start;">
+              <span style="font-weight:600; text-align:left;">Phone:</span>
+              <span style="font-weight:500; min-width:0; text-align:left;">${COMPANY.phone}</span>
             </div>
-            <div style="display:flex; align-items:flex-start; justify-content:flex-end; gap:6px;">
-              <span style="font-weight:600; width:46px; text-align:left;">Email:</span>
-              <span style="font-weight:500; min-width:150px; text-align:left;">${COMPANY.email}</span>
+            <div style="display:grid; grid-template-columns: 62px minmax(0, 1fr); column-gap: 6px; align-items:flex-start;">
+              <span style="font-weight:600; text-align:left;">Email:</span>
+              <span style="font-weight:500; min-width:0; text-align:left;">${COMPANY.email}</span>
             </div>
-            <div style="display:flex; align-items:flex-start; justify-content:flex-end; gap:6px;">
-              <span style="font-weight:600; width:46px; text-align:left;">Website:</span>
-              <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="font-weight:500; min-width:150px; text-align:left; color:inherit; text-decoration:none;">vijayalakshmifirewoods.netlify.app</a>
+            <div style="display:grid; grid-template-columns: 62px minmax(0, 1fr); column-gap: 6px; align-items:flex-start;">
+              <span style="font-weight:600; text-align:left;">Website:</span>
+              <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="font-weight:500; min-width:0; text-align:left; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere;">vijayalakshmifirewoods.netlify.app</a>
             </div>
           </div>
         </div>

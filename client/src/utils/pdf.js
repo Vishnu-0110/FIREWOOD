@@ -112,16 +112,16 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
           </div>
 
           <div style="min-width: 220px; font-size: 14px; margin-top: 6px; line-height: 1.55;">
-            <div style="display:grid; grid-template-columns: 64px minmax(0, 1fr); column-gap: 4px; align-items:flex-start;">
-              <span style="font-weight:600; text-align:left;">Phone:</span>
+            <div style="display:grid; grid-template-columns: 58px minmax(0, 1fr); column-gap: 2px; align-items:flex-start;">
+              <span style="font-weight:600; text-align:left; white-space:nowrap;">Phone:</span>
               <span style="font-weight:500; min-width:0; text-align:left;">${COMPANY.phone}</span>
             </div>
-            <div style="display:grid; grid-template-columns: 64px minmax(0, 1fr); column-gap: 4px; align-items:flex-start;">
-              <span style="font-weight:600; text-align:left;">Email:</span>
-              <a href="mailto:${escapeHtml(COMPANY.email)}" style="font-weight:500; min-width:0; text-align:left; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere;">${COMPANY.email}</a>
+            <div style="display:grid; grid-template-columns: 58px minmax(0, 1fr); column-gap: 2px; align-items:flex-start;">
+              <span style="font-weight:600; text-align:left; white-space:nowrap;">Email:</span>
+              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(COMPANY.email)}" target="_blank" rel="noreferrer noopener" style="font-weight:500; min-width:0; text-align:left; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere;">${COMPANY.email}</a>
             </div>
-            <div style="display:grid; grid-template-columns: 64px minmax(0, 1fr); column-gap: 4px; align-items:flex-start;">
-              <span style="font-weight:600; text-align:left;">Website:</span>
+            <div style="display:grid; grid-template-columns: 58px minmax(0, 1fr); column-gap: 2px; align-items:flex-start;">
+              <span style="font-weight:600; text-align:left; white-space:nowrap;">Website:</span>
               <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="font-weight:500; min-width:0; text-align:left; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere;">vijayalakshmifirewoods.netlify.app</a>
             </div>
           </div>

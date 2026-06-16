@@ -9,7 +9,8 @@ const COMPANY = {
   address3: 'Tamil Nadu',
   gst: 'GSTIN: 33CPOPA7913R1ZC',
   phone: '+91 94427 37292',
-  email: 'garumugam251@gmail.com'
+  email: 'garumugam251@gmail.com',
+  website: 'https://vijayalakshmifirewoods.netlify.app'
 };
 
 const BANK = {
@@ -118,6 +119,10 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
             <div style="display:flex; align-items:flex-start; justify-content:flex-end; gap:6px;">
               <span style="font-weight:600; width:46px; text-align:left;">Email:</span>
               <span style="font-weight:500; min-width:150px; text-align:left;">${COMPANY.email}</span>
+            </div>
+            <div style="display:flex; align-items:flex-start; justify-content:flex-end; gap:6px;">
+              <span style="font-weight:600; width:46px; text-align:left;">Website:</span>
+              <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="font-weight:500; min-width:150px; text-align:left; color:inherit; text-decoration:none;">vijayalakshmifirewoods.netlify.app</a>
             </div>
           </div>
         </div>

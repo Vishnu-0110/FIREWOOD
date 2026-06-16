@@ -118,7 +118,7 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
             </div>
             <div style="display:grid; grid-template-columns: 58px minmax(0, 1fr); column-gap: 2px; align-items:flex-start;">
               <span style="font-weight:600; text-align:left; white-space:nowrap;">Email:</span>
-              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(COMPANY.email)}" target="_blank" rel="noreferrer noopener" style="font-weight:500; min-width:0; text-align:left; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere;">${COMPANY.email}</a>
+              <a href="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to=${encodeURIComponent(COMPANY.email)}" target="_blank" rel="noreferrer noopener" style="font-weight:500; min-width:0; text-align:left; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere;">${COMPANY.email}</a>
             </div>
             <div style="display:grid; grid-template-columns: 58px minmax(0, 1fr); column-gap: 2px; align-items:flex-start;">
               <span style="font-weight:600; text-align:left; white-space:nowrap;">Website:</span>

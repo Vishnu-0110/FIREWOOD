@@ -26,15 +26,12 @@ function App() {
     if (typeof document === 'undefined') return undefined;
 
     const { body } = document;
-    const themeClass = isAuthenticated || checkingSession
-      ? (theme === 'dark' ? 'app-theme-dark' : 'app-theme-light')
-      : null;
+    body.classList.remove('auth-screen', 'app-theme-light', 'app-theme-dark');
 
-    if (themeClass) {
-      body.classList.remove('auth-screen', 'app-theme-light', 'app-theme-dark');
-      body.classList.add(themeClass);
+    if (isAuthenticated || checkingSession) {
+      body.classList.add(theme === 'dark' ? 'app-theme-dark' : 'app-theme-light');
     } else {
-      body.classList.remove('app-theme-light', 'app-theme-dark');
+      body.classList.add('auth-screen');
     }
 
     return undefined;

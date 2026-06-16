@@ -92,7 +92,13 @@ const parseJsonIfPossible = (content) => {
 const isCatchAllRule = (value) => {
   if (typeof value !== 'string') return false;
   const normalized = value.trim();
-  return normalized === '/(.*)' || normalized === '/:path*' || normalized === '/*' || normalized === '/(.*)*';
+  return (
+    normalized === '/(.*)'
+    || normalized === '/:path*'
+    || normalized === '/*'
+    || normalized === '/(.*)*'
+    || normalized === '/((?!api/).*)'
+  );
 };
 
 const isSpaDestination = (value) => {

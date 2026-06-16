@@ -120,10 +120,24 @@ const InvoiceHistoryPage = () => {
               </select>
             </div>
             <div className="col-6 col-lg-2">
-              <input type="date" className="form-control" value={filters.startDate} onChange={(e) => updateFilters({ startDate: e.target.value, page: 1 })} />
+              <label className="form-label mb-1" htmlFor="invoice-history-start-date">From Date</label>
+              <input
+                id="invoice-history-start-date"
+                type="date"
+                className="form-control"
+                value={filters.startDate}
+                onChange={(e) => updateFilters({ startDate: e.target.value, page: 1 })}
+              />
             </div>
             <div className="col-6 col-lg-2">
-              <input type="date" className="form-control" value={filters.endDate} onChange={(e) => updateFilters({ endDate: e.target.value, page: 1 })} />
+              <label className="form-label mb-1" htmlFor="invoice-history-end-date">To Date</label>
+              <input
+                id="invoice-history-end-date"
+                type="date"
+                className="form-control"
+                value={filters.endDate}
+                onChange={(e) => updateFilters({ endDate: e.target.value, page: 1 })}
+              />
             </div>
             <div className="col-12 col-lg-3 d-flex gap-2 page-actions-row">
               <button className="btn btn-warning" onClick={() => updateFilters({ q: filters.q, page: 1 })}>Filter</button>

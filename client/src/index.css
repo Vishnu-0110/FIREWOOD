@@ -280,6 +280,7 @@ button:active {
 
 .topbar-left {
   min-width: 0;
+  flex: 1 1 auto;
 }
 
 .topbar-brand {
@@ -287,6 +288,13 @@ button:active {
   align-items: center;
   flex-shrink: 0;
   margin-left: auto;
+  min-width: 0;
+}
+
+.topbar-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.06rem;
   min-width: 0;
 }
 
@@ -389,18 +397,23 @@ button:active {
 .topbar-icon-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  justify-content: center;
+  gap: 0;
   min-width: 0;
+  width: 2.6rem;
+  height: 2.6rem;
+  padding: 0 !important;
+  border-radius: 999px !important;
 }
 
 .topbar-icon-btn-symbol {
-  width: 1.95rem;
-  height: 1.95rem;
+  width: 1.85rem;
+  height: 1.85rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border: 1px solid var(--line-strong);
-  border-radius: 11px;
+  border-radius: 999px;
   background: rgba(255, 255, 255, 0.92);
   font-size: 0.95rem;
   line-height: 1;
@@ -413,7 +426,15 @@ button:active {
 }
 
 .topbar-icon-btn-label {
-  line-height: 1;
+  display: none;
+}
+
+.hero-actions .btn,
+.page-actions-row .btn,
+.form-action-row .btn {
+  border-radius: 999px;
+  padding-inline: 0.85rem;
+  min-height: 36px;
 }
 
 .app-content {
@@ -2298,9 +2319,11 @@ textarea:focus-visible,
 
 @media (max-width: 576px) {
   .topbar-actions .topbar-icon-btn {
-    width: auto !important;
-    min-width: 0 !important;
-    max-width: none !important;
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    min-width: 2.5rem !important;
+    min-height: 2.5rem !important;
+    max-width: 2.5rem !important;
     flex: 0 0 auto !important;
   }
 }
@@ -2617,31 +2640,33 @@ body,
 }
 
 body.auth-screen {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: auto;
 }
 
 body.app-theme-light,
 body.app-theme-dark {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: auto;
 }
 
 .app-shell {
-  height: var(--app-viewport-height);
   min-height: var(--app-viewport-height);
-  overflow: hidden;
+  height: auto;
+  overflow: visible;
 }
 
 .app-sidebar {
-  height: var(--app-viewport-height);
   min-height: var(--app-viewport-height);
   overflow-y: auto;
 }
 
 .app-main {
-  height: var(--app-viewport-height);
   min-height: var(--app-viewport-height);
-  overflow: hidden;
-  min-height: 0;
+  height: auto;
+  overflow: visible;
 }
 
 .app-topbar {
@@ -2651,9 +2676,9 @@ body.app-theme-dark {
 .app-content {
   flex: 1 1 auto;
   min-height: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  overflow: visible;
+  -webkit-overflow-scrolling: auto;
+  overscroll-behavior: auto;
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
 

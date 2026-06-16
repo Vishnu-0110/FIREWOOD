@@ -11,21 +11,19 @@ const PowerIcon = () => (
   </svg>
 );
 
-const Topbar = ({ collapsed, onToggleSidebar }) => {
+const Topbar = ({ collapsed, onToggleSidebar, routeLabel = 'Dashboard' }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { theme } = useSelector((state) => state.auth);
+  const { theme, user } = useSelector((state) => state.auth);
 
   const handleLogout = async () => {
-    try {
-      await api.post('/auth/logout');
-    } catch {
-      // Proceed with local logout even if request fails.
-    } finally {
-      dispatch(clearCredentials());
-      toast.success('Signed out');
-      navigate('/login');
-    }
+    void api.post('/auth/logout').catch(() => {
+      // Proceed with local logout even if the server call fails.
+    });
+
+    dispatch(clearCredentials());
+    toast.success('Signed out');
+    navigate('/login', { replace: true });
   };
 
   return (
@@ -40,17 +38,11 @@ const Topbar = ({ collapsed, onToggleSidebar }) => {
         >
           {collapsed ? '☰' : '✕'}
         </button>
-      </div>
-      <div className="topbar-brand" title="Vijaya Lakshmi Firewood Supplier">
-        <img
-          className="topbar-company-logo topbar-brand-logo"
-          src="/invoice-logo.png"
-          alt="Vijaya Lakshmi logo"
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
-        />
-        <span className="visually-hidden">Vijaya Lakshmi Firewood Supplier</span>
+        <div className="topbar-title">
+          <div className="topbar-kicker">Billing Command Center</div>
+          <h6>Vijaya Lakshmi Firewood Supplier</h6>
+          <small>{routeLabel}{user?.name ? ` • Welcome, ${user.name}` : ''}</small>
+        </div>
       </div>
       <div className="d-flex align-items-center gap-2 topbar-actions">
         <button
@@ -59,9 +51,8 @@ const Topbar = ({ collapsed, onToggleSidebar }) => {
           onClick={() => dispatch(toggleTheme())}
           aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-          >
+        >
           <span className="topbar-icon-btn-symbol" aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
-          <span className="topbar-icon-btn-label">{theme === 'dark' ? 'Light' : 'Dark'}</span>
         </button>
         <button
           type="button"
@@ -71,7 +62,6 @@ const Topbar = ({ collapsed, onToggleSidebar }) => {
           title="Logout"
         >
           <span className="topbar-icon-btn-symbol" aria-hidden="true"><PowerIcon /></span>
-          <span className="topbar-icon-btn-label">Logout</span>
         </button>
       </div>
     </header>

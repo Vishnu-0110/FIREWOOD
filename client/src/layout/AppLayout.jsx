@@ -76,18 +76,6 @@ const AppLayout = ({ children }) => {
     return () => window.clearTimeout(timer);
   }, [location.pathname]);
 
-  useEffect(() => {
-    if (typeof document === 'undefined') return undefined;
-
-    const { body } = document;
-    const previousOverflow = body.style.overflow;
-    body.style.overflow = 'hidden';
-
-    return () => {
-      body.style.overflow = previousOverflow;
-    };
-  }, []);
-
   const handleToggleSidebar = () => {
     setCollapsed((prev) => !prev);
   };
@@ -109,7 +97,7 @@ const AppLayout = ({ children }) => {
           />
         ) : null}
         <main className="app-main">
-          <Topbar collapsed={collapsed} onToggleSidebar={handleToggleSidebar} />
+          <Topbar collapsed={collapsed} onToggleSidebar={handleToggleSidebar} routeLabel={routeLabel} />
           <div className={`app-route-indicator ${isRouteSwitching ? 'show' : ''}`} aria-live="polite" aria-atomic="true">
             <span className="app-route-indicator-dot" />
             <span>{routeLabel}</span>

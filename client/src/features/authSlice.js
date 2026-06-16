@@ -80,7 +80,7 @@ const authSlice = createSlice({
       const { user: authUser, token: authToken } = action.payload;
       const nextTheme = authUser?.theme === 'dark' || authUser?.theme === 'light'
         ? authUser.theme
-        : state.theme || storedTheme;
+        : 'light';
 
       state.theme = nextTheme;
       state.user = authUser ? { ...authUser, theme: nextTheme } : authUser;
@@ -96,8 +96,10 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
+      state.theme = 'light';
       localStorage.removeItem('user');
       localStorage.removeItem('token');
+      localStorage.setItem('app_theme', 'light');
     },
     toggleTheme: (state) => {
       const nextTheme = state.theme === 'dark' ? 'light' : 'dark';

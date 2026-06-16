@@ -225,6 +225,7 @@ const buildWorker = (node, filename) => {
   const options = {
     margin: [10, 10, 10, 10],
     filename,
+    enableLinks: true,
     image: { type: 'jpeg', quality: 0.92 },
     html2canvas: {
       scale: 2.4,

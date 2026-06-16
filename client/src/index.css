@@ -1387,8 +1387,10 @@ body.app-theme-dark .app-toast-body {
     grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-areas:
       'left brand actions';
-    gap: 0.5rem 0.55rem;
+    gap: 0.35rem 0.45rem;
     align-items: center !important;
+    padding-top: 0.45rem !important;
+    padding-bottom: 0.45rem !important;
   }
 
   .topbar-left {
@@ -1402,6 +1404,7 @@ body.app-theme-dark .app-toast-body {
     justify-self: start;
     align-self: center;
     overflow: hidden;
+    gap: 0.4rem;
   }
 
   .topbar-actions {
@@ -1410,16 +1413,18 @@ body.app-theme-dark .app-toast-body {
     display: inline-flex !important;
     align-items: center;
     justify-content: flex-end;
-    gap: 0.35rem !important;
+    gap: 0.28rem !important;
     margin-left: auto;
   }
 
   .topbar-actions .btn {
     width: auto;
     min-width: 0;
-    height: 36px;
-    min-height: 36px;
-    padding: 0 0.45rem !important;
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 0 !important;
     border-radius: 999px;
     flex: 0 0 auto;
     justify-content: center;
@@ -1440,19 +1445,24 @@ body.app-theme-dark .app-toast-body {
   }
 
   .topbar-title h6 {
-    font-size: 0.9rem;
+    font-size: 0.82rem;
     line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .topbar-title small {
-    font-size: 0.68rem;
+    font-size: 0.6rem;
+    line-height: 1.1;
   }
 
+  .topbar-company-logo,
   .topbar-brand-logo {
-    width: 32px;
-    height: 32px;
-    padding: 2px;
-    border-radius: 10px;
+    width: 28px;
+    height: 28px;
+    padding: 1px;
+    border-radius: 9px;
   }
 
   .topbar-user-chip {
@@ -1509,6 +1519,62 @@ body.app-theme-dark .app-toast-body {
   .form-select,
   .form-label {
     font-size: 0.86rem;
+  }
+
+  .app-route-indicator {
+    display: none;
+  }
+
+  .app-content {
+    padding-top: 0.45rem !important;
+    padding-left: 0.7rem !important;
+    padding-right: 0.7rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+
+  .page-hero {
+    padding: 0.72rem 0.78rem !important;
+    margin-bottom: 0.65rem !important;
+    border-radius: 18px !important;
+  }
+
+  .page-eyebrow {
+    padding: 0.14rem 0.42rem !important;
+    font-size: 0.56rem !important;
+  }
+
+  .page-title {
+    font-size: 1.08rem !important;
+    line-height: 1.12;
+  }
+
+  .page-subtitle {
+    font-size: 0.86rem !important;
+    line-height: 1.35;
+  }
+
+  .card-header {
+    padding: 0.7rem 0.78rem !important;
+  }
+
+  .card-body,
+  .card-footer {
+    padding: 0.78rem !important;
+  }
+
+  .card {
+    border-radius: 18px;
+  }
+
+  .hero-actions .btn,
+  .page-actions-row .btn,
+  .form-action-row .btn {
+    min-height: 34px;
+    padding-inline: 0.7rem;
+  }
+
+  .btn {
+    border-radius: 999px;
   }
 }
 
@@ -3264,4 +3330,198 @@ body.app-theme-light .topbar-user-avatar,
 body.app-theme-dark .topbar-user-avatar {
   border-style: solid;
   border-color: var(--line-strong);
+}
+
+@media (max-width: 576px) {
+  body.app-theme-light .app-topbar,
+  body.app-theme-dark .app-topbar {
+    padding: 0.38rem 0.65rem !important;
+    gap: 0.35rem 0.4rem !important;
+    min-height: 58px;
+    flex-wrap: nowrap;
+    align-items: center !important;
+  }
+
+  body.app-theme-light .topbar-left,
+  body.app-theme-dark .topbar-left {
+    flex: 0 0 auto;
+    gap: 0.35rem;
+  }
+
+  body.app-theme-light .topbar-brand,
+  body.app-theme-dark .topbar-brand {
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 0.35rem;
+    overflow: hidden;
+  }
+
+  body.app-theme-light .topbar-kicker,
+  body.app-theme-dark .topbar-kicker {
+    display: none !important;
+  }
+
+  body.app-theme-light .topbar-title h6,
+  body.app-theme-dark .topbar-title h6 {
+    font-size: 0.8rem !important;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.app-theme-light .topbar-title small,
+  body.app-theme-dark .topbar-title small {
+    font-size: 0.58rem !important;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.app-theme-light .topbar-brand-logo,
+  body.app-theme-dark .topbar-brand-logo,
+  body.app-theme-light .topbar-company-logo,
+  body.app-theme-dark .topbar-company-logo {
+    width: 28px;
+    height: 28px;
+    padding: 1px;
+    border-radius: 9px;
+  }
+
+  body.app-theme-light .topbar-actions,
+  body.app-theme-dark .topbar-actions {
+    flex: 0 0 auto;
+    width: auto;
+    gap: 0.25rem !important;
+    flex-wrap: nowrap;
+  }
+
+  body.app-theme-light .topbar-actions .btn,
+  body.app-theme-dark .topbar-actions .btn {
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    padding: 0 !important;
+    border-radius: 999px !important;
+  }
+
+  body.app-theme-light .topbar-icon-btn-label,
+  body.app-theme-dark .topbar-icon-btn-label,
+  body.app-theme-light .topbar-kicker,
+  body.app-theme-dark .topbar-kicker {
+    display: none !important;
+  }
+
+  body.app-theme-light .app-route-indicator,
+  body.app-theme-dark .app-route-indicator {
+    display: none !important;
+  }
+
+  body.app-theme-light .app-content,
+  body.app-theme-dark .app-content {
+    padding-top: 0.4rem !important;
+    padding-left: 0.65rem !important;
+    padding-right: 0.65rem !important;
+    padding-bottom: 0.7rem !important;
+  }
+
+  body.app-theme-light .app-content.py-3,
+  body.app-theme-dark .app-content.py-3 {
+    padding-top: 0.4rem !important;
+    padding-bottom: 0.7rem !important;
+  }
+
+  body.app-theme-light .app-content > .mb-3,
+  body.app-theme-dark .app-content > .mb-3 {
+    margin-bottom: 0.6rem !important;
+  }
+
+  body.app-theme-light .page-hero,
+  body.app-theme-dark .page-hero {
+    padding: 0.7rem 0.75rem !important;
+    margin-bottom: 0.6rem !important;
+    border-radius: 18px !important;
+    gap: 0.55rem;
+  }
+
+  body.app-theme-light .page-eyebrow,
+  body.app-theme-dark .page-eyebrow {
+    padding: 0.12rem 0.38rem !important;
+    font-size: 0.55rem !important;
+  }
+
+  body.app-theme-light .page-title,
+  body.app-theme-dark .page-title {
+    font-size: 1.05rem !important;
+    line-height: 1.1;
+    margin-top: 0.25rem;
+  }
+
+  body.app-theme-light .page-subtitle,
+  body.app-theme-dark .page-subtitle {
+    font-size: 0.84rem !important;
+    line-height: 1.32;
+  }
+
+  body.app-theme-light .card-header,
+  body.app-theme-dark .card-header {
+    padding: 0.65rem 0.75rem !important;
+  }
+
+  body.app-theme-light .card-body,
+  body.app-theme-light .card-footer,
+  body.app-theme-dark .card-body,
+  body.app-theme-dark .card-footer {
+    padding: 0.7rem 0.75rem !important;
+  }
+
+  body.app-theme-light .card,
+  body.app-theme-dark .card {
+    border-radius: 18px;
+  }
+
+  body.app-theme-light .hero-actions .btn,
+  body.app-theme-dark .hero-actions .btn,
+  body.app-theme-light .page-actions-row .btn,
+  body.app-theme-dark .page-actions-row .btn,
+  body.app-theme-light .form-action-row .btn,
+  body.app-theme-dark .form-action-row .btn {
+    min-height: 34px;
+    padding-inline: 0.7rem;
+    border-radius: 999px;
+  }
+
+  body.app-theme-light .table-mobile-stack tbody,
+  body.app-theme-dark .table-mobile-stack tbody {
+    padding: 0.4rem;
+  }
+
+  body.app-theme-light .table-mobile-stack tr,
+  body.app-theme-dark .table-mobile-stack tr {
+    margin-bottom: 0.6rem;
+    padding: 0.24rem 0;
+    border-radius: 16px;
+  }
+
+  body.app-theme-light .table-mobile-stack td,
+  body.app-theme-dark .table-mobile-stack td {
+    padding: 0.62rem 0.75rem 0.62rem 7.4rem !important;
+    min-height: 48px;
+  }
+
+  body.app-theme-light .table-mobile-stack td::before,
+  body.app-theme-dark .table-mobile-stack td::before {
+    left: 0.75rem;
+    top: 0.62rem;
+    width: 6rem;
+    font-size: 0.66rem;
+  }
+
+  body.app-theme-light .table-mobile-stack .action-cell,
+  body.app-theme-dark .table-mobile-stack .action-cell {
+    padding-left: 0.75rem !important;
+    gap: 0.4rem !important;
+  }
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
   ResponsiveContainer,
   LineChart,
@@ -23,13 +24,34 @@ import { isSilentAuthError } from '../utils/apiErrors';
 const COLORS = ['#6366F1', '#818CF8', '#4F46E5', '#A5B4FC', '#C7D2FE'];
 const GRID_COLOR = 'rgba(148, 163, 184, 0.16)';
 const AXIS_COLOR = '#94A3B8';
-const TOOLTIP_STYLE = {
-  background: 'rgba(17, 24, 39, 0.96)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  borderRadius: '16px',
-  boxShadow: '0 20px 45px rgba(2, 6, 23, 0.32)',
-  color: '#F8FAFC'
-};
+
+const getTooltipStyles = (isDark) => ({
+  contentStyle: isDark
+    ? {
+        background: 'rgba(17, 24, 39, 0.96)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: '16px',
+        boxShadow: '0 20px 45px rgba(2, 6, 23, 0.32)',
+        color: '#F8FAFC'
+      }
+    : {
+        background: 'rgba(255, 255, 255, 0.98)',
+        border: '1px solid rgba(15, 23, 42, 0.08)',
+        borderRadius: '16px',
+        boxShadow: '0 18px 38px rgba(15, 23, 42, 0.14)',
+        color: '#0F172A'
+      },
+  itemStyle: {
+    color: isDark ? '#F8FAFC' : '#0F172A'
+  },
+  labelStyle: {
+    color: isDark ? '#F8FAFC' : '#0F172A',
+    fontWeight: 700
+  },
+  wrapperStyle: {
+    outline: 'none'
+  }
+});
 
 const truncateLabel = (value = '', max = 10) => {
   const label = String(value);
@@ -43,8 +65,11 @@ const compactCurrency = (value = 0) =>
   }).format(Number(value) || 0);
 
 const DashboardPage = () => {
+  const { user } = useSelector((state) => state.auth);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const isDark = user?.theme === 'dark';
+  const tooltipStyles = getTooltipStyles(isDark);
 
   useEffect(() => {
     const loadStats = async () => {
@@ -134,10 +159,12 @@ const DashboardPage = () => {
                     axisLine={false}
                   />
                   <Tooltip
-                    contentStyle={TOOLTIP_STYLE}
+                    contentStyle={tooltipStyles.contentStyle}
+                    itemStyle={tooltipStyles.itemStyle}
+                    labelStyle={tooltipStyles.labelStyle}
+                    wrapperStyle={tooltipStyles.wrapperStyle}
                     cursor={{ stroke: 'rgba(99, 102, 241, 0.28)', strokeWidth: 1 }}
                     formatter={(value) => [formatCurrency(value), 'Revenue']}
-                    labelStyle={{ color: '#F8FAFC', fontWeight: 700 }}
                   />
                   <Line
                     type="monotone"
@@ -183,11 +210,13 @@ const DashboardPage = () => {
                     axisLine={false}
                   />
                   <Tooltip
-                    contentStyle={TOOLTIP_STYLE}
+                    contentStyle={tooltipStyles.contentStyle}
+                    itemStyle={tooltipStyles.itemStyle}
+                    labelStyle={tooltipStyles.labelStyle}
+                    wrapperStyle={tooltipStyles.wrapperStyle}
                     cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                     formatter={(value) => [formatCurrency(value), 'Revenue']}
                     labelFormatter={(value) => String(value)}
-                    labelStyle={{ color: '#F8FAFC', fontWeight: 700 }}
                   />
                   <Bar
                     dataKey="revenue"
@@ -236,9 +265,11 @@ const DashboardPage = () => {
                     ))}
                   </Pie>
                   <Tooltip
-                    contentStyle={TOOLTIP_STYLE}
+                    contentStyle={tooltipStyles.contentStyle}
+                    itemStyle={tooltipStyles.itemStyle}
+                    labelStyle={tooltipStyles.labelStyle}
+                    wrapperStyle={tooltipStyles.wrapperStyle}
                     formatter={(value) => [formatCurrency(value), 'Revenue']}
-                    labelStyle={{ color: '#F8FAFC', fontWeight: 700 }}
                   />
                 </PieChart>
                 </ResponsiveContainer>

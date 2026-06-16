@@ -70,7 +70,7 @@ const LoginPage = () => {
         throw new Error('Invalid login response from server');
       }
       dispatch(setCredentials(response.data));
-      toast.success('Signed in');
+      toast.success('Signed in', { autoClose: 2000 });
       navigate('/');
     } catch (error) {
       if (!error?.response) {

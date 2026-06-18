@@ -112,19 +112,17 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
             </div>
           </div>
 
-          <div style="min-width: 220px; font-size: 14px; margin-top: 6px; line-height: 1.55;">
+          <div style="min-width: 220px; font-size: 14px; margin-top: 6px; line-height: 1.55; display:flex; flex-direction:column; gap:7px;">
             <div style="display:grid; grid-template-columns: 58px minmax(0, 1fr); column-gap: 2px; align-items:flex-start;">
               <span style="font-weight:600; text-align:left; white-space:nowrap;">Phone:</span>
               <span style="font-weight:500; min-width:0; text-align:left;">${COMPANY.phone}</span>
             </div>
-            <div style="display:grid; grid-template-columns: 58px minmax(0, 1fr); column-gap: 2px; align-items:flex-start;">
-              <span style="font-weight:600; text-align:left; white-space:nowrap;">Email:</span>
-              <a href="mailto:${escapeHtml(COMPANY.email)}" target="_blank" rel="noreferrer noopener" style="font-weight:500; min-width:0; text-align:left; color:#0b57d0; text-decoration:underline; overflow-wrap:anywhere; display:inline-block; max-width:100%;">${COMPANY.email}</a>
-            </div>
-            <div style="display:grid; grid-template-columns: 58px minmax(0, 1fr); column-gap: 2px; align-items:flex-start;">
-              <span style="font-weight:600; text-align:left; white-space:nowrap;">Website:</span>
-              <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="font-weight:500; min-width:0; text-align:left; color:#0b57d0; text-decoration:underline; overflow-wrap:anywhere; display:inline-block; max-width:100%;">${escapeHtml(websiteText)}</a>
-            </div>
+            <a href="mailto:${escapeHtml(COMPANY.email)}" target="_blank" rel="noreferrer noopener" style="display:block; width:100%; padding:6px 8px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere; font-weight:600;">
+              Email: ${COMPANY.email}
+            </a>
+            <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="display:block; width:100%; padding:6px 8px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere; font-weight:600;">
+              Website: ${escapeHtml(websiteText)}
+            </a>
           </div>
         </div>
 

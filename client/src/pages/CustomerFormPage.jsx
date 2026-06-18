@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
+import { CheckIcon, CloseIcon, IconAction } from '../components/AppIcons';
 import { isSilentAuthError } from '../utils/apiErrors';
 
 const CustomerFormPage = () => {
@@ -81,10 +82,20 @@ const CustomerFormPage = () => {
               <textarea rows="3" className="form-control" {...register('address')} />
             </div>
             <div className="col-12 d-flex gap-2 form-action-row">
-              <button disabled={isSubmitting} type="submit" className="btn btn-warning">
-                {isSubmitting ? 'Saving...' : 'Save'}
-              </button>
-              <button type="button" onClick={() => navigate('/customers')} className="btn btn-outline-secondary">Cancel</button>
+              <IconAction
+                type="submit"
+                icon={CheckIcon}
+                label={isSubmitting ? 'Saving...' : 'Save'}
+                className="btn-warning btn-lg"
+                disabled={isSubmitting}
+              />
+              <IconAction
+                type="button"
+                icon={CloseIcon}
+                label="Cancel"
+                className="btn-outline-secondary btn-lg"
+                onClick={() => navigate('/customers')}
+              />
             </div>
           </form>
         </div>

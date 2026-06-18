@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { DownloadIcon, EyeIcon, IconAction, PrintIcon, ShareIcon } from '../components/AppIcons';
 import { formatCurrency, formatDate } from '../utils/format';
 import { isSilentAuthError } from '../utils/apiErrors';
 import { downloadInvoicePdf, printInvoicePdf, shareInvoicePdf, viewInvoicePdf } from '../utils/pdf';
@@ -70,12 +71,10 @@ const InvoiceViewPage = () => {
           <p className="page-subtitle mb-0">Review, print, download or share this invoice instantly.</p>
         </div>
         <div className="hero-actions">
-          <button className="btn btn-outline-success" onClick={viewPdf}>View PDF</button>
-          <button className="btn btn-warning" onClick={downloadPdf}>Download PDF</button>
-          <button className="btn btn-outline-dark" onClick={printPdf}>Print</button>
-          <button className="btn btn-outline-primary" onClick={sharePdf} disabled={sharing}>
-            {sharing ? 'Sharing...' : 'Share'}
-          </button>
+          <IconAction type="button" icon={EyeIcon} label="View PDF" className="btn-outline-success btn-sm" onClick={viewPdf} />
+          <IconAction type="button" icon={DownloadIcon} label="Download PDF" className="btn-warning btn-sm" onClick={downloadPdf} />
+          <IconAction type="button" icon={PrintIcon} label="Print" className="btn-outline-dark btn-sm" onClick={printPdf} />
+          <IconAction type="button" icon={ShareIcon} label={sharing ? 'Sharing...' : 'Share'} className="btn-outline-primary btn-sm" onClick={sharePdf} disabled={sharing} />
         </div>
       </section>
 

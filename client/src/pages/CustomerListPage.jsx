@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
+import { EditIcon, IconAction, LeftIcon, PlusIcon, RightIcon, SearchIcon, TrashIcon } from '../components/AppIcons';
 import { formatCurrency } from '../utils/format';
 import { isSilentAuthError } from '../utils/apiErrors';
 
@@ -67,8 +68,8 @@ const CustomerListPage = () => {
               onChange={(e) => setQ(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && load(1, q)}
             />
-            <button className="btn btn-sm btn-warning" onClick={() => load(1, q)}>Search</button>
-            <Link className="btn btn-sm btn-dark" to="/customers/new">Add Factory</Link>
+            <IconAction type="button" icon={SearchIcon} label="Search" className="btn-warning btn-sm" onClick={() => load(1, q)} />
+            <IconAction as={Link} to="/customers/new" icon={PlusIcon} label="Add Factory" className="btn-dark btn-sm" />
           </div>
         </div>
         <div className="table-responsive">
@@ -88,8 +89,8 @@ const CustomerListPage = () => {
                   <td data-label="Total Loads">{item.totalLoadsSent}</td>
                   <td data-label="Total Revenue">{formatCurrency(item.totalAmountPaid)}</td>
                   <td data-label="Actions" className="d-flex gap-1 action-cell">
-                    <Link className="btn btn-sm btn-outline-primary" to={`/customers/${item._id}/edit`}>Edit</Link>
-                    <button className="btn btn-sm btn-outline-danger" onClick={() => onDelete(item._id)}>Delete</button>
+                    <IconAction as={Link} to={`/customers/${item._id}/edit`} icon={EditIcon} label="Edit" className="btn-outline-primary btn-sm" />
+                    <IconAction type="button" icon={TrashIcon} label="Delete" className="btn-outline-danger btn-sm" onClick={() => onDelete(item._id)} />
                   </td>
                 </tr>
               ))}
@@ -99,9 +100,23 @@ const CustomerListPage = () => {
         <div className="card-footer d-flex justify-content-between align-items-center">
           <small>Total: {state.total}</small>
           <div className="d-flex gap-2">
-            <button className="btn btn-sm btn-outline-secondary" disabled={state.page <= 1} onClick={() => load(state.page - 1, q)}>Prev</button>
+            <IconAction
+              type="button"
+              icon={LeftIcon}
+              label="Previous page"
+              className="btn-outline-secondary btn-sm"
+              disabled={state.page <= 1}
+              onClick={() => load(state.page - 1, q)}
+            />
             <span className="small align-self-center">{state.page} / {state.pages}</span>
-            <button className="btn btn-sm btn-outline-secondary" disabled={state.page >= state.pages} onClick={() => load(state.page + 1, q)}>Next</button>
+            <IconAction
+              type="button"
+              icon={RightIcon}
+              label="Next page"
+              className="btn-outline-secondary btn-sm"
+              disabled={state.page >= state.pages}
+              onClick={() => load(state.page + 1, q)}
+            />
           </div>
         </div>
       </div>

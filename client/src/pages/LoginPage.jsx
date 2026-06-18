@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../api/axiosClient';
+import { EyeIcon, EyeOffIcon, IconAction, RightIcon } from '../components/AppIcons';
 import { setCredentials } from '../features/authSlice';
 
 const LOGIN_TIMEOUT_MS = 60000;
@@ -125,21 +126,25 @@ const LoginPage = () => {
                   className="form-control"
                   {...register('password', { required: 'Password is required' })}
                 />
-                <button
+                <IconAction
                   type="button"
-                  className="btn btn-outline-secondary"
+                  icon={showPassword ? EyeOffIcon : EyeIcon}
+                  label={showPassword ? 'Hide password' : 'Show password'}
+                  className="btn-sm btn-outline-secondary"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  title={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? 'Hide' : 'Show'}
-                </button>
+                />
               </div>
               {errors.password && <small className="field-error">{errors.password.message}</small>}
             </div>
-            <button disabled={isSubmitting} className="btn btn-warning w-100" type="submit">
-              {isSubmitting ? 'Signing in...' : 'Login'}
-            </button>
+            <div className="d-flex justify-content-center pt-1">
+              <IconAction
+                type="submit"
+                icon={RightIcon}
+                label={isSubmitting ? 'Signing in...' : 'Login'}
+                className="btn-lg btn-warning login-submit-btn"
+                disabled={isSubmitting}
+              />
+            </div>
           </form>
         </div>
       </div>

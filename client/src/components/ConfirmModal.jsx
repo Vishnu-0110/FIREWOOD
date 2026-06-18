@@ -1,3 +1,5 @@
+import { CheckIcon, CloseIcon, IconAction } from './AppIcons';
+
 const ConfirmModal = ({ title, text, onConfirm, id = 'confirmModal' }) => {
   return (
     <div className="modal fade" id={id} tabIndex="-1" aria-hidden="true">
@@ -9,12 +11,8 @@ const ConfirmModal = ({ title, text, onConfirm, id = 'confirmModal' }) => {
           </div>
           <div className="modal-body">{text}</div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-outline-secondary" data-bs-dismiss="modal">
-              Cancel
-            </button>
-            <button type="button" className="btn btn-danger" onClick={onConfirm} data-bs-dismiss="modal">
-              Confirm
-            </button>
+            <IconAction type="button" icon={CloseIcon} label="Cancel" className="btn-outline-secondary btn-sm" data-bs-dismiss="modal" />
+            <IconAction type="button" icon={CheckIcon} label="Confirm" className="btn-danger btn-sm" onClick={onConfirm} data-bs-dismiss="modal" />
           </div>
         </div>
       </div>

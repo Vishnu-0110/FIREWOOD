@@ -3,13 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../api/axiosClient';
 import { clearCredentials, toggleTheme } from '../features/authSlice';
-
-const PowerIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-    <path d="M12 3.25a.85.85 0 0 1 .85.85v7.55a.85.85 0 1 1-1.7 0V4.1a.85.85 0 0 1 .85-.85Z" fill="currentColor" />
-    <path d="M7.08 5.1a.85.85 0 0 1 1.18.22.85.85 0 0 1-.18 1.17 6.1 6.1 0 1 0 7.84 0 .85.85 0 1 1 1-1.37 7.8 7.8 0 1 1-9.86 0Z" fill="currentColor" />
-  </svg>
-);
+import { CloseIcon, IconAction, MenuIcon, MoonIcon, PowerIcon, SunIcon } from '../components/AppIcons';
 
 const Topbar = ({ collapsed, onToggleSidebar, routeLabel = 'Dashboard' }) => {
   const dispatch = useDispatch();
@@ -29,15 +23,13 @@ const Topbar = ({ collapsed, onToggleSidebar, routeLabel = 'Dashboard' }) => {
   return (
     <header className="app-topbar d-flex align-items-center px-3 py-2">
       <div className="d-flex align-items-center gap-2 topbar-left">
-        <button
+        <IconAction
           type="button"
-          className="btn btn-sm sidebar-toggle-btn"
+          icon={collapsed ? MenuIcon : CloseIcon}
+          label={collapsed ? 'Open sidebar' : 'Collapse sidebar'}
+          className="btn-sm btn-outline-secondary sidebar-toggle-btn"
           onClick={onToggleSidebar}
-          aria-label={collapsed ? 'Open sidebar' : 'Collapse sidebar'}
-          title={collapsed ? 'Open sidebar' : 'Collapse sidebar'}
-        >
-          {collapsed ? '☰' : '✕'}
-        </button>
+        />
       </div>
       <div className="topbar-brand" title="Vijaya Lakshmi Firewood Supplier">
         <img
@@ -55,24 +47,20 @@ const Topbar = ({ collapsed, onToggleSidebar, routeLabel = 'Dashboard' }) => {
         </div>
       </div>
       <div className="d-flex align-items-center gap-2 topbar-actions">
-        <button
+        <IconAction
           type="button"
-          className="btn btn-sm btn-outline-secondary topbar-ghost-btn topbar-icon-btn"
+          icon={theme === 'dark' ? SunIcon : MoonIcon}
+          label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          className="btn-sm btn-outline-secondary topbar-ghost-btn"
           onClick={() => dispatch(toggleTheme())}
-          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-          title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-        >
-          <span className="topbar-icon-btn-symbol" aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
-        </button>
-        <button
+        />
+        <IconAction
           type="button"
-          className="btn btn-sm btn-outline-danger topbar-ghost-btn topbar-icon-btn topbar-logout-btn"
+          icon={PowerIcon}
+          label="Logout"
+          className="btn-sm btn-outline-danger topbar-ghost-btn"
           onClick={handleLogout}
-          aria-label="Logout"
-          title="Logout"
-        >
-          <span className="topbar-icon-btn-symbol" aria-hidden="true"><PowerIcon /></span>
-        </button>
+        />
       </div>
     </header>
   );

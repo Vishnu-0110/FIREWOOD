@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
+import { DownloadIcon, EditIcon, EyeIcon, FilterIcon, IconAction, LeftIcon, RightIcon, TrashIcon } from '../components/AppIcons';
 import { formatCurrency, formatDate, queryParams } from '../utils/format';
 import { isSilentAuthError } from '../utils/apiErrors';
 
@@ -140,9 +141,9 @@ const InvoiceHistoryPage = () => {
               />
             </div>
             <div className="col-12 col-lg-3 d-flex gap-2 page-actions-row">
-              <button className="btn btn-warning" onClick={() => updateFilters({ q: filters.q, page: 1 })}>Filter</button>
-              <button className="btn btn-outline-success" onClick={exportCurrent}>Export Excel</button>
-              <button className="btn btn-outline-dark" onClick={downloadServerExcel}>Server Export</button>
+              <IconAction type="button" icon={FilterIcon} label="Filter" className="btn-warning btn-sm" onClick={() => updateFilters({ q: filters.q, page: 1 })} />
+              <IconAction type="button" icon={DownloadIcon} label="Export Excel" className="btn-outline-success btn-sm" onClick={exportCurrent} />
+              <IconAction type="button" icon={DownloadIcon} label="Server Export" className="btn-outline-dark btn-sm" onClick={downloadServerExcel} />
             </div>
           </div>
         </div>
@@ -169,9 +170,9 @@ const InvoiceHistoryPage = () => {
                   <td data-label="Net Weight">{item.netWeight}</td>
                   <td data-label="Total">{formatCurrency(item.totalAmount)}</td>
                   <td data-label="Actions" className="d-flex gap-1 action-cell">
-                    <Link className="btn btn-sm btn-outline-dark" to={`/invoices/${item._id}`}>View</Link>
-                    <Link className="btn btn-sm btn-outline-primary" to={`/invoices/${item._id}/edit`}>Edit</Link>
-                    <button className="btn btn-sm btn-outline-danger" onClick={() => deleteInvoice(item._id)}>Delete</button>
+                    <IconAction as={Link} to={`/invoices/${item._id}`} icon={EyeIcon} label="View" className="btn-outline-dark btn-sm" />
+                    <IconAction as={Link} to={`/invoices/${item._id}/edit`} icon={EditIcon} label="Edit" className="btn-outline-primary btn-sm" />
+                    <IconAction type="button" icon={TrashIcon} label="Delete" className="btn-outline-danger btn-sm" onClick={() => deleteInvoice(item._id)} />
                   </td>
                 </tr>
               ))}
@@ -181,9 +182,23 @@ const InvoiceHistoryPage = () => {
         <div className="card-footer d-flex justify-content-between">
           <small>Total: {data.total}</small>
           <div className="d-flex gap-2">
-            <button className="btn btn-sm btn-outline-secondary" disabled={data.page <= 1} onClick={() => updateFilters({ page: data.page - 1 })}>Prev</button>
+            <IconAction
+              type="button"
+              icon={LeftIcon}
+              label="Previous page"
+              className="btn-outline-secondary btn-sm"
+              disabled={data.page <= 1}
+              onClick={() => updateFilters({ page: data.page - 1 })}
+            />
             <span className="small align-self-center">{data.page} / {data.pages}</span>
-            <button className="btn btn-sm btn-outline-secondary" disabled={data.page >= data.pages} onClick={() => updateFilters({ page: data.page + 1 })}>Next</button>
+            <IconAction
+              type="button"
+              icon={RightIcon}
+              label="Next page"
+              className="btn-outline-secondary btn-sm"
+              disabled={data.page >= data.pages}
+              onClick={() => updateFilters({ page: data.page + 1 })}
+            />
           </div>
         </div>
       </div>

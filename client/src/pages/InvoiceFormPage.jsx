@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
 import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
+import { CheckIcon, CloseIcon, IconAction, TemplateIcon } from '../components/AppIcons';
 import { formatCurrency } from '../utils/format';
 import { isSilentAuthError } from '../utils/apiErrors';
 import { downloadInvoiceTemplatePdf } from '../utils/pdf';
@@ -86,9 +87,13 @@ const InvoiceFormPage = () => {
           <p className="page-subtitle mb-0">Fast entry, mobile-friendly layout and live totals while you work.</p>
         </div>
         <div className="hero-actions">
-          <button type="button" className="btn btn-outline-secondary" onClick={downloadTemplate}>
-            Download Template
-          </button>
+          <IconAction
+            type="button"
+            icon={TemplateIcon}
+            label="Download Template"
+            className="btn-outline-secondary btn-sm"
+            onClick={downloadTemplate}
+          />
         </div>
       </section>
 
@@ -181,12 +186,20 @@ const InvoiceFormPage = () => {
               </div>
             </div>
             <div className="col-12 d-flex gap-2 form-action-row">
-              <button disabled={isSubmitting} className="btn btn-warning" type="submit">
-                {isSubmitting ? 'Saving...' : isEdit ? 'Update Invoice' : 'Save Invoice'}
-              </button>
-              <button type="button" className="btn btn-outline-secondary" onClick={() => navigate('/invoices')}>
-                Cancel
-              </button>
+              <IconAction
+                type="submit"
+                icon={CheckIcon}
+                label={isSubmitting ? 'Saving...' : isEdit ? 'Update Invoice' : 'Save Invoice'}
+                className="btn-warning btn-lg"
+                disabled={isSubmitting}
+              />
+              <IconAction
+                type="button"
+                icon={CloseIcon}
+                label="Cancel"
+                className="btn-outline-secondary btn-lg"
+                onClick={() => navigate('/invoices')}
+              />
             </div>
           </form>
         </div>

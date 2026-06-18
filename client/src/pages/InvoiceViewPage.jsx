@@ -6,7 +6,7 @@ import api from '../api/axiosClient';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { formatCurrency, formatDate } from '../utils/format';
 import { isSilentAuthError } from '../utils/apiErrors';
-import { downloadInvoicePdf, printInvoicePdf, shareInvoicePdf } from '../utils/pdf';
+import { downloadInvoicePdf, printInvoicePdf, shareInvoicePdf, viewInvoicePdf } from '../utils/pdf';
 
 const InvoiceViewPage = () => {
   const { id } = useParams();
@@ -24,6 +24,13 @@ const InvoiceViewPage = () => {
 
   const downloadPdf = async () => {
     await downloadInvoicePdf(invoice);
+  };
+
+  const viewPdf = async () => {
+    const opened = await viewInvoicePdf(invoice);
+    if (!opened) {
+      toast.info('Could not open a PDF preview here.');
+    }
   };
 
   const printPdf = async () => {
@@ -63,6 +70,7 @@ const InvoiceViewPage = () => {
           <p className="page-subtitle mb-0">Review, print, download or share this invoice instantly.</p>
         </div>
         <div className="hero-actions">
+          <button className="btn btn-outline-success" onClick={viewPdf}>View PDF</button>
           <button className="btn btn-warning" onClick={downloadPdf}>Download PDF</button>
           <button className="btn btn-outline-dark" onClick={printPdf}>Print</button>
           <button className="btn btn-outline-primary" onClick={sharePdf} disabled={sharing}>

@@ -29,6 +29,7 @@ const rateValue = (value = 0) =>
   Number(value).toLocaleString('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 0 });
 
 const invoiceNo = (value) => String(Number(value) || 0);
+const websiteText = COMPANY.website;
 const buildInvoiceFilename = (invoice) => {
   const rawName = String(invoice?.customer?.factoryName || invoice?.customer?.customerName || '').trim();
   const firstWord = rawName ? rawName.split(/\s+/)[0] : 'INVOICE';
@@ -118,11 +119,11 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
             </div>
             <div style="display:grid; grid-template-columns: 58px minmax(0, 1fr); column-gap: 2px; align-items:flex-start;">
               <span style="font-weight:600; text-align:left; white-space:nowrap;">Email:</span>
-              <a href="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to=${encodeURIComponent(COMPANY.email)}" target="_blank" rel="noreferrer noopener" style="font-weight:500; min-width:0; text-align:left; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere;">${COMPANY.email}</a>
+              <a href="mailto:${escapeHtml(COMPANY.email)}" target="_blank" rel="noreferrer noopener" style="font-weight:500; min-width:0; text-align:left; color:#0b57d0; text-decoration:underline; overflow-wrap:anywhere; display:inline-block; max-width:100%;">${COMPANY.email}</a>
             </div>
             <div style="display:grid; grid-template-columns: 58px minmax(0, 1fr); column-gap: 2px; align-items:flex-start;">
               <span style="font-weight:600; text-align:left; white-space:nowrap;">Website:</span>
-              <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="font-weight:500; min-width:0; text-align:left; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere;">vijayalakshmifirewoods.netlify.app</a>
+              <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="font-weight:500; min-width:0; text-align:left; color:#0b57d0; text-decoration:underline; overflow-wrap:anywhere; display:inline-block; max-width:100%;">${escapeHtml(websiteText)}</a>
             </div>
           </div>
         </div>
@@ -265,6 +266,28 @@ export const downloadInvoicePdf = async (invoice) => {
     await buildWorker(node, buildInvoiceFilename(invoice)).save();
   } finally {
     node.parentElement?.remove();
+  }
+};
+
+export const viewInvoicePdf = async (invoice) => {
+  if (typeof window === 'undefined') return false;
+
+  const previewWindow = window.open('', '_blank');
+  if (!previewWindow) return false;
+
+  previewWindow.document.write('<p style="font-family: Arial, sans-serif; padding: 16px;">Loading invoice preview...</p>');
+  previewWindow.document.close();
+
+  try {
+    const blob = await createInvoicePdfBlob(invoice);
+    const url = URL.createObjectURL(blob);
+    previewWindow.location.href = url;
+    previewWindow.focus();
+    setTimeout(() => URL.revokeObjectURL(url), 120000);
+    return true;
+  } catch (error) {
+    previewWindow.close();
+    throw error;
   }
 };
 

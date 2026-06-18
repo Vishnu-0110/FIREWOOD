@@ -1885,10 +1885,16 @@ body.app-theme-dark .app-toast-body {
     width: 100%;
   }
 
-  .hero-actions .btn,
-  .page-actions-row .btn,
-  .form-action-row .btn {
+  .hero-actions .btn:not(.btn-icon),
+  .page-actions-row .btn:not(.btn-icon),
+  .form-action-row .btn:not(.btn-icon) {
     flex: 1 1 180px;
+  }
+
+  .hero-actions .btn.btn-icon,
+  .page-actions-row .btn.btn-icon,
+  .form-action-row .btn.btn-icon {
+    flex: 0 0 auto;
   }
 
   .topbar-actions {
@@ -1964,8 +1970,16 @@ body.app-theme-dark .app-toast-body {
     margin-bottom: 0.55rem;
   }
 
-  .table-mobile-stack .action-cell .btn {
+  .table-mobile-stack .action-cell .btn:not(.btn-icon) {
     flex: 1 1 120px;
+  }
+
+  .table-mobile-stack .action-cell .btn.btn-icon {
+    flex: 0 0 auto;
+    width: 2rem;
+    min-width: 2rem;
+    height: 2rem;
+    min-height: 2rem;
   }
 
   .info-grid {
@@ -1987,14 +2001,24 @@ body.app-theme-dark .app-toast-body {
     font-size: 1.4rem;
   }
 
-  .hero-actions .btn,
-  .page-actions-row .btn,
-  .form-action-row .btn,
-  .topbar-actions .btn {
+  .hero-actions .btn:not(.btn-icon),
+  .page-actions-row .btn:not(.btn-icon),
+  .form-action-row .btn:not(.btn-icon),
+  .topbar-actions .btn:not(.btn-icon) {
     width: 100%;
   }
 
-  .topbar-actions .btn {
+  .hero-actions .btn.btn-icon,
+  .page-actions-row .btn.btn-icon,
+  .form-action-row .btn.btn-icon,
+  .topbar-actions .btn.btn-icon {
+    width: 2rem;
+    min-width: 2rem;
+    height: 2rem;
+    min-height: 2rem;
+  }
+
+  .topbar-actions .btn:not(.btn-icon) {
     width: auto;
   }
 

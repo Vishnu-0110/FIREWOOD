@@ -141,7 +141,7 @@ const LoginPage = () => {
                 type="submit"
                 icon={RightIcon}
                 label={isSubmitting ? 'Signing in...' : 'Login'}
-                className="btn-lg btn-warning login-submit-btn"
+                className="btn-sm btn-warning login-submit-btn"
                 disabled={isSubmitting}
               />
             </div>

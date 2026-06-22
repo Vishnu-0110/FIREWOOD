@@ -3212,7 +3212,7 @@ body.app-theme-dark .sidebar-brand-title {
 body.app-theme-light .sidebar-brand-subtitle,
 body.app-theme-dark .sidebar-brand-subtitle {
   color: inherit;
-  opacity: 0.72;
+  opacity: 0.92;
 }
 
 @media (min-width: 992px) {
@@ -3640,4 +3640,56 @@ body.app-theme-dark .topbar-user-avatar {
     padding-left: 0.75rem !important;
     gap: 0.4rem !important;
   }
+}
+
+body.app-theme-light .brand-text p,
+body.app-theme-light .sidebar-section-label,
+body.app-theme-light .sidebar-brand-subtitle,
+body.app-theme-light .topbar-title small,
+body.app-theme-light .topbar-user-meta small,
+body.app-theme-light .page-subtitle,
+body.app-theme-light .detail-label,
+body.app-theme-light .custom-chart-legend-text,
+body.app-theme-light .text-muted,
+body.app-theme-light small,
+body.app-theme-light .small,
+body.app-theme-light .login-showcase p,
+body.app-theme-light .login-flow-step small,
+body.app-theme-light .login-hud-label,
+body.app-theme-light .login-ops-label {
+  color: #334155 !important;
+  opacity: 1 !important;
+}
+
+body.app-theme-dark .brand-text p,
+body.app-theme-dark .sidebar-section-label,
+body.app-theme-dark .sidebar-brand-subtitle,
+body.app-theme-dark .topbar-title small,
+body.app-theme-dark .topbar-user-meta small,
+body.app-theme-dark .page-subtitle,
+body.app-theme-dark .detail-label,
+body.app-theme-dark .custom-chart-legend-text,
+body.app-theme-dark .text-muted,
+body.app-theme-dark small,
+body.app-theme-dark .small,
+body.app-theme-dark .login-showcase p,
+body.app-theme-dark .login-flow-step small,
+body.app-theme-dark .login-hud-label,
+body.app-theme-dark .login-ops-label {
+  color: #e2e8f0 !important;
+  opacity: 1 !important;
+}
+
+body.app-theme-light .form-control::placeholder,
+body.app-theme-light .form-select::placeholder,
+body.app-theme-light textarea::placeholder {
+  color: #64748b;
+  opacity: 1;
+}
+
+body.app-theme-dark .form-control::placeholder,
+body.app-theme-dark .form-select::placeholder,
+body.app-theme-dark textarea::placeholder {
+  color: #94a3b8;
+  opacity: 1;
 }

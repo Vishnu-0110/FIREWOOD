@@ -444,6 +444,35 @@ button:active {
   min-height: 36px;
 }
 
+.login-submit-btn,
+.form-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  white-space: nowrap;
+}
+
+.login-submit-btn svg,
+.form-submit-btn svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.login-submit-btn {
+  min-width: 180px;
+}
+
+.form-submit-btn {
+  min-width: 160px;
+}
+
+.login-submit-btn span,
+.form-submit-btn span {
+  line-height: 1;
+}
+
 .app-content {
   width: 100%;
 }
@@ -2808,6 +2837,11 @@ body.app-theme-dark {
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior-y: auto;
+}
+
+body.sidebar-open {
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 .app-shell {

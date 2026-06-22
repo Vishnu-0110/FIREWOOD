@@ -63,6 +63,17 @@ const AppLayout = ({ children }) => {
   }, [collapsed, isMobileView]);
 
   useEffect(() => {
+    if (typeof document === 'undefined') return undefined;
+
+    const shouldLockScroll = isMobileView && !collapsed;
+    document.body.classList.toggle('sidebar-open', shouldLockScroll);
+
+    return () => {
+      document.body.classList.remove('sidebar-open');
+    };
+  }, [collapsed, isMobileView]);
+
+  useEffect(() => {
     if (!hasMountedRef.current) {
       hasMountedRef.current = true;
       return undefined;

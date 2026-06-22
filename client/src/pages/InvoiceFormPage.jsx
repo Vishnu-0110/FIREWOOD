@@ -186,13 +186,10 @@ const InvoiceFormPage = () => {
               </div>
             </div>
             <div className="col-12 d-flex gap-2 form-action-row">
-              <IconAction
-                type="submit"
-                icon={CheckIcon}
-                label={isSubmitting ? 'Saving...' : isEdit ? 'Update Invoice' : 'Save Invoice'}
-                className="btn-warning btn-lg"
-                disabled={isSubmitting}
-              />
+              <button type="submit" className="btn btn-warning btn-lg form-submit-btn" disabled={isSubmitting}>
+                <CheckIcon />
+                <span>{isSubmitting ? 'Saving...' : isEdit ? 'Update Invoice' : 'Save Invoice'}</span>
+              </button>
               <IconAction
                 type="button"
                 icon={CloseIcon}

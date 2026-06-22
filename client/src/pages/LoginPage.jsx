@@ -137,13 +137,10 @@ const LoginPage = () => {
               {errors.password && <small className="field-error">{errors.password.message}</small>}
             </div>
             <div className="d-flex justify-content-center pt-1">
-              <IconAction
-                type="submit"
-                icon={RightIcon}
-                label={isSubmitting ? 'Signing in...' : 'Login'}
-                className="btn-sm btn-warning login-submit-btn"
-                disabled={isSubmitting}
-              />
+              <button type="submit" className="btn btn-warning btn-lg login-submit-btn" disabled={isSubmitting}>
+                <RightIcon />
+                <span>{isSubmitting ? 'Signing in...' : 'Login'}</span>
+              </button>
             </div>
           </form>
         </div>

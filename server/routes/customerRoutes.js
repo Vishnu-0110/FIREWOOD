@@ -16,7 +16,7 @@ router.use(protect);
 router.post(
   '/',
   [
-    body('customerName').trim().notEmpty().withMessage('Customer name is required'),
+    body('factoryName').trim().notEmpty().withMessage('Factory name is required'),
     body('phone')
       .optional({ values: 'falsy' })
       .trim()
@@ -33,7 +33,7 @@ router.put(
   '/:id',
   [
     param('id').isMongoId().withMessage('Valid customer id is required'),
-    body('customerName').optional().trim().notEmpty().withMessage('Customer name cannot be empty')
+    body('factoryName').optional().trim().notEmpty().withMessage('Factory name cannot be empty')
   ],
   handleValidation,
   updateCustomer

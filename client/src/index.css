@@ -1052,6 +1052,20 @@ small,
   line-height: 1.35;
 }
 
+.form-control.is-invalid,
+.form-select.is-invalid,
+textarea.is-invalid {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 0.2rem rgba(239, 68, 68, 0.14) !important;
+}
+
+.form-control.is-invalid:focus,
+.form-select.is-invalid:focus,
+textarea.is-invalid:focus {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 0.2rem rgba(239, 68, 68, 0.2) !important;
+}
+
 .app-toast {
   border-radius: 14px !important;
   border: 1px solid rgba(15, 23, 42, 0.08) !important;
@@ -1076,6 +1090,21 @@ small,
 
 .Toastify__toast--error.app-toast {
   border-left: 4px solid #ef4444 !important;
+  color: #b91c1c !important;
+}
+
+.Toastify__toast--error.app-toast .app-toast-body {
+  color: #b91c1c !important;
+}
+
+body.app-theme-light .field-error,
+body.app-theme-light .invalid-feedback,
+body.app-theme-light .text-danger,
+body.app-theme-dark .field-error,
+body.app-theme-dark .invalid-feedback,
+body.app-theme-dark .text-danger {
+  color: #ef4444 !important;
+  opacity: 1 !important;
 }
 
 .Toastify__toast--info.app-toast {

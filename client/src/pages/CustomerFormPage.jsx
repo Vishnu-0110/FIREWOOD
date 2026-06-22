@@ -11,7 +11,7 @@ const CustomerFormPage = () => {
   const { id } = useParams();
   const isEdit = Boolean(id);
   const navigate = useNavigate();
-  const { register, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm();
+  const { register, handleSubmit, setValue, setError, clearErrors, formState: { errors, isSubmitting } } = useForm();
 
   useEffect(() => {
     if (isEdit) {
@@ -42,9 +42,14 @@ const CustomerFormPage = () => {
       navigate('/customers');
     } catch (error) {
       if (isSilentAuthError(error)) return;
+      const apiMessage = String(error?.response?.data?.message || '').trim();
+      if (apiMessage.toLowerCase() === 'factory already exists') {
+        setError('factoryName', { type: 'server', message: 'Factory already exists' });
+        return;
+      }
       const apiError =
         error?.response?.data?.errors?.[0]?.message ||
-        error?.response?.data?.message ||
+        apiMessage ||
         'Save failed';
       toast.error(apiError);
     }
@@ -66,7 +71,13 @@ const CustomerFormPage = () => {
           <form className="row g-3" onSubmit={handleSubmit(onSubmit)}>
             <div className="col-12 col-lg-8">
               <label className="form-label">Factory Name</label>
-              <input className="form-control" {...register('factoryName', { required: 'Factory name is required' })} />
+              <input
+                className={`form-control ${errors.factoryName ? 'is-invalid' : ''}`}
+                {...register('factoryName', {
+                  required: 'Factory name is required',
+                  onChange: () => clearErrors('factoryName')
+                })}
+              />
               {errors.factoryName && <small className="field-error">{errors.factoryName.message}</small>}
             </div>
             <div className="col-12 col-lg-4">

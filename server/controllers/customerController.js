@@ -1,8 +1,39 @@
 const Customer = require('../models/Customer');
 const { logAudit } = require('../utils/audit');
 
+const escapeRegex = (value) => String(value || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const normalizeFactoryName = (value) => String(value || '').trim().replace(/\s+/g, ' ');
+
+const findDuplicateFactory = async ({ factoryName, excludeId } = {}) => {
+  const normalizedName = normalizeFactoryName(factoryName);
+  if (!normalizedName) return null;
+
+  const query = {
+    isDeleted: false,
+    _id: excludeId ? { $ne: excludeId } : { $exists: true },
+    $or: [
+      { factoryName: { $regex: `^${escapeRegex(normalizedName)}$`, $options: 'i' } },
+      { customerName: { $regex: `^${escapeRegex(normalizedName)}$`, $options: 'i' } }
+    ]
+  };
+
+  return Customer.findOne(query).lean();
+};
+
 const addCustomer = async (req, res) => {
-  const customer = await Customer.create(req.body);
+  const factoryName = normalizeFactoryName(req.body.factoryName || req.body.customerName);
+  const duplicate = await findDuplicateFactory({ factoryName });
+
+  if (duplicate) {
+    return res.status(400).json({ message: 'Factory already exists' });
+  }
+
+  const customer = await Customer.create({
+    ...req.body,
+    factoryName,
+    customerName: factoryName
+  });
   await logAudit({ user: req.user._id, action: 'CREATE_CUSTOMER', module: 'CUSTOMER', metadata: { customerId: customer._id } });
   return res.status(201).json(customer);
 };
@@ -29,9 +60,20 @@ const getCustomers = async (req, res) => {
 };
 
 const updateCustomer = async (req, res) => {
+  const factoryName = normalizeFactoryName(req.body.factoryName || req.body.customerName);
+  const duplicate = await findDuplicateFactory({ factoryName, excludeId: req.params.id });
+
+  if (duplicate) {
+    return res.status(400).json({ message: 'Factory already exists' });
+  }
+
   const customer = await Customer.findOneAndUpdate(
     { _id: req.params.id, isDeleted: false },
-    req.body,
+    {
+      ...req.body,
+      factoryName,
+      customerName: factoryName
+    },
     { new: true }
   );
 

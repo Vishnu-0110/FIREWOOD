@@ -2534,9 +2534,9 @@ body.auth-screen .login-page {
 }
 
 body.auth-screen .login-card {
-  background: rgba(255, 255, 255, 0.84);
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 0 30px 70px rgba(99, 102, 241, 0.12);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  box-shadow: 0 30px 70px rgba(99, 102, 241, 0.14);
 }
 
 body.auth-screen .login-card,
@@ -2548,7 +2548,8 @@ body.auth-screen .login-card .form-label {
 body.auth-screen .login-card .text-muted,
 body.auth-screen .login-card small,
 body.auth-screen .login-card .small {
-  color: #64748b !important;
+  color: #334155 !important;
+  opacity: 1 !important;
 }
 
 body.auth-screen .login-card .form-control,
@@ -2557,6 +2558,13 @@ body.auth-screen .login-card textarea {
   color: #0f172a;
   background: rgba(248, 250, 252, 0.98);
   border-color: rgba(15, 23, 42, 0.1);
+}
+
+body.auth-screen .login-card .form-control::placeholder,
+body.auth-screen .login-card .form-select::placeholder,
+body.auth-screen .login-card textarea::placeholder {
+  color: #94a3b8;
+  opacity: 1;
 }
 
 body.auth-screen .login-card .form-control:focus,
@@ -2578,6 +2586,16 @@ body.auth-screen .login-card .btn-outline-secondary:hover {
   color: #0f172a;
   background: #eef2ff;
   border-color: rgba(99, 102, 241, 0.24);
+}
+
+body.auth-screen .login-overline {
+  color: #4f46e5;
+  background: rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.18);
+}
+
+body.auth-screen .login-card .form-label {
+  color: #0f172a;
 }
 
 body.auth-screen .login-ops-card {

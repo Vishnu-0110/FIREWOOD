@@ -10,7 +10,7 @@ const COMPANY = {
   gst: 'GSTIN: 33CPOPA7913R1ZC',
   phone: '+91 94427 37292',
   email: 'garumugam251@gmail.com',
-  website: 'https://vijayalakshmifirewoods.netlify.app'
+  website: 'https://vijayalakshmifirewoods.vercel.app'
 };
 
 const BANK = {

@@ -3791,8 +3791,27 @@ body.app-theme-dark textarea::placeholder {
 }
 
 @media (max-width: 991.98px) {
+  html,
+  body,
+  #root,
+  .app-layout {
+    height: auto;
+    min-height: 100%;
+  }
+
+  body.app-theme-light,
+  body.app-theme-dark {
+    overflow-y: auto !important;
+    overscroll-behavior-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .app-shell {
     position: relative;
+    display: block;
+    overflow: visible;
+    min-height: var(--app-viewport-height);
+    height: auto;
   }
 
   .app-sidebar {
@@ -3804,6 +3823,12 @@ body.app-theme-dark textarea::placeholder {
     height: 100dvh;
     flex: 0 0 auto;
     transform: translate3d(0, 0, 0) !important;
+    transition:
+      transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.22s ease,
+      box-shadow 0.22s ease;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
   }
 
   .app-sidebar.collapsed {
@@ -3816,9 +3841,19 @@ body.app-theme-dark textarea::placeholder {
   .app-main {
     width: 100%;
     min-width: 0;
+    display: block;
     height: auto;
     min-height: var(--app-viewport-height);
     overflow: visible;
     -webkit-overflow-scrolling: touch;
+  }
+
+  .app-content {
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .app-sidebar-backdrop {
+    transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   }
 }

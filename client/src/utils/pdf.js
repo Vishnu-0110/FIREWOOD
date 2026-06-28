@@ -29,7 +29,7 @@ const rateValue = (value = 0) =>
   Number(value).toLocaleString('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 0 });
 
 const invoiceNo = (value) => String(Number(value) || 0);
-const websiteText = COMPANY.website;
+const websiteText = String(COMPANY.website || '').replace(/^https?:\/\//i, '');
 const buildInvoiceFilename = (invoice) => {
   const rawName = String(invoice?.customer?.factoryName || invoice?.customer?.customerName || '').trim();
   const firstWord = rawName ? rawName.split(/\s+/)[0] : 'INVOICE';
@@ -103,12 +103,12 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
             </div>
 
             <div style="text-align: left; max-width: 355px;">
-              <div style="font-size: 26px; font-weight: 700; line-height: 0.98; letter-spacing: -0.3px; white-space: nowrap;">${COMPANY.nameLine1}</div>
-              <div style="font-size: 26px; font-weight: 700; line-height: 0.98; letter-spacing: -0.3px; white-space: nowrap; margin-bottom: 14px;">${COMPANY.nameLine2}</div>
-              <div style="font-size: 17px; font-weight: 700; line-height: 1.12; white-space: nowrap;">${COMPANY.address1}</div>
-              <div style="font-size: 17px; font-weight: 700; line-height: 1.12; white-space: nowrap;">${COMPANY.address2}</div>
-              <div style="font-size: 17px; font-weight: 700; line-height: 1.12; white-space: nowrap;">${COMPANY.address3}</div>
-              <div style="font-size: 17px; font-weight: 700; line-height: 1.12; margin-top: 6px; white-space: nowrap;">${COMPANY.gst}</div>
+              <div style="font-size: 25px; font-weight: 600; line-height: 1.0; letter-spacing: -0.2px; white-space: nowrap;">${COMPANY.nameLine1}</div>
+              <div style="font-size: 25px; font-weight: 600; line-height: 1.0; letter-spacing: -0.2px; white-space: nowrap; margin-bottom: 12px;">${COMPANY.nameLine2}</div>
+              <div style="font-size: 16px; font-weight: 600; line-height: 1.16; white-space: nowrap;">${COMPANY.address1}</div>
+              <div style="font-size: 16px; font-weight: 600; line-height: 1.16; white-space: nowrap;">${COMPANY.address2}</div>
+              <div style="font-size: 16px; font-weight: 600; line-height: 1.16; white-space: nowrap;">${COMPANY.address3}</div>
+              <div style="font-size: 16px; font-weight: 600; line-height: 1.16; margin-top: 6px; white-space: nowrap;">${COMPANY.gst}</div>
             </div>
           </div>
 

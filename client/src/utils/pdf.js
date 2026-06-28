@@ -105,10 +105,10 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
             <div style="text-align: left; max-width: 355px;">
               <div style="font-size: 25px; font-weight: 600; line-height: 1.0; letter-spacing: -0.2px; white-space: nowrap;">${COMPANY.nameLine1}</div>
               <div style="font-size: 25px; font-weight: 600; line-height: 1.0; letter-spacing: -0.2px; white-space: nowrap; margin-bottom: 12px;">${COMPANY.nameLine2}</div>
-              <div style="font-size: 16px; font-weight: 600; line-height: 1.16; white-space: nowrap;">${COMPANY.address1}</div>
-              <div style="font-size: 16px; font-weight: 600; line-height: 1.16; white-space: nowrap;">${COMPANY.address2}</div>
-              <div style="font-size: 16px; font-weight: 600; line-height: 1.16; white-space: nowrap;">${COMPANY.address3}</div>
-              <div style="font-size: 16px; font-weight: 600; line-height: 1.16; margin-top: 6px; white-space: nowrap;">${COMPANY.gst}</div>
+              <div style="font-size: 15px; font-weight: 500; line-height: 1.16; white-space: nowrap;">${COMPANY.address1}</div>
+              <div style="font-size: 15px; font-weight: 500; line-height: 1.16; white-space: nowrap;">${COMPANY.address2}</div>
+              <div style="font-size: 15px; font-weight: 500; line-height: 1.16; white-space: nowrap;">${COMPANY.address3}</div>
+              <div style="font-size: 15px; font-weight: 600; line-height: 1.16; margin-top: 6px; white-space: nowrap;">${COMPANY.gst}</div>
             </div>
           </div>
 
@@ -120,8 +120,8 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
             <a href="mailto:${escapeHtml(COMPANY.email)}" target="_blank" rel="noreferrer noopener" style="display:block; width:100%; padding:6px 8px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere; font-weight:600;">
               Email: ${COMPANY.email}
             </a>
-            <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="display:block; width:100%; padding:7px 10px 8px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere; font-weight:600; line-height:1.15;">
-              <div style="font-size: 15px; font-weight: 700; white-space: nowrap;">Website:${escapeHtml(websiteText)}</div>
+            <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="display:block; width:100%; box-sizing:border-box; padding:6px 8px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; overflow:hidden; font-weight:600; line-height:1.12;">
+              <div style="font-size: 13px; font-weight: 700; white-space: nowrap;">Website:${escapeHtml(websiteText)}</div>
             </a>
           </div>
         </div>

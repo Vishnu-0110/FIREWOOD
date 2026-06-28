@@ -65,6 +65,11 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
     return parsed.isValid() ? parsed.format('DD-MMM-YYYY') : placeholder;
   };
 
+  const gstText = String(COMPANY.gst || '').trim();
+  const gstParts = gstText.split(/:\s*/, 2);
+  const gstLabel = gstParts[0] || 'GSTIN';
+  const gstNumber = gstParts[1] || gstText;
+
   const factoryName = textFallback(invoice.customer?.factoryName || invoice.customer?.customerName);
   const customerAddress = textFallback(invoice.customer?.address);
   const customerGst = textFallback(invoice.customer?.gstNumber);
@@ -97,18 +102,19 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
     ">
       <div style="border: 1px solid #2f2f2f; padding: 16px 16px; box-sizing: border-box; width: 100%; min-height: 245mm; display: flex; flex-direction: column;">
         <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
-          <div style="display: flex; align-items: flex-start; gap: 12px; flex: 1;">
+          <div style="display: flex; align-items: flex-start; gap: 14px; flex: 1;">
             <div style="width: 72px; height: 72px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
               <img src="/invoice-logo.png" alt="logo" style="width: 100%; height: 100%; object-fit: cover;" onerror="if(!this.dataset.retry){this.dataset.retry='1';this.src='/logo.png';}else{this.style.display='none';this.parentNode.innerHTML='<span style=&quot;font-weight:700;color:#7B4F2C;&quot;>VL</span>';}" />
             </div>
 
-            <div style="text-align: left;">
-              <div style="font-size: 28px; font-weight: 700; line-height: 1.05;">${COMPANY.nameLine1}</div>
-              <div style="font-size: 28px; font-weight: 700; line-height: 1.05; margin-bottom: 14px;">${COMPANY.nameLine2}</div>
-              <div style="font-size: 18px; font-weight: 600; line-height: 1.18;">${COMPANY.address1}</div>
-              <div style="font-size: 18px; font-weight: 600; line-height: 1.18;">${COMPANY.address2}</div>
-              <div style="font-size: 18px; font-weight: 600; line-height: 1.18;">${COMPANY.address3}</div>
-              <div style="font-size: 18px; font-weight: 700; margin-top: 2px;">${COMPANY.gst}</div>
+            <div style="text-align: left; max-width: 235px;">
+              <div style="font-size: 31px; font-weight: 700; line-height: 0.98; letter-spacing: -0.4px;">${COMPANY.nameLine1}</div>
+              <div style="font-size: 31px; font-weight: 700; line-height: 0.98; letter-spacing: -0.4px; margin-bottom: 16px;">${COMPANY.nameLine2}</div>
+              <div style="font-size: 18px; font-weight: 700; line-height: 1.12;">${COMPANY.address1}</div>
+              <div style="font-size: 18px; font-weight: 700; line-height: 1.12;">${COMPANY.address2}</div>
+              <div style="font-size: 18px; font-weight: 700; line-height: 1.12;">${COMPANY.address3}</div>
+              <div style="font-size: 18px; font-weight: 700; line-height: 1.12; margin-top: 6px;">${gstLabel}:</div>
+              <div style="font-size: 18px; font-weight: 700; line-height: 1.12; margin-top: 12px;">${gstNumber}</div>
             </div>
           </div>
 

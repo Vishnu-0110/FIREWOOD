@@ -105,23 +105,23 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
             <div style="text-align: left; max-width: 355px;">
               <div style="font-size: 25px; font-weight: 600; line-height: 1.0; letter-spacing: -0.2px; white-space: nowrap;">${COMPANY.nameLine1}</div>
               <div style="font-size: 25px; font-weight: 600; line-height: 1.0; letter-spacing: -0.2px; white-space: nowrap; margin-bottom: 12px;">${COMPANY.nameLine2}</div>
-              <div style="font-size: 15px; font-weight: 500; line-height: 1.16; white-space: nowrap;">${COMPANY.address1}</div>
-              <div style="font-size: 15px; font-weight: 500; line-height: 1.16; white-space: nowrap;">${COMPANY.address2}</div>
-              <div style="font-size: 15px; font-weight: 500; line-height: 1.16; white-space: nowrap;">${COMPANY.address3}</div>
+              <div style="font-size: 15px; font-weight: 600; line-height: 1.16; white-space: nowrap;">${COMPANY.address1}</div>
+              <div style="font-size: 15px; font-weight: 600; line-height: 1.16; white-space: nowrap;">${COMPANY.address2}</div>
+              <div style="font-size: 15px; font-weight: 600; line-height: 1.16; white-space: nowrap;">${COMPANY.address3}</div>
               <div style="font-size: 15px; font-weight: 600; line-height: 1.16; margin-top: 6px; white-space: nowrap;">${COMPANY.gst}</div>
             </div>
           </div>
 
-          <div style="min-width: 300px; font-size: 14px; margin-top: 6px; line-height: 1.55; display:flex; flex-direction:column; gap:9px;">
-            <div style="display:grid; grid-template-columns: 58px minmax(0, 1fr); column-gap: 2px; align-items:flex-start;">
+          <div style="min-width: 300px; font-size: 14px; margin-top: 6px; line-height: 1.4; display:flex; flex-direction:column; gap:8px;">
+            <div style="display:grid; grid-template-columns: 58px minmax(0, 1fr); column-gap: 2px; align-items:flex-start; font-size: 14px; line-height: 1.2;">
               <span style="font-weight:600; text-align:left; white-space:nowrap;">Phone:</span>
-              <span style="font-weight:500; min-width:0; text-align:left;">${COMPANY.phone}</span>
+              <span style="font-weight:600; min-width:0; text-align:left;">${COMPANY.phone}</span>
             </div>
-            <a href="mailto:${escapeHtml(COMPANY.email)}" target="_blank" rel="noreferrer noopener" style="display:block; width:100%; padding:6px 8px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere; font-weight:600;">
+            <a href="mailto:${escapeHtml(COMPANY.email)}" target="_blank" rel="noreferrer noopener" style="display:block; width:100%; padding:6px 8px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere; font-weight:600; line-height:1.2; font-size:14px;">
               Email: ${COMPANY.email}
             </a>
-            <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="display:block; width:100%; box-sizing:border-box; padding:6px 8px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; overflow:hidden; font-weight:600; line-height:1.12;">
-              <div style="font-size: 13px; font-weight: 700; white-space: nowrap;">Website:${escapeHtml(websiteText)}</div>
+            <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="display:block; width:100%; box-sizing:border-box; padding:6px 8px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; overflow:hidden; font-weight:600; line-height:1.2; font-size:14px;">
+              <div style="font-size: 14px; font-weight: 600; white-space: nowrap;">Website:${escapeHtml(websiteText)}</div>
             </a>
           </div>
         </div>

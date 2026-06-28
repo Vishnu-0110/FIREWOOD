@@ -140,7 +140,7 @@ const InvoiceHistoryPage = () => {
                 onChange={(e) => updateFilters({ endDate: e.target.value, page: 1 })}
               />
             </div>
-            <div className="col-12 col-lg-3 d-flex gap-2 page-actions-row">
+            <div className="col-12 col-lg-3 d-flex gap-2 page-actions-row action-row-grid action-row-grid--buttons">
               <IconAction type="button" icon={FilterIcon} label="Filter" className="btn-warning btn-sm" onClick={() => updateFilters({ q: filters.q, page: 1 })} />
               <IconAction type="button" icon={DownloadIcon} label="Export Excel" className="btn-outline-success btn-sm" onClick={exportCurrent} />
               <IconAction type="button" icon={DownloadIcon} label="Server Export" className="btn-outline-dark btn-sm" onClick={downloadServerExcel} />

@@ -70,7 +70,7 @@ const InvoiceViewPage = () => {
           <h1 className="page-title mb-1">Invoice #{invoice.invoiceNumber}</h1>
           <p className="page-subtitle mb-0">Review, print, download or share this invoice instantly.</p>
         </div>
-        <div className="hero-actions">
+        <div className="hero-actions action-row-grid action-row-grid--buttons">
           <IconAction type="button" icon={EyeIcon} label="View PDF" className="btn-outline-success btn-sm" onClick={viewPdf} />
           <IconAction type="button" icon={DownloadIcon} label="Download PDF" className="btn-warning btn-sm" onClick={downloadPdf} />
           <IconAction type="button" icon={PrintIcon} label="Print" className="btn-outline-dark btn-sm" onClick={printPdf} />

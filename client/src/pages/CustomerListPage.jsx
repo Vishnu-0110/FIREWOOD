@@ -60,7 +60,7 @@ const CustomerListPage = () => {
       <div className="card shadow-sm">
         <div className="card-header d-flex justify-content-between align-items-center">
           <span>Factory List</span>
-          <div className="d-flex gap-2 page-actions-row">
+          <div className="d-flex gap-2 page-actions-row action-row-grid action-row-grid--search">
             <input
               className="form-control form-control-sm"
               placeholder="Search"

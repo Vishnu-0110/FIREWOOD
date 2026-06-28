@@ -92,7 +92,7 @@ const CustomerFormPage = () => {
               <label className="form-label">Address</label>
               <textarea rows="3" className="form-control" {...register('address')} />
             </div>
-            <div className="col-12 d-flex gap-2 form-action-row">
+            <div className="col-12 d-flex gap-2 form-action-row action-row-grid action-row-grid--buttons">
               <button type="submit" className="btn btn-warning btn-lg form-submit-btn" disabled={isSubmitting}>
                 <CheckIcon />
                 <span>{isSubmitting ? 'Saving...' : 'Save Factory'}</span>

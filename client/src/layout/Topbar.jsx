@@ -46,7 +46,7 @@ const Topbar = ({ collapsed, onToggleSidebar, routeLabel = 'Dashboard' }) => {
           <small>{routeLabel}{user?.name ? ` • Welcome, ${user.name}` : ''}</small>
         </div>
       </div>
-      <div className="d-flex align-items-center gap-2 topbar-actions">
+      <div className="d-flex align-items-center gap-2 topbar-actions action-row-grid action-row-grid--buttons">
         <IconAction
           type="button"
           icon={theme === 'dark' ? SunIcon : MoonIcon}

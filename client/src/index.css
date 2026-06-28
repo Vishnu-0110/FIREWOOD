@@ -482,6 +482,32 @@ button:active {
   width: 100%;
 }
 
+.action-row-grid {
+  display: grid !important;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.action-row-grid--buttons {
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  justify-content: end;
+}
+
+.action-row-grid--buttons > * {
+  min-width: 0;
+}
+
+.action-row-grid--search {
+  grid-template-columns: minmax(0, 1fr) repeat(2, max-content);
+}
+
+.action-row-grid .btn,
+.action-row-grid .form-control,
+.action-row-grid .form-select {
+  margin: 0;
+}
+
 .app-sidebar-backdrop {
   display: none;
 }
@@ -2153,18 +2179,6 @@ body.app-theme-dark .app-toast-body {
   --radius-lg: 20px;
   --shadow-soft: 0 18px 36px rgba(2, 6, 23, 0.28);
   --shadow-hard: 0 32px 64px rgba(2, 6, 23, 0.42);
-}
-
-*,
-*::before,
-*::after {
-  transition:
-    background-color 200ms ease,
-    border-color 200ms ease,
-    color 200ms ease,
-    box-shadow 200ms ease,
-    transform 200ms ease,
-    opacity 200ms ease;
 }
 
 body {

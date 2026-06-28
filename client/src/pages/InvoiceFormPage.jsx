@@ -86,7 +86,7 @@ const InvoiceFormPage = () => {
           <h1 className="page-title mb-1">{isEdit ? 'Edit Invoice' : 'Generate Invoice'}</h1>
           <p className="page-subtitle mb-0">Fast entry, mobile-friendly layout and live totals while you work.</p>
         </div>
-        <div className="hero-actions">
+        <div className="hero-actions action-row-grid action-row-grid--buttons">
           <IconAction
             type="button"
             icon={TemplateIcon}
@@ -185,7 +185,7 @@ const InvoiceFormPage = () => {
                 </div>
               </div>
             </div>
-            <div className="col-12 d-flex gap-2 form-action-row">
+            <div className="col-12 d-flex gap-2 form-action-row action-row-grid action-row-grid--buttons">
               <button type="submit" className="btn btn-warning btn-lg form-submit-btn" disabled={isSubmitting}>
                 <CheckIcon />
                 <span>{isSubmitting ? 'Saving...' : isEdit ? 'Update Invoice' : 'Save Invoice'}</span>

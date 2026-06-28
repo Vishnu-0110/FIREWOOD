@@ -56,6 +56,7 @@ body {
     radial-gradient(circle at 88% 100%, rgba(245, 158, 11, 0.1), transparent 22%),
     linear-gradient(160deg, #f8fbff 0%, #f1f5fb 44%, #edf1f7 100%);
   background-attachment: fixed;
+  scrollbar-gutter: stable;
 }
 
 body::before {
@@ -107,10 +108,11 @@ button:active {
     linear-gradient(180deg, #091120 0%, #0e1b31 52%, #122347 100%);
   border-right: 1px solid rgba(255, 255, 255, 0.09);
   box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.04);
-  transition: width 0.28s ease, transform 0.28s ease, opacity 0.2s ease;
+  transition: width 0.24s cubic-bezier(0.22, 1, 0.36, 1), transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease;
   overflow: hidden;
   position: relative;
   z-index: 1040;
+  will-change: transform, width, opacity;
 }
 
 .app-sidebar::after {
@@ -212,7 +214,7 @@ button:active {
   align-items: center;
   gap: 0.72rem;
   border: 1px solid rgba(255, 255, 255, 0.04);
-  transition: all 0.22s ease;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
   position: relative;
   z-index: 1;
 }
@@ -490,6 +492,7 @@ button:active {
   color: var(--primary) !important;
   font-weight: 700 !important;
   background: rgba(255, 255, 255, 0.7) !important;
+  transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
 }
 
 .sidebar-toggle-btn:hover {
@@ -580,7 +583,7 @@ textarea::placeholder {
   border-radius: 14px;
   font-weight: 700;
   letter-spacing: 0.01em;
-  transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.08s ease, border-color 0.08s ease, color 0.08s ease;
+  transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.16s ease, background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease;
   min-height: 42px;
   padding-inline: 0.95rem;
   display: inline-flex;
@@ -1381,6 +1384,33 @@ body.app-theme-dark .app-toast-body {
     width: min(64vw, 360px);
     right: -8px;
     bottom: -8px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  body.app-theme-light,
+  body.app-theme-dark {
+    overflow-y: auto;
+    overscroll-behavior-y: auto;
+  }
+
+  .app-shell {
+    position: relative;
+    height: auto;
+    min-height: var(--app-viewport-height);
+    overflow: visible;
+  }
+
+  .app-main {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    min-height: var(--app-viewport-height);
+    overflow: visible;
+  }
+
+  .app-content {
+    overflow: visible;
   }
 }
 
@@ -2915,6 +2945,7 @@ body.sidebar-open {
   overflow-x: hidden;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
 }
 
 .app-topbar {
@@ -2950,6 +2981,7 @@ body.sidebar-open {
   opacity: 0;
   transform: translateY(-6px) scale(0.98);
   pointer-events: none;
+  will-change: transform, opacity;
 }
 
 .app-route-indicator.show {
@@ -2973,6 +3005,7 @@ body.sidebar-open {
 .app-page-surface {
   min-height: 100%;
   animation: page-enter 180ms ease both;
+  will-change: transform, opacity;
 }
 
 .app-page-shell.is-switching .app-page-surface {
@@ -3730,6 +3763,24 @@ body.app-theme-dark .form-select::placeholder,
 body.app-theme-dark textarea::placeholder {
   color: #94a3b8;
   opacity: 1;
+}
+
+@media (max-width: 991.98px) and (pointer: coarse) {
+  body {
+    background-attachment: scroll;
+  }
+
+  body::before {
+    opacity: 0.16;
+  }
+
+  .login-page {
+    background-attachment: scroll;
+  }
+
+  .app-sidebar-backdrop {
+    backdrop-filter: none;
+  }
 }
 
 @media (max-width: 991.98px) {

@@ -27,6 +27,10 @@ const LoginPage = () => {
   }, [isAuthenticated, navigate]);
 
   const updatePointer = (event) => {
+    if (event.pointerType && event.pointerType !== 'mouse' && event.pointerType !== 'pen') {
+      return;
+    }
+
     const scene = sceneRef.current;
     if (!scene) return;
 

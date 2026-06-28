@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Sidebar from './Sidebar';
@@ -62,7 +62,7 @@ const AppLayout = ({ children }) => {
     localStorage.setItem('sidebar_collapsed', collapsed ? '1' : '0');
   }, [collapsed, isMobileView]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof document === 'undefined') return undefined;
 
     const shouldLockScroll = isMobileView && !collapsed;

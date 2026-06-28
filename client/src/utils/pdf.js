@@ -120,8 +120,9 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
             <a href="mailto:${escapeHtml(COMPANY.email)}" target="_blank" rel="noreferrer noopener" style="display:block; width:100%; padding:6px 8px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere; font-weight:600;">
               Email: ${COMPANY.email}
             </a>
-            <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="display:block; width:100%; padding:6px 8px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere; font-weight:600;">
-              Website: ${escapeHtml(websiteText)}
+            <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="display:block; width:100%; padding:7px 10px 8px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere; font-weight:600; line-height:1.15;">
+              <div style="font-size: 15px; margin-bottom: 6px;">Website:</div>
+              <div style="font-size: 15px; font-weight: 700; white-space: nowrap;">${escapeHtml(websiteText)}</div>
             </a>
           </div>
         </div>

@@ -103,8 +103,7 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
             </div>
 
             <div style="text-align: left;">
-              <div style="font-size: 23px; font-weight: 600; line-height: 1.12;">${COMPANY.nameLine1}</div>
-              <div style="font-size: 23px; font-weight: 600; line-height: 1.12; margin-bottom: 4px;">${COMPANY.nameLine2}</div>
+              <div style="font-size: 23px; font-weight: 600; line-height: 1.12; margin-bottom: 4px;">${COMPANY.nameLine1} ${COMPANY.nameLine2}</div>
               <div style="font-size: 14px; font-weight: 500;">${COMPANY.address1}</div>
               <div style="font-size: 14px; font-weight: 500;">${COMPANY.address2}</div>
               <div style="font-size: 14px; font-weight: 500;">${COMPANY.address3}</div>

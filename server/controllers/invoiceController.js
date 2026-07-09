@@ -226,9 +226,60 @@ const deleteInvoice = async (req, res) => {
   await invoice.save();
 
   await recalculateCustomerTotals(invoice.customer);
-  await logAudit({ user: req.user._id, action: 'DELETE_INVOICE', module: 'INVOICE', metadata: { invoiceId: invoice._id } });
+  await logAudit({
+    user: req.user._id,
+    action: 'DELETE_INVOICE',
+    module: 'INVOICE',
+    metadata: {
+      invoiceId: invoice._id,
+      invoiceNumber: invoice.invoiceNumber,
+      customerId: invoice.customer,
+      deletedAt: invoice.deletedAt
+    }
+  });
 
   return res.json({ message: 'Invoice deleted successfully' });
+};
+
+const restoreInvoice = async (req, res) => {
+  const invoice = await Invoice.findOne({ _id: req.params.id, isDeleted: true });
+  if (!invoice) {
+    return res.status(404).json({ message: 'Invoice not found' });
+  }
+
+  const customerDoc = await Customer.findOne({ _id: invoice.customer, isDeleted: false });
+  if (!customerDoc) {
+    return res.status(409).json({ message: 'Restore the factory first before restoring this invoice' });
+  }
+
+  const duplicate = await Invoice.findOne({
+    _id: { $ne: invoice._id },
+    customer: invoice.customer,
+    invoiceNumber: invoice.invoiceNumber,
+    isDeleted: false
+  });
+
+  if (duplicate) {
+    return res.status(409).json({ message: 'Invoice number already exists for this factory' });
+  }
+
+  invoice.isDeleted = false;
+  invoice.deletedAt = null;
+  await invoice.save();
+
+  await recalculateCustomerTotals(invoice.customer);
+  await logAudit({
+    user: req.user._id,
+    action: 'RESTORE_INVOICE',
+    module: 'INVOICE',
+    metadata: {
+      invoiceId: invoice._id,
+      invoiceNumber: invoice.invoiceNumber,
+      customerId: invoice.customer
+    }
+  });
+
+  return res.json({ message: 'Invoice restored successfully' });
 };
 
 const exportInvoicesExcel = async (req, res) => {
@@ -277,5 +328,6 @@ module.exports = {
   getInvoiceById,
   updateInvoice,
   deleteInvoice,
+  restoreInvoice,
   exportInvoicesExcel
 };

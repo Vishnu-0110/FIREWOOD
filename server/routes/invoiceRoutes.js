@@ -6,6 +6,7 @@ const {
   getInvoiceById,
   updateInvoice,
   deleteInvoice,
+  restoreInvoice,
   exportInvoicesExcel
 } = require('../controllers/invoiceController');
 const { protect } = require('../middleware/authMiddleware');
@@ -34,5 +35,6 @@ router.get('/export/excel', exportInvoicesExcel);
 router.get('/:id', [param('id').isMongoId().withMessage('Valid invoice id is required')], handleValidation, getInvoiceById);
 router.put('/:id', [param('id').isMongoId().withMessage('Valid invoice id is required'), ...invoiceValidation], handleValidation, updateInvoice);
 router.delete('/:id', [param('id').isMongoId().withMessage('Valid invoice id is required')], handleValidation, deleteInvoice);
+router.post('/:id/restore', [param('id').isMongoId().withMessage('Valid invoice id is required')], handleValidation, restoreInvoice);
 
 module.exports = router;

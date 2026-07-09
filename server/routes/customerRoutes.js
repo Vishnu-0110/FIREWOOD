@@ -4,7 +4,8 @@ const {
   addCustomer,
   getCustomers,
   updateCustomer,
-  deleteCustomer
+  deleteCustomer,
+  restoreCustomer
 } = require('../controllers/customerController');
 const { protect } = require('../middleware/authMiddleware');
 const { handleValidation } = require('../middleware/validateMiddleware');
@@ -40,5 +41,6 @@ router.put(
 );
 
 router.delete('/:id', [param('id').isMongoId().withMessage('Valid customer id is required')], handleValidation, deleteCustomer);
+router.post('/:id/restore', [param('id').isMongoId().withMessage('Valid customer id is required')], handleValidation, restoreCustomer);
 
 module.exports = router;

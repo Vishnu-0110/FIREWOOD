@@ -1,5 +1,6 @@
 const Customer = require('../models/Customer');
 const { logAudit } = require('../utils/audit');
+const { recalculateCustomerTotals } = require('../utils/customerTotals');
 
 const escapeRegex = (value) => String(value || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -88,7 +89,7 @@ const updateCustomer = async (req, res) => {
 const deleteCustomer = async (req, res) => {
   const customer = await Customer.findOneAndUpdate(
     { _id: req.params.id, isDeleted: false },
-    { isDeleted: true },
+    { isDeleted: true, deletedAt: new Date() },
     { new: true }
   );
 
@@ -96,8 +97,51 @@ const deleteCustomer = async (req, res) => {
     return res.status(404).json({ message: 'Customer not found' });
   }
 
-  await logAudit({ user: req.user._id, action: 'DELETE_CUSTOMER', module: 'CUSTOMER', metadata: { customerId: customer._id } });
+  await logAudit({
+    user: req.user._id,
+    action: 'DELETE_CUSTOMER',
+    module: 'CUSTOMER',
+    metadata: {
+      customerId: customer._id,
+      factoryName: customer.factoryName || customer.customerName,
+      deletedAt: customer.deletedAt
+    }
+  });
   return res.json({ message: 'Customer deleted successfully' });
 };
 
-module.exports = { addCustomer, getCustomers, updateCustomer, deleteCustomer };
+const restoreCustomer = async (req, res) => {
+  const customer = await Customer.findOne({ _id: req.params.id, isDeleted: true });
+
+  if (!customer) {
+    return res.status(404).json({ message: 'Customer not found' });
+  }
+
+  const duplicate = await findDuplicateFactory({
+    factoryName: customer.factoryName || customer.customerName,
+    excludeId: customer._id
+  });
+
+  if (duplicate) {
+    return res.status(409).json({ message: 'Factory already exists' });
+  }
+
+  customer.isDeleted = false;
+  customer.deletedAt = null;
+  await customer.save();
+  await recalculateCustomerTotals(customer._id);
+
+  await logAudit({
+    user: req.user._id,
+    action: 'RESTORE_CUSTOMER',
+    module: 'CUSTOMER',
+    metadata: {
+      customerId: customer._id,
+      factoryName: customer.factoryName || customer.customerName
+    }
+  });
+
+  return res.json({ message: 'Customer restored successfully' });
+};
+
+module.exports = { addCustomer, getCustomers, updateCustomer, deleteCustomer, restoreCustomer };

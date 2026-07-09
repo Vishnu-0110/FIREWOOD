@@ -5,6 +5,7 @@ import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
 import { DownloadIcon, EditIcon, EyeIcon, FilterIcon, IconAction, LeftIcon, RightIcon, TrashIcon } from '../components/AppIcons';
 import { formatCurrency, formatDate, queryParams } from '../utils/format';
+import { showDeleteUndoToast } from '../utils/deleteUndoToast';
 import { isSilentAuthError } from '../utils/apiErrors';
 
 const InvoiceHistoryPage = () => {
@@ -46,12 +47,25 @@ const InvoiceHistoryPage = () => {
     load(next);
   };
 
-  const deleteInvoice = async (id) => {
+  const deleteInvoice = async (id, label) => {
     if (!window.confirm('Delete this invoice?')) return;
     try {
       await api.delete(`/invoices/${id}`);
-      toast.success('Deleted');
-      load(filters);
+      showDeleteUndoToast({
+        message: `${label || 'Invoice'} deleted`,
+        onUndo: async () => {
+          try {
+            await api.post(`/invoices/${id}/restore`);
+            toast.success('Invoice restored');
+            await load(filters);
+          } catch (error) {
+            if (isSilentAuthError(error)) return;
+            toast.error(error?.response?.data?.message || 'Restore failed');
+            throw error;
+          }
+        }
+      });
+      await load(filters);
     } catch (error) {
       if (isSilentAuthError(error)) return;
       toast.error(error?.response?.data?.message || 'Delete failed');
@@ -172,7 +186,13 @@ const InvoiceHistoryPage = () => {
                   <td data-label="Actions" className="d-flex gap-1 action-cell">
                     <IconAction as={Link} to={`/invoices/${item._id}`} icon={EyeIcon} label="View" className="btn-outline-dark btn-sm" />
                     <IconAction as={Link} to={`/invoices/${item._id}/edit`} icon={EditIcon} label="Edit" className="btn-outline-primary btn-sm" />
-                    <IconAction type="button" icon={TrashIcon} label="Delete" className="btn-outline-danger btn-sm" onClick={() => deleteInvoice(item._id)} />
+                    <IconAction
+                      type="button"
+                      icon={TrashIcon}
+                      label="Delete"
+                      className="btn-outline-danger btn-sm"
+                      onClick={() => deleteInvoice(item._id, `Invoice #${item.invoiceNumber}`)}
+                    />
                   </td>
                 </tr>
               ))}

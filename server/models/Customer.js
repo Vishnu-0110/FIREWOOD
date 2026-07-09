@@ -9,7 +9,8 @@ const customerSchema = new mongoose.Schema(
     address: { type: String, trim: true, default: '' },
     totalLoadsSent: { type: Number, default: 0 },
     totalAmountPaid: { type: Number, default: 0 },
-    isDeleted: { type: Boolean, default: false }
+    isDeleted: { type: Boolean, default: false },
+    deletedAt: { type: Date, default: null }
   },
   { timestamps: true }
 );

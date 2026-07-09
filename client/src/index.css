@@ -1116,6 +1116,39 @@ textarea.is-invalid:focus {
   line-height: 1.35 !important;
 }
 
+.undo-toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
+  min-width: min(100%, 280px);
+}
+
+.undo-toast-message {
+  flex: 1 1 auto;
+}
+
+.undo-toast-action {
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--primary);
+  font: inherit;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+}
+
+.undo-toast-action:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+body.app-theme-dark .undo-toast-action {
+  color: #93c5fd;
+}
+
 .Toastify__toast--success.app-toast {
   border-left: 4px solid #10b981 !important;
 }

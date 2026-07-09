@@ -5,6 +5,7 @@ import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
 import { EditIcon, IconAction, LeftIcon, PlusIcon, RightIcon, SearchIcon, TrashIcon } from '../components/AppIcons';
 import { formatCurrency } from '../utils/format';
+import { showDeleteUndoToast } from '../utils/deleteUndoToast';
 import { isSilentAuthError } from '../utils/apiErrors';
 
 const CustomerListPage = () => {
@@ -35,12 +36,25 @@ const CustomerListPage = () => {
     init();
   }, []);
 
-  const onDelete = async (id) => {
+  const onDelete = async (id, label) => {
     if (!window.confirm('Delete this factory?')) return;
     try {
       await api.delete(`/customers/${id}`);
-      toast.success('Deleted');
-      load(state.page, q);
+      showDeleteUndoToast({
+        message: `${label || 'Factory'} deleted`,
+        onUndo: async () => {
+          try {
+            await api.post(`/customers/${id}/restore`);
+            toast.success('Factory restored');
+            await load(state.page, q);
+          } catch (error) {
+            if (isSilentAuthError(error)) return;
+            toast.error(error?.response?.data?.message || 'Restore failed');
+            throw error;
+          }
+        }
+      });
+      await load(state.page, q);
     } catch (error) {
       if (isSilentAuthError(error)) return;
       toast.error(error?.response?.data?.message || 'Delete failed');
@@ -90,7 +104,13 @@ const CustomerListPage = () => {
                   <td data-label="Total Revenue">{formatCurrency(item.totalAmountPaid)}</td>
                   <td data-label="Actions" className="d-flex gap-1 action-cell">
                     <IconAction as={Link} to={`/customers/${item._id}/edit`} icon={EditIcon} label="Edit" className="btn-outline-primary btn-sm" />
-                    <IconAction type="button" icon={TrashIcon} label="Delete" className="btn-outline-danger btn-sm" onClick={() => onDelete(item._id)} />
+                    <IconAction
+                      type="button"
+                      icon={TrashIcon}
+                      label="Delete"
+                      className="btn-outline-danger btn-sm"
+                      onClick={() => onDelete(item._id, item.factoryName || item.customerName || 'Factory')}
+                    />
                   </td>
                 </tr>
               ))}

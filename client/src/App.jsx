@@ -102,6 +102,7 @@ const InvoiceFormPage = lazyRoute(() => import('./pages/InvoiceFormPage'), 'invo
 const InvoiceHistoryPage = lazyRoute(() => import('./pages/InvoiceHistoryPage'), 'invoice-history');
 const InvoiceViewPage = lazyRoute(() => import('./pages/InvoiceViewPage'), 'invoice-view');
 const ProfilePage = lazyRoute(() => import('./pages/ProfilePage'), 'profile');
+const TrashPage = lazyRoute(() => import('./pages/TrashPage'), 'trash');
 
 function App() {
   const dispatch = useDispatch();
@@ -171,6 +172,7 @@ function App() {
             <Route path="/invoices/new" element={<InvoiceFormPage />} />
             <Route path="/invoices/:id/edit" element={<InvoiceFormPage />} />
             <Route path="/invoices/:id" element={<InvoiceViewPage />} />
+            <Route path="/trash" element={<TrashPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -3,6 +3,7 @@ const { body, param } = require('express-validator');
 const {
   addCustomer,
   getCustomers,
+  getDeletedCustomers,
   updateCustomer,
   deleteCustomer,
   restoreCustomer
@@ -29,6 +30,7 @@ router.post(
 );
 
 router.get('/', getCustomers);
+router.get('/deleted', getDeletedCustomers);
 
 router.put(
   '/:id',

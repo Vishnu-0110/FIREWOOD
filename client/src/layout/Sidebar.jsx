@@ -1,14 +1,18 @@
 import { Link, useLocation } from 'react-router-dom';
+import { TrashIcon } from '../components/AppIcons';
 
 const Sidebar = ({ collapsed = false, onNavigate }) => {
   const { pathname } = useLocation();
-  const menu = [
+  const workspaceMenu = [
     { key: 'dashboard', to: '/', label: 'Dashboard', icon: 'DB' },
     { key: 'customers', to: '/customers', label: 'Factories', icon: 'FC' },
     { key: 'addCustomer', to: '/customers/new', label: 'Add Factory', icon: 'AF' },
     { key: 'generateInvoice', to: '/invoices/new', label: 'Generate Invoice', icon: 'GI' },
     { key: 'invoiceHistory', to: '/invoices', label: 'Invoice History', icon: 'IH' },
     { key: 'profile', to: '/profile', label: 'Profile', icon: 'PR' }
+  ];
+  const recoveryMenu = [
+    { key: 'trash', to: '/trash', label: 'Deleted Items', icon: TrashIcon }
   ];
 
   const getActiveKey = () => {
@@ -19,6 +23,7 @@ const Sidebar = ({ collapsed = false, onNavigate }) => {
     if (pathname === '/invoices/new') return 'generateInvoice';
     if (pathname.startsWith('/invoices/') && pathname.endsWith('/edit')) return 'generateInvoice';
     if (pathname === '/invoices' || (pathname.startsWith('/invoices/') && !pathname.endsWith('/edit'))) return 'invoiceHistory';
+    if (pathname.startsWith('/trash')) return 'trash';
     if (pathname === '/profile') return 'profile';
     return '';
   };
@@ -48,7 +53,7 @@ const Sidebar = ({ collapsed = false, onNavigate }) => {
       </div>
       <div className="sidebar-section-label">Workspace</div>
       <nav className="d-flex flex-column gap-2">
-        {menu.map((item) => (
+        {workspaceMenu.map((item) => (
           <Link
             key={item.to}
             to={item.to}
@@ -61,6 +66,27 @@ const Sidebar = ({ collapsed = false, onNavigate }) => {
             <span className="sidebar-link-text">{item.label}</span>
           </Link>
         ))}
+      </nav>
+      <div className="sidebar-section-label mt-4">Recovery</div>
+      <nav className="d-flex flex-column gap-2">
+        {recoveryMenu.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`sidebar-link ${activeKey === item.key ? 'active' : ''}`}
+              title={collapsed ? item.label : ''}
+              aria-current={activeKey === item.key ? 'page' : undefined}
+              onClick={onNavigate}
+            >
+              <span className="sidebar-link-icon" aria-hidden="true">
+                <Icon />
+              </span>
+              <span className="sidebar-link-text">{item.label}</span>
+            </Link>
+          );
+        })}
       </nav>
     </aside>
   );

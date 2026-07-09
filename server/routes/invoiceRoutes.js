@@ -3,6 +3,7 @@ const { body, param } = require('express-validator');
 const {
   createInvoice,
   getInvoices,
+  getDeletedInvoices,
   getInvoiceById,
   updateInvoice,
   deleteInvoice,
@@ -32,6 +33,7 @@ const invoiceValidation = [
 router.post('/', invoiceValidation, handleValidation, createInvoice);
 router.get('/', getInvoices);
 router.get('/export/excel', exportInvoicesExcel);
+router.get('/deleted', getDeletedInvoices);
 router.get('/:id', [param('id').isMongoId().withMessage('Valid invoice id is required')], handleValidation, getInvoiceById);
 router.put('/:id', [param('id').isMongoId().withMessage('Valid invoice id is required'), ...invoiceValidation], handleValidation, updateInvoice);
 router.delete('/:id', [param('id').isMongoId().withMessage('Valid invoice id is required')], handleValidation, deleteInvoice);

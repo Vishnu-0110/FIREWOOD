@@ -60,6 +60,27 @@ const getCustomers = async (req, res) => {
   return res.json({ items, total, page: Number(page), pages: Math.ceil(total / Number(limit)) || 1 });
 };
 
+const getDeletedCustomers = async (req, res) => {
+  const { q = '', page = 1, limit = 10 } = req.query;
+  const query = {
+    isDeleted: true,
+    $or: [
+      { customerName: { $regex: q, $options: 'i' } },
+      { factoryName: { $regex: q, $options: 'i' } },
+      { gstNumber: { $regex: q, $options: 'i' } },
+      { phone: { $regex: q, $options: 'i' } }
+    ]
+  };
+
+  const skip = (Number(page) - 1) * Number(limit);
+  const [items, total] = await Promise.all([
+    Customer.find(query).sort({ deletedAt: -1, updatedAt: -1 }).skip(skip).limit(Number(limit)),
+    Customer.countDocuments(query)
+  ]);
+
+  return res.json({ items, total, page: Number(page), pages: Math.ceil(total / Number(limit)) || 1 });
+};
+
 const updateCustomer = async (req, res) => {
   const factoryName = normalizeFactoryName(req.body.factoryName || req.body.customerName);
   const duplicate = await findDuplicateFactory({ factoryName, excludeId: req.params.id });
@@ -144,4 +165,4 @@ const restoreCustomer = async (req, res) => {
   return res.json({ message: 'Customer restored successfully' });
 };
 
-module.exports = { addCustomer, getCustomers, updateCustomer, deleteCustomer, restoreCustomer };
+module.exports = { addCustomer, getCustomers, getDeletedCustomers, updateCustomer, deleteCustomer, restoreCustomer };

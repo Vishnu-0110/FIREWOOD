@@ -253,6 +253,12 @@ button:active {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
+.sidebar-link-icon svg {
+  width: 1rem;
+  height: 1rem;
+  display: block;
+}
+
 .sidebar-link.active .sidebar-link-icon {
   background: rgba(255, 255, 255, 0.18);
   border-color: rgba(255, 255, 255, 0.18);

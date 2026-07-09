@@ -141,6 +141,46 @@ const getInvoices = async (req, res) => {
   return res.json({ items, total, page: Number(page), pages: Math.ceil(total / Number(limit)) || 1 });
 };
 
+const getDeletedInvoices = async (req, res) => {
+  const {
+    q = '',
+    page = 1,
+    limit = 10
+  } = req.query;
+
+  const filter = { isDeleted: true };
+
+  const customers = await Customer.find(
+    {
+      $or: [
+        { customerName: { $regex: q, $options: 'i' } },
+        { factoryName: { $regex: q, $options: 'i' } }
+      ]
+    },
+    '_id'
+  );
+
+  if (q) {
+    filter.$or = [
+      { vehicleNumber: { $regex: q, $options: 'i' } },
+      { invoiceNumber: Number.isNaN(Number(q)) ? -1 : Number(q) },
+      { customer: { $in: customers.map((c) => c._id) } }
+    ];
+  }
+
+  const skip = (Number(page) - 1) * Number(limit);
+  const [items, total] = await Promise.all([
+    Invoice.find(filter)
+      .populate('customer', 'customerName factoryName isDeleted')
+      .sort({ deletedAt: -1, updatedAt: -1 })
+      .skip(skip)
+      .limit(Number(limit)),
+    Invoice.countDocuments(filter)
+  ]);
+
+  return res.json({ items, total, page: Number(page), pages: Math.ceil(total / Number(limit)) || 1 });
+};
+
 const getInvoiceById = async (req, res) => {
   const invoice = await Invoice.findOne({ _id: req.params.id, isDeleted: false }).populate(
     'customer',
@@ -325,6 +365,7 @@ const exportInvoicesExcel = async (req, res) => {
 module.exports = {
   createInvoice,
   getInvoices,
+  getDeletedInvoices,
   getInvoiceById,
   updateInvoice,
   deleteInvoice,

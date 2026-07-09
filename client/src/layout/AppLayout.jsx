@@ -16,6 +16,7 @@ const getRouteLabel = (pathname) => {
   if (pathname.startsWith('/invoices/new')) return 'Generate Invoice';
   if (pathname.startsWith('/invoices/')) return 'Invoice Details';
   if (pathname.startsWith('/invoices')) return 'Invoice History';
+  if (pathname.startsWith('/trash')) return 'Deleted Items';
   if (pathname.startsWith('/profile')) return 'Profile';
   return 'Page';
 };

@@ -1201,6 +1201,11 @@ body.app-theme-dark .app-toast-body {
   --line: rgba(96, 165, 250, 0.14);
   --line-strong: rgba(148, 163, 184, 0.28);
   --ring: rgba(96, 165, 250, 0.22);
+  color-scheme: dark;
+}
+
+.theme-light {
+  color-scheme: light;
 }
 
 .theme-dark .app-main {
@@ -2742,6 +2747,7 @@ body.app-theme-light {
   --line: rgba(15, 23, 42, 0.08);
   --line-strong: rgba(15, 23, 42, 0.14);
   --ring: rgba(99, 102, 241, 0.18);
+  color-scheme: light;
   background:
     radial-gradient(circle at top left, rgba(99, 102, 241, 0.1), transparent 22%),
     linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
@@ -2972,14 +2978,15 @@ body.auth-screen {
 
 body.app-theme-light,
 body.app-theme-dark {
+  color-scheme: dark;
   overflow-x: hidden;
   overflow-y: hidden;
   overscroll-behavior: none;
 }
 
 body.sidebar-open {
-  overflow: hidden;
-  overscroll-behavior: none;
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
 }
 
 .app-shell {
@@ -3852,11 +3859,16 @@ body.app-theme-dark textarea::placeholder {
     min-height: 100%;
   }
 
-  body.app-theme-light,
-  body.app-theme-dark {
+  body.app-theme-light:not(.sidebar-open),
+  body.app-theme-dark:not(.sidebar-open) {
     overflow-y: auto !important;
     overscroll-behavior-y: auto;
     -webkit-overflow-scrolling: touch;
+  }
+
+  body.sidebar-open {
+    overflow: hidden !important;
+    overscroll-behavior: none !important;
   }
 
   .app-shell {
@@ -3882,6 +3894,8 @@ body.app-theme-dark textarea::placeholder {
       box-shadow 0.22s ease;
     will-change: transform, opacity;
     backface-visibility: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
   .app-sidebar.collapsed {
@@ -3908,5 +3922,6 @@ body.app-theme-dark textarea::placeholder {
 
   .app-sidebar-backdrop {
     transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    touch-action: none;
   }
 }

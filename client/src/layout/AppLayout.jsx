@@ -32,6 +32,7 @@ const AppLayout = ({ children }) => {
   });
   const [isRouteSwitching, setIsRouteSwitching] = useState(false);
   const hasMountedRef = useRef(false);
+  const scrollLockRef = useRef({ scrollY: 0 });
   const routeLabel = useMemo(() => getRouteLabel(location.pathname), [location.pathname]);
 
   useEffect(() => {
@@ -66,11 +67,42 @@ const AppLayout = ({ children }) => {
   useLayoutEffect(() => {
     if (typeof document === 'undefined') return undefined;
 
+    const { body } = document;
     const shouldLockScroll = isMobileView && !collapsed;
-    document.body.classList.toggle('sidebar-open', shouldLockScroll);
+
+    if (!shouldLockScroll) {
+      body.classList.remove('sidebar-open');
+      body.style.position = '';
+      body.style.top = '';
+      body.style.left = '';
+      body.style.right = '';
+      body.style.width = '';
+      body.style.overflow = '';
+      body.style.touchAction = '';
+      return undefined;
+    }
+
+    const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+    scrollLockRef.current.scrollY = scrollY;
+    body.classList.add('sidebar-open');
+    body.style.position = 'fixed';
+    body.style.top = `-${scrollY}px`;
+    body.style.left = '0';
+    body.style.right = '0';
+    body.style.width = '100%';
+    body.style.overflow = 'hidden';
+    body.style.touchAction = 'none';
 
     return () => {
-      document.body.classList.remove('sidebar-open');
+      body.classList.remove('sidebar-open');
+      body.style.position = '';
+      body.style.top = '';
+      body.style.left = '';
+      body.style.right = '';
+      body.style.width = '';
+      body.style.overflow = '';
+      body.style.touchAction = '';
+      window.scrollTo(0, scrollLockRef.current.scrollY || 0);
     };
   }, [collapsed, isMobileView]);
 

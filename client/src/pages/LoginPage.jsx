@@ -124,17 +124,17 @@ const LoginPage = () => {
             </div>
             <div className="mb-3">
               <label className="form-label">Password</label>
-              <div className="input-group login-password-group">
+              <div className="login-password-field">
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  className="form-control"
+                  className="form-control login-password-input"
                   {...register('password', { required: 'Password is required' })}
                 />
                 <IconAction
                   type="button"
                   icon={showPassword ? EyeOffIcon : EyeIcon}
                   label={showPassword ? 'Hide password' : 'Show password'}
-                  className="btn-sm btn-outline-secondary login-password-toggle"
+                  className="btn-outline-secondary login-password-toggle"
                   onClick={() => setShowPassword((prev) => !prev)}
                 />
               </div>

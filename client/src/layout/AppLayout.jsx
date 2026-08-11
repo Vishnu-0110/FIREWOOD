@@ -32,6 +32,7 @@ const AppLayout = ({ children }) => {
   });
   const [isRouteSwitching, setIsRouteSwitching] = useState(false);
   const hasMountedRef = useRef(false);
+  const mainRef = useRef(null);
   const scrollLockRef = useRef({ scrollY: 0 });
   const routeLabel = useMemo(() => getRouteLabel(location.pathname), [location.pathname]);
 
@@ -120,6 +121,19 @@ const AppLayout = ({ children }) => {
     return () => window.clearTimeout(timer);
   }, [location.pathname]);
 
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const target = mainRef.current;
+    window.scrollTo(0, 0);
+    if (target) {
+      target.scrollTop = 0;
+      target.scrollLeft = 0;
+    }
+
+    return undefined;
+  }, [location.pathname]);
+
   const handleToggleSidebar = () => {
     setCollapsed((prev) => !prev);
   };
@@ -140,7 +154,7 @@ const AppLayout = ({ children }) => {
             aria-label="Close menu"
           />
         ) : null}
-        <main className="app-main">
+        <main ref={mainRef} className="app-main">
           <Topbar collapsed={collapsed} onToggleSidebar={handleToggleSidebar} routeLabel={routeLabel} />
           <div className={`app-route-indicator ${isRouteSwitching ? 'show' : ''}`} aria-live="polite" aria-atomic="true">
             <span className="app-route-indicator-dot" />

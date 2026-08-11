@@ -2639,14 +2639,14 @@ textarea:focus-visible,
   }
 }
 
-body.auth-screen {
+body.app-theme-light.auth-screen {
   background:
     radial-gradient(circle at top left, rgba(99, 102, 241, 0.16), transparent 22%),
     radial-gradient(circle at 100% 100%, rgba(129, 140, 248, 0.1), transparent 20%),
     linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
 }
 
-body.auth-screen::before {
+body.app-theme-light.auth-screen::before {
   opacity: 0.24;
   background-image:
     linear-gradient(180deg, rgba(99, 102, 241, 0.04) 0%, transparent 32%),
@@ -2657,57 +2657,57 @@ body.auth-screen .login-page {
   background: transparent;
 }
 
-body.auth-screen .login-card {
+body.app-theme-light.auth-screen .login-card {
   background: rgba(255, 255, 255, 0.94);
   border: 1px solid rgba(15, 23, 42, 0.1);
   box-shadow: 0 30px 70px rgba(99, 102, 241, 0.14);
 }
 
-body.auth-screen .login-card,
-body.auth-screen .login-card h4,
-body.auth-screen .login-card .form-label {
+body.app-theme-light.auth-screen .login-card,
+body.app-theme-light.auth-screen .login-card h4,
+body.app-theme-light.auth-screen .login-card .form-label {
   color: #0f172a;
 }
 
-body.auth-screen .login-card .text-muted,
-body.auth-screen .login-card small,
-body.auth-screen .login-card .small {
+body.app-theme-light.auth-screen .login-card .text-muted,
+body.app-theme-light.auth-screen .login-card small,
+body.app-theme-light.auth-screen .login-card .small {
   color: #334155 !important;
   opacity: 1 !important;
 }
 
-body.auth-screen .login-card .form-control,
-body.auth-screen .login-card .form-select,
-body.auth-screen .login-card textarea {
+body.app-theme-light.auth-screen .login-card .form-control,
+body.app-theme-light.auth-screen .login-card .form-select,
+body.app-theme-light.auth-screen .login-card textarea {
   color: #0f172a;
   background: #ffffff;
   border: 1.5px solid rgba(15, 23, 42, 0.18);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
 }
 
-body.auth-screen .login-card .form-control::placeholder,
-body.auth-screen .login-card .form-select::placeholder,
-body.auth-screen .login-card textarea::placeholder {
+body.app-theme-light.auth-screen .login-card .form-control::placeholder,
+body.app-theme-light.auth-screen .login-card .form-select::placeholder,
+body.app-theme-light.auth-screen .login-card textarea::placeholder {
   color: #94a3b8;
   opacity: 1;
 }
 
-body.auth-screen .login-card .form-control:focus,
-body.auth-screen .login-card .form-select:focus,
-body.auth-screen .login-card textarea:focus {
+body.app-theme-light.auth-screen .login-card .form-control:focus,
+body.app-theme-light.auth-screen .login-card .form-select:focus,
+body.app-theme-light.auth-screen .login-card textarea:focus {
   color: #0f172a;
   background: #ffffff;
   border-color: #6366f1;
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.16);
 }
 
-body.auth-screen .login-card .btn-outline-secondary {
+body.app-theme-light.auth-screen .login-card .btn-outline-secondary {
   color: #334155;
   background: #ffffff;
   border-color: rgba(15, 23, 42, 0.12);
 }
 
-body.auth-screen .login-card .btn-outline-secondary:hover {
+body.app-theme-light.auth-screen .login-card .btn-outline-secondary:hover {
   color: #0f172a;
   background: #eef2ff;
   border-color: rgba(99, 102, 241, 0.24);
@@ -2740,24 +2740,24 @@ body.auth-screen .login-password-toggle svg {
   height: 0.95rem;
 }
 
-body.auth-screen .login-overline {
+body.app-theme-light.auth-screen .login-overline {
   color: #4f46e5;
   background: rgba(99, 102, 241, 0.12);
   border-color: rgba(99, 102, 241, 0.18);
 }
 
-body.auth-screen .login-card .form-label {
+body.app-theme-light.auth-screen .login-card .form-label {
   color: #0f172a;
 }
 
-body.auth-screen .login-ops-card {
+body.app-theme-light.auth-screen .login-ops-card {
   border-color: rgba(15, 23, 42, 0.08);
   background:
     radial-gradient(circle at top right, rgba(99, 102, 241, 0.08), transparent 42%),
     rgba(255, 255, 255, 0.94);
 }
 
-body.auth-screen .login-ops-card strong {
+body.app-theme-light.auth-screen .login-ops-card strong {
   color: #0f172a;
 }
 
@@ -2787,12 +2787,47 @@ body.app-theme-light::before {
     linear-gradient(90deg, rgba(15, 23, 42, 0.025) 0%, transparent 28%);
 }
 
+body.app-theme-dark {
+  --bg: #08111f;
+  --bg-soft: #0d1729;
+  --paper: #101a2f;
+  --text: #e5edf8;
+  --muted: #9db0cb;
+  --primary: #818cf8;
+  --primary-strong: #a5b4fc;
+  --secondary: #1e293b;
+  --accent: #f59e0b;
+  --line: rgba(96, 165, 250, 0.14);
+  --line-strong: rgba(148, 163, 184, 0.28);
+  --ring: rgba(96, 165, 250, 0.22);
+  color-scheme: dark;
+  background:
+    radial-gradient(circle at top left, rgba(99, 102, 241, 0.14), transparent 24%),
+    radial-gradient(circle at 100% 0%, rgba(15, 118, 110, 0.12), transparent 24%),
+    linear-gradient(180deg, #08111f 0%, #0f172a 100%);
+}
+
+body.app-theme-dark::before {
+  opacity: 0.18;
+  background-image:
+    linear-gradient(180deg, rgba(129, 140, 248, 0.06) 0%, transparent 32%),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.035) 0%, transparent 28%);
+}
+
 body.app-theme-light .app-main,
 body.app-theme-light .theme-light .app-main {
   background:
     radial-gradient(circle at top right, rgba(99, 102, 241, 0.08), transparent 18%),
     linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
   color: #0f172a;
+}
+
+body.app-theme-dark .app-main,
+body.app-theme-dark .theme-dark .app-main {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(31, 94, 255, 0.14), transparent 24%),
+    linear-gradient(180deg, #07101d, #0b1324);
+  color: var(--text);
 }
 
 body.app-theme-light .app-topbar {
@@ -3001,17 +3036,16 @@ body.auth-screen {
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior-y: auto;
-  color-scheme: light;
 }
 
-body.app-theme-light {
+body.app-theme-light:not(.auth-screen) {
   color-scheme: light;
   overflow-x: hidden;
   overflow-y: hidden;
   overscroll-behavior: none;
 }
 
-body.app-theme-dark {
+body.app-theme-dark:not(.auth-screen) {
   color-scheme: dark;
   overflow-x: hidden;
   overflow-y: hidden;

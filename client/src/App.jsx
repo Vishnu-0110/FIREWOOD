@@ -114,12 +114,17 @@ function App() {
     if (typeof document === 'undefined') return undefined;
 
     const { body } = document;
-    body.classList.remove('auth-screen', 'app-theme-light', 'app-theme-dark');
+    const themeClasses = theme === 'dark'
+      ? ['theme-dark', 'app-theme-dark']
+      : ['theme-light', 'app-theme-light'];
+
+    body.classList.remove('auth-screen', 'theme-light', 'theme-dark', 'app-theme-light', 'app-theme-dark');
 
     if (isAuthenticated || checkingSession) {
-      body.classList.add(theme === 'dark' ? 'app-theme-dark' : 'app-theme-light');
+      body.classList.add(...themeClasses);
     } else {
       body.classList.add('auth-screen');
+      body.classList.add(...themeClasses);
     }
 
     return undefined;

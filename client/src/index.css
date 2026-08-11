@@ -45,6 +45,10 @@ body,
   min-height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   color: var(--text);
@@ -55,8 +59,14 @@ body {
     radial-gradient(circle at 100% 0%, rgba(15, 118, 110, 0.12), transparent 28%),
     radial-gradient(circle at 88% 100%, rgba(245, 158, 11, 0.1), transparent 22%),
     linear-gradient(160deg, #f8fbff 0%, #f1f5fb 44%, #edf1f7 100%);
-  background-attachment: fixed;
+  background-attachment: scroll;
   scrollbar-gutter: stable;
+}
+
+body,
+.app-main,
+.app-content {
+  overflow-anchor: none;
 }
 
 body::before {
@@ -282,7 +292,7 @@ button:active {
   top: 0;
   z-index: 1030;
   background: rgba(248, 251, 255, 0.76);
-  backdrop-filter: blur(18px);
+  backdrop-filter: none;
   border-bottom: 1px solid var(--line);
   gap: 0.9rem;
   flex-wrap: wrap;
@@ -798,8 +808,11 @@ textarea::placeholder {
   border-radius: 28px;
   box-shadow: var(--shadow-hard);
   background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
+  backdrop-filter: none;
   position: relative;
+  contain: layout paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 520px;
 }
 
 .login-shell {
@@ -832,7 +845,7 @@ textarea::placeholder {
     radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(99, 102, 241, 0.18), transparent 18%),
     radial-gradient(circle at 78% 22%, rgba(15, 118, 110, 0.16), transparent 22%),
     radial-gradient(circle at 20% 82%, rgba(245, 158, 11, 0.14), transparent 18%);
-  filter: blur(8px);
+  filter: blur(4px);
   opacity: 0.95;
 }
 
@@ -950,9 +963,12 @@ textarea::placeholder {
   border-radius: 28px;
   box-shadow: var(--shadow-hard);
   background: rgba(255, 255, 255, 0.86);
-  backdrop-filter: blur(20px);
+  backdrop-filter: none;
   position: relative;
   z-index: 2;
+  contain: layout paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 520px;
 }
 
 /* legacy login showcase classes retained for compatibility */
@@ -1792,7 +1808,10 @@ body.app-theme-dark .app-toast-body {
     radial-gradient(circle at 100% 100%, rgba(15, 118, 110, 0.12), transparent 28%),
     rgba(255, 255, 255, 0.78);
   box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(14px);
+  backdrop-filter: none;
+  contain: layout paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 180px;
 }
 
 .page-hero-tight {
@@ -2373,7 +2392,14 @@ small,
   background: rgba(17, 24, 39, 0.92);
   border: 1px solid var(--line);
   box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(14px);
+  backdrop-filter: none;
+}
+
+.card,
+.theme-dark .card {
+  contain: layout paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 320px;
 }
 
 .card-header,
@@ -3081,6 +3107,7 @@ body.sidebar-open {
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   scrollbar-gutter: stable;
+  scroll-behavior: smooth;
 }
 
 .app-topbar {
@@ -3206,7 +3233,10 @@ body.app-theme-light .custom-chart-legend-text {
   border: 1px solid rgba(15, 23, 42, 0.08);
   background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
-  backdrop-filter: blur(10px);
+  backdrop-filter: none;
+  contain: layout paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 120px;
 }
 
 .loading-icon {
@@ -3546,6 +3576,16 @@ body.app-theme-dark .sidebar-brand-subtitle {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .app-page-surface,
+  .app-route-indicator-dot {
+    animation: none !important;
+    transition: none !important;
+  }
+
   .login-showcase,
   .login-flow-step,
   .login-flow-line::after,
@@ -3556,6 +3596,19 @@ body.app-theme-dark .sidebar-brand-subtitle {
   .login-orbit-ring,
   .login-orbit-node {
     animation: none !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .app-page-surface {
+    animation: none;
+    will-change: auto;
+  }
+
+  .app-route-indicator,
+  .app-route-indicator-dot {
+    transition: none;
+    animation: none;
   }
 }
 
@@ -3921,7 +3974,23 @@ body.app-theme-dark textarea::placeholder {
     background-attachment: scroll;
   }
 
+  .login-backdrop-orbit,
+  .login-backdrop-trace,
+  .login-backdrop-node {
+    animation: none !important;
+  }
+
+  .login-backdrop::before,
+  .login-backdrop::after {
+    filter: none;
+  }
+
   .app-sidebar-backdrop {
+    backdrop-filter: none;
+  }
+
+  .login-card,
+  .loading-shell {
     backdrop-filter: none;
   }
 }

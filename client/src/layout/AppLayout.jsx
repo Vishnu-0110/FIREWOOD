@@ -113,13 +113,18 @@ const AppLayout = ({ children }) => {
       return undefined;
     }
 
+    if (isMobileView) {
+      setIsRouteSwitching(false);
+      return undefined;
+    }
+
     setIsRouteSwitching(true);
     const timer = window.setTimeout(() => {
       setIsRouteSwitching(false);
     }, 180);
 
     return () => window.clearTimeout(timer);
-  }, [location.pathname]);
+  }, [location.pathname, isMobileView]);
 
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return undefined;
@@ -156,10 +161,12 @@ const AppLayout = ({ children }) => {
         ) : null}
         <main ref={mainRef} className="app-main">
           <Topbar collapsed={collapsed} onToggleSidebar={handleToggleSidebar} routeLabel={routeLabel} />
-          <div className={`app-route-indicator ${isRouteSwitching ? 'show' : ''}`} aria-live="polite" aria-atomic="true">
-            <span className="app-route-indicator-dot" />
-            <span>{routeLabel}</span>
-          </div>
+          {!isMobileView ? (
+            <div className={`app-route-indicator ${isRouteSwitching ? 'show' : ''}`} aria-live="polite" aria-atomic="true">
+              <span className="app-route-indicator-dot" />
+              <span>{routeLabel}</span>
+            </div>
+          ) : null}
           <div className={`container-fluid py-3 app-content app-page-shell ${isRouteSwitching ? 'is-switching' : ''}`}>
             <div key={location.pathname} className="app-page-surface">
               {children}

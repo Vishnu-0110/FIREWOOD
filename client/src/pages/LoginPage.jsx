@@ -21,6 +21,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.auth);
   const sceneRef = useRef(null);
+  const pointerFrameRef = useRef(0);
+  const pointerPointRef = useRef(null);
 
   useEffect(() => {
     if (isAuthenticated) navigate('/');
@@ -31,22 +33,37 @@ const LoginPage = () => {
       return;
     }
 
-    const scene = sceneRef.current;
-    if (!scene) return;
+    pointerPointRef.current = { clientX: event.clientX, clientY: event.clientY };
 
-    const rect = scene.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * 100;
-    const y = ((event.clientY - rect.top) / rect.height) * 100;
-    const tiltX = ((event.clientY - rect.top) / rect.height - 0.5) * -10;
-    const tiltY = ((event.clientX - rect.left) / rect.width - 0.5) * 10;
+    if (pointerFrameRef.current) return;
 
-    scene.style.setProperty('--pointer-x', `${x}%`);
-    scene.style.setProperty('--pointer-y', `${y}%`);
-    scene.style.setProperty('--tilt-x', `${tiltX.toFixed(2)}deg`);
-    scene.style.setProperty('--tilt-y', `${tiltY.toFixed(2)}deg`);
+    pointerFrameRef.current = window.requestAnimationFrame(() => {
+      pointerFrameRef.current = 0;
+
+      const scene = sceneRef.current;
+      const point = pointerPointRef.current;
+      if (!scene || !point) return;
+
+      const rect = scene.getBoundingClientRect();
+      const x = ((point.clientX - rect.left) / rect.width) * 100;
+      const y = ((point.clientY - rect.top) / rect.height) * 100;
+      const tiltX = ((point.clientY - rect.top) / rect.height - 0.5) * -10;
+      const tiltY = ((point.clientX - rect.left) / rect.width - 0.5) * 10;
+
+      scene.style.setProperty('--pointer-x', `${x}%`);
+      scene.style.setProperty('--pointer-y', `${y}%`);
+      scene.style.setProperty('--tilt-x', `${tiltX.toFixed(2)}deg`);
+      scene.style.setProperty('--tilt-y', `${tiltY.toFixed(2)}deg`);
+    });
   };
 
   const resetPointer = () => {
+    if (pointerFrameRef.current) {
+      window.cancelAnimationFrame(pointerFrameRef.current);
+      pointerFrameRef.current = 0;
+    }
+
+    pointerPointRef.current = null;
     const scene = sceneRef.current;
     if (!scene) return;
     scene.style.setProperty('--pointer-x', '50%');
@@ -54,6 +71,12 @@ const LoginPage = () => {
     scene.style.setProperty('--tilt-x', '0deg');
     scene.style.setProperty('--tilt-y', '0deg');
   };
+
+  useEffect(() => () => {
+    if (pointerFrameRef.current) {
+      window.cancelAnimationFrame(pointerFrameRef.current);
+    }
+  }, []);
 
   const onSubmit = async (data) => {
     try {

@@ -2713,6 +2713,28 @@ body.auth-screen .login-card .btn-outline-secondary:hover {
   border-color: rgba(99, 102, 241, 0.24);
 }
 
+body.auth-screen .login-password-group {
+  align-items: stretch;
+}
+
+body.auth-screen .login-password-toggle {
+  width: 3rem;
+  min-width: 3rem;
+  height: 46px;
+  min-height: 46px;
+  padding: 0 !important;
+  align-self: stretch;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-top-right-radius: var(--radius-sm) !important;
+  border-bottom-right-radius: var(--radius-sm) !important;
+}
+
+body.auth-screen .login-password-toggle svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
 body.auth-screen .login-overline {
   color: #4f46e5;
   background: rgba(99, 102, 241, 0.12);
@@ -2974,9 +2996,16 @@ body.auth-screen {
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior-y: auto;
+  color-scheme: light;
 }
 
-body.app-theme-light,
+body.app-theme-light {
+  color-scheme: light;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  overscroll-behavior: none;
+}
+
 body.app-theme-dark {
   color-scheme: dark;
   overflow-x: hidden;
@@ -3777,6 +3806,11 @@ body.app-theme-dark .topbar-user-avatar {
   body.app-theme-dark .table-mobile-stack .action-cell {
     padding-left: 0.75rem !important;
     gap: 0.4rem !important;
+  }
+
+  body.auth-screen .login-password-toggle {
+    width: 2.8rem;
+    min-width: 2.8rem;
   }
 }
 

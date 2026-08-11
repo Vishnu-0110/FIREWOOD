@@ -124,7 +124,7 @@ const LoginPage = () => {
             </div>
             <div className="mb-3">
               <label className="form-label">Password</label>
-              <div className="input-group">
+              <div className="input-group login-password-group">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   className="form-control"
@@ -134,7 +134,7 @@ const LoginPage = () => {
                   type="button"
                   icon={showPassword ? EyeOffIcon : EyeIcon}
                   label={showPassword ? 'Hide password' : 'Show password'}
-                  className="btn-sm btn-outline-secondary"
+                  className="btn-sm btn-outline-secondary login-password-toggle"
                   onClick={() => setShowPassword((prev) => !prev)}
                 />
               </div>

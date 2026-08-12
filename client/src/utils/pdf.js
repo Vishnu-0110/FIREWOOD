@@ -113,7 +113,7 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
           </div>
 
           <div style="min-width: 300px; font-size: 14px; margin-top: 6px; line-height: 1.45; display:flex; flex-direction:column; gap:7px;">
-            <div style="display:flex; align-items:center; justify-content:flex-end; gap:4px; white-space:nowrap;">
+            <div style="display:flex; align-items:center; justify-content:flex-start; gap:4px; white-space:nowrap; width:100%; padding:0 9px;">
               <span style="font-weight:600; width:46px; text-align:left; white-space:nowrap;">Phone:</span>
               <span style="font-weight:500; text-align:left; white-space:nowrap;">${COMPANY.phone}</span>
             </div>

@@ -112,17 +112,16 @@ const buildInvoiceHTML = (invoice, { template = false } = {}) => {
             </div>
           </div>
 
-          <div style="min-width: 300px; font-size: 14px; margin-top: 6px; line-height: 1.55; display:flex; flex-direction:column; gap:9px;">
-            <div style="display:flex; align-items:flex-start; justify-content:flex-end; gap:6px;">
+          <div style="min-width: 300px; font-size: 14px; margin-top: 6px; line-height: 1.45; display:flex; flex-direction:column; gap:7px;">
+            <div style="display:flex; align-items:center; justify-content:flex-end; gap:4px; white-space:nowrap;">
               <span style="font-weight:600; width:46px; text-align:left; white-space:nowrap;">Phone:</span>
-              <span style="font-weight:500; min-width:150px; text-align:left;">${COMPANY.phone}</span>
+              <span style="font-weight:500; text-align:left; white-space:nowrap;">${COMPANY.phone}</span>
             </div>
-            <a href="mailto:${escapeHtml(COMPANY.email)}" target="_blank" rel="noreferrer noopener" style="display:block; width:100%; padding:6px 8px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere; font-weight:600;">
-              Email: ${COMPANY.email}
+            <a href="mailto:${escapeHtml(COMPANY.email)}" target="_blank" rel="noreferrer noopener" style="display:flex; align-items:center; width:100%; padding:5px 9px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; font-weight:600; white-space:nowrap; overflow:hidden;">
+              Email: ${escapeHtml(COMPANY.email)}
             </a>
-            <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="display:block; width:100%; padding:7px 10px 8px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; overflow-wrap:anywhere; font-weight:600; line-height:1.15;">
-              <div style="font-size: 15px; margin-bottom: 6px;">Website:</div>
-              <div style="font-size: 15px; font-weight: 700; white-space: nowrap;">${escapeHtml(websiteText)}</div>
+            <a href="${escapeHtml(COMPANY.website)}" target="_blank" rel="noreferrer noopener" style="display:flex; align-items:center; width:100%; padding:5px 9px; border:1px solid #c7d2fe; border-radius:8px; background:#f8fbff; color:#0b57d0; text-decoration:none; font-weight:600; white-space:nowrap; overflow:hidden;">
+              Website:${escapeHtml(websiteText)}
             </a>
           </div>
         </div>

@@ -19,26 +19,40 @@ function threeDigits(num) {
 }
 
 function numberToWordsIndian(amount) {
-  const rounded = Math.round(Number(amount));
-  if (Number.isNaN(rounded) || rounded < 0) return '';
-  if (rounded === 0) return 'Zero Rupees Only';
+  const numericAmount = Number(amount);
+  if (!Number.isFinite(numericAmount) || numericAmount < 0) return '';
 
-  let num = rounded;
-  const crore = Math.floor(num / 10000000);
-  num %= 10000000;
-  const lakh = Math.floor(num / 100000);
-  num %= 100000;
-  const thousand = Math.floor(num / 1000);
-  num %= 1000;
-  const hundredPart = num;
+  const [rupeesPart, paisePart] = numericAmount.toFixed(2).split('.');
+  const rupees = Number(rupeesPart);
+  const paise = Number(paisePart);
 
-  const parts = [];
-  if (crore) parts.push(`${twoDigits(crore)} Crore`);
-  if (lakh) parts.push(`${twoDigits(lakh)} Lakh`);
-  if (thousand) parts.push(`${twoDigits(thousand)} Thousand`);
-  if (hundredPart) parts.push(threeDigits(hundredPart));
+  const rupeeWords = (() => {
+    if (rupees === 0) return 'Zero Rupees';
 
-  return `${parts.join(' ').replace(/\s+/g, ' ').trim()} Rupees Only`;
+    let num = rupees;
+    const crore = Math.floor(num / 10000000);
+    num %= 10000000;
+    const lakh = Math.floor(num / 100000);
+    num %= 100000;
+    const thousand = Math.floor(num / 1000);
+    num %= 1000;
+    const hundredPart = num;
+
+    const parts = [];
+    if (crore) parts.push(`${twoDigits(crore)} Crore`);
+    if (lakh) parts.push(`${twoDigits(lakh)} Lakh`);
+    if (thousand) parts.push(`${twoDigits(thousand)} Thousand`);
+    if (hundredPart) parts.push(threeDigits(hundredPart));
+
+    const amountLabel = rupees === 1 ? 'Rupee' : 'Rupees';
+    return `${parts.join(' ').replace(/\s+/g, ' ').trim()} ${amountLabel}`.trim();
+  })();
+
+  if (rupees === 0 && paise === 0) return 'Zero Rupees Only';
+  if (rupees === 0) return `${twoDigits(paise)} Paise Only`;
+  if (paise === 0) return `${rupeeWords} Only`;
+
+  return `${rupeeWords} and ${twoDigits(paise)} Paise Only`;
 }
 
 module.exports = numberToWordsIndian;

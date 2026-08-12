@@ -12,6 +12,16 @@ const getNextInvoiceNumberForCustomer = async (customerId) => {
   return (latest?.invoiceNumber || 0) + 1;
 };
 
+const withExactAmountInWords = (invoice) => {
+  if (!invoice) return invoice;
+
+  const plainInvoice = typeof invoice.toObject === 'function' ? invoice.toObject() : { ...invoice };
+  return {
+    ...plainInvoice,
+    amountInWords: numberToWordsIndian(plainInvoice.totalAmount)
+  };
+};
+
 const createInvoice = async (req, res) => {
   const {
     invoiceNumber,
@@ -84,7 +94,7 @@ const createInvoice = async (req, res) => {
   await logAudit({ user: req.user._id, action: 'CREATE_INVOICE', module: 'INVOICE', metadata: { invoiceId: created._id } });
 
   const populated = await created.populate('customer', 'customerName factoryName gstNumber phone address');
-  return res.status(201).json(populated);
+  return res.status(201).json(withExactAmountInWords(populated));
 };
 
 const getInvoices = async (req, res) => {
@@ -138,7 +148,12 @@ const getInvoices = async (req, res) => {
     Invoice.countDocuments(filter)
   ]);
 
-  return res.json({ items, total, page: Number(page), pages: Math.ceil(total / Number(limit)) || 1 });
+  return res.json({
+    items: items.map(withExactAmountInWords),
+    total,
+    page: Number(page),
+    pages: Math.ceil(total / Number(limit)) || 1
+  });
 };
 
 const getDeletedInvoices = async (req, res) => {
@@ -178,7 +193,12 @@ const getDeletedInvoices = async (req, res) => {
     Invoice.countDocuments(filter)
   ]);
 
-  return res.json({ items, total, page: Number(page), pages: Math.ceil(total / Number(limit)) || 1 });
+  return res.json({
+    items: items.map(withExactAmountInWords),
+    total,
+    page: Number(page),
+    pages: Math.ceil(total / Number(limit)) || 1
+  });
 };
 
 const getInvoiceById = async (req, res) => {
@@ -191,7 +211,7 @@ const getInvoiceById = async (req, res) => {
     return res.status(404).json({ message: 'Invoice not found' });
   }
 
-  return res.json(invoice);
+  return res.json(withExactAmountInWords(invoice));
 };
 
 const updateInvoice = async (req, res) => {
@@ -252,7 +272,7 @@ const updateInvoice = async (req, res) => {
   await logAudit({ user: req.user._id, action: 'UPDATE_INVOICE', module: 'INVOICE', metadata: { invoiceId: invoice._id } });
 
   const populated = await invoice.populate('customer', 'customerName factoryName gstNumber phone address');
-  return res.json(populated);
+  return res.json(withExactAmountInWords(populated));
 };
 
 const deleteInvoice = async (req, res) => {

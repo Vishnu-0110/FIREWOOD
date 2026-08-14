@@ -2197,9 +2197,11 @@ body.app-theme-dark .app-toast-body {
   .hero-actions.action-row-grid--buttons,
   .page-actions-row.action-row-grid--buttons,
   .form-action-row.action-row-grid--buttons {
-    grid-auto-flow: row;
-    grid-template-columns: minmax(0, 1fr);
-    justify-content: stretch;
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
   }
 
   .hero-actions.action-row-grid--search,
@@ -2216,7 +2218,9 @@ body.app-theme-dark .app-toast-body {
   .page-actions-row .btn:not(.btn-icon),
   .form-action-row .btn:not(.btn-icon),
   .topbar-actions .btn:not(.btn-icon) {
-    width: 100%;
+    width: auto;
+    flex: 1 1 0;
+    min-width: 0;
   }
 
   .hero-actions .btn.btn-icon,
@@ -2231,6 +2235,7 @@ body.app-theme-dark .app-toast-body {
 
   .topbar-actions .btn:not(.btn-icon) {
     width: auto;
+    flex: 0 0 auto;
   }
 
   .topbar-user-chip {

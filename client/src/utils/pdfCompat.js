@@ -106,11 +106,43 @@ export const downloadBlob = (blob, filename) => {
   return true;
 };
 
-export const openPdfDataUrl = (dataUrl, title = 'Invoice PDF') => {
-  if (!isBrowser() || !dataUrl) return null;
+export const openPdfDataUrl = (dataUrl, title = 'Invoice PDF', blob = null) => {
+  if (!isBrowser() || (!dataUrl && !blob)) return null;
 
-  const previewWindow = window.open('', '_blank', 'noopener,noreferrer');
-  if (!previewWindow) return null;
+  const previewWindow = window.open('', '_blank');
+  const sourceUrl = blob ? URL.createObjectURL(blob) : dataUrl;
+  const cleanup = () => {
+    if (!blob) return;
+    try {
+      URL.revokeObjectURL(sourceUrl);
+    } catch {
+      // Ignore revocation failures on browsers that already released the URL.
+    }
+  };
+
+  if (!previewWindow) {
+    const fallbackLink = document.createElement('a');
+    fallbackLink.href = sourceUrl;
+    fallbackLink.target = '_blank';
+    fallbackLink.rel = 'noopener';
+    document.body.appendChild(fallbackLink);
+    fallbackLink.click();
+    fallbackLink.remove();
+    window.setTimeout(cleanup, 5 * 60 * 1000);
+    return { closed: true };
+  }
+
+  if (blob && isSamsungInternet()) {
+    try {
+      previewWindow.location.replace(sourceUrl);
+      previewWindow.addEventListener('beforeunload', cleanup, { once: true });
+      window.setTimeout(cleanup, 5 * 60 * 1000);
+      previewWindow.focus();
+      return previewWindow;
+    } catch {
+      // Fall back to the embedded document below.
+    }
+  }
 
   previewWindow.document.open();
   previewWindow.document.write(`<!doctype html>
@@ -126,19 +158,78 @@ export const openPdfDataUrl = (dataUrl, title = 'Invoice PDF') => {
         </style>
       </head>
       <body>
-        <iframe src="${dataUrl}" title="${title}"></iframe>
+        <iframe src="${sourceUrl}" title="${title}"></iframe>
       </body>
     </html>`);
   previewWindow.document.close();
+  previewWindow.addEventListener('beforeunload', cleanup, { once: true });
+  window.setTimeout(cleanup, 5 * 60 * 1000);
   previewWindow.focus();
   return previewWindow;
 };
 
-export const printPdfDataUrl = (dataUrl, title = 'Invoice PDF') => {
-  if (!isBrowser() || !dataUrl) return false;
+export const printPdfDataUrl = (dataUrl, title = 'Invoice PDF', blob = null) => {
+  if (!isBrowser() || (!dataUrl && !blob)) return false;
 
-  const printWindow = window.open('', '_blank', 'noopener,noreferrer');
-  if (!printWindow) return false;
+  const printWindow = window.open('', '_blank');
+  const sourceUrl = blob ? URL.createObjectURL(blob) : dataUrl;
+  const cleanup = () => {
+    if (!blob) return;
+    try {
+      URL.revokeObjectURL(sourceUrl);
+    } catch {
+      // Ignore revocation failures on browsers that already released the URL.
+    }
+  };
+
+  if (!printWindow) {
+    if (blob && isSamsungInternet()) {
+      try {
+        window.location.href = sourceUrl;
+        window.setTimeout(() => {
+          try {
+            window.focus();
+            window.print();
+          } catch {
+            // Ignore print failures on browsers that block the fallback.
+          }
+        }, 1200);
+        window.setTimeout(cleanup, 5 * 60 * 1000);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    const fallbackLink = document.createElement('a');
+    fallbackLink.href = sourceUrl;
+    fallbackLink.target = '_blank';
+    fallbackLink.rel = 'noopener';
+    document.body.appendChild(fallbackLink);
+    fallbackLink.click();
+    fallbackLink.remove();
+    window.setTimeout(cleanup, 5 * 60 * 1000);
+    return true;
+  }
+
+  if (blob && isSamsungInternet()) {
+    try {
+      printWindow.addEventListener('beforeunload', cleanup, { once: true });
+      printWindow.location.replace(sourceUrl);
+      window.setTimeout(() => {
+        try {
+          printWindow.focus();
+          printWindow.print();
+        } catch {
+          // Ignore print failures if the native viewer is still loading.
+        }
+      }, 1200);
+      window.setTimeout(cleanup, 5 * 60 * 1000);
+      return true;
+    } catch {
+      // Fall back to the embedded document below.
+    }
+  }
 
   printWindow.document.open();
   printWindow.document.write(`<!doctype html>
@@ -153,7 +244,7 @@ export const printPdfDataUrl = (dataUrl, title = 'Invoice PDF') => {
         </style>
       </head>
       <body>
-        <iframe id="pdf-frame" src="${dataUrl}" title="${title}"></iframe>
+        <iframe id="pdf-frame" src="${sourceUrl}" title="${title}"></iframe>
         <script>
           const frame = document.getElementById('pdf-frame');
           frame.addEventListener('load', () => {
@@ -166,6 +257,8 @@ export const printPdfDataUrl = (dataUrl, title = 'Invoice PDF') => {
       </body>
     </html>`);
   printWindow.document.close();
+  printWindow.addEventListener('beforeunload', cleanup, { once: true });
+  window.setTimeout(cleanup, 5 * 60 * 1000);
   printWindow.focus();
   return true;
 };

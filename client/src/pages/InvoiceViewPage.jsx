@@ -161,7 +161,7 @@ const InvoiceViewPage = () => {
         return;
       }
 
-      if (!openPdfDataUrl(pdfArtifacts.dataUrl, invoicePdfTitle)) {
+      if (!openPdfDataUrl(pdfArtifacts.dataUrl, invoicePdfTitle, pdfArtifacts.blob)) {
         toast.info('Could not open a PDF preview here.');
       }
       return;
@@ -182,7 +182,7 @@ const InvoiceViewPage = () => {
         return;
       }
 
-      if (!printPdfDataUrl(pdfArtifacts.dataUrl, invoicePdfTitle)) {
+      if (!printPdfDataUrl(pdfArtifacts.dataUrl, invoicePdfTitle, pdfArtifacts.blob)) {
         toast.info('Could not open print preview here.');
       }
       return;
@@ -202,29 +202,63 @@ const InvoiceViewPage = () => {
 
       try {
         const file = new File([pdfArtifacts.blob], invoicePdfName, { type: 'application/pdf' });
-        if (typeof navigator.share === 'function') {
-          if (typeof navigator.canShare !== 'function' || navigator.canShare({ files: [file] })) {
+        const shareText = `Invoice for ${factoryName}`;
+        const shareLink = window.location.href;
+        let canShareFile = false;
+
+        if (typeof navigator.canShare === 'function') {
+          try {
+            canShareFile = navigator.canShare({ files: [file] });
+          } catch {
+            canShareFile = false;
+          }
+        } else if (typeof navigator.share === 'function') {
+          canShareFile = true;
+        }
+
+        if (typeof navigator.share === 'function' && canShareFile) {
+          try {
             await navigator.share({
               title: invoicePdfTitle,
-              text: `Invoice for ${factoryName}`,
+              text: shareText,
               files: [file]
             });
             return;
+          } catch (shareError) {
+            if (shareError?.name === 'AbortError') {
+              return;
+            }
           }
         }
+
         if (typeof navigator.share === 'function') {
-          await navigator.share({
-            title: invoicePdfTitle,
-            text: `Invoice for ${factoryName}`,
-            url: window.location.href
-          });
-          return;
+          try {
+            await navigator.share({
+              title: invoicePdfTitle,
+              text: shareText,
+              url: shareLink
+            });
+            return;
+          } catch (shareError) {
+            if (shareError?.name === 'AbortError') {
+              return;
+            }
+          }
         }
+
+        if (navigator.clipboard?.writeText) {
+          try {
+            await navigator.clipboard.writeText(shareLink);
+            toast.success('Invoice link copied to clipboard.');
+            return;
+          } catch {
+            // Fall through to the informational message below.
+          }
+        }
+
         toast.info('Sharing not available here.');
-      } catch (shareError) {
-        if (shareError?.name !== 'AbortError') {
-          toast.error('Could not share invoice.');
-        }
+      } catch {
+        toast.error('Could not share invoice.');
       }
       return;
     }

@@ -2199,9 +2199,18 @@ body.app-theme-dark .app-toast-body {
   .form-action-row.action-row-grid--buttons {
     display: flex !important;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: center;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .hero-actions.action-row-grid--buttons > *,
+  .page-actions-row.action-row-grid--buttons > *,
+  .form-action-row.action-row-grid--buttons > * {
+    flex: 0 0 auto;
   }
 
   .hero-actions.action-row-grid--search,

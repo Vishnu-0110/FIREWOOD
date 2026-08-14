@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
+import { safeLocalStorage } from '../utils/browserStorage';
 
 const getIsMobileView = () => {
   if (typeof window === 'undefined') return false;
@@ -27,7 +28,7 @@ const AppLayout = ({ children }) => {
   const isDark = theme === 'dark';
   const [isMobileView, setIsMobileView] = useState(getIsMobileView);
   const [collapsed, setCollapsed] = useState(() => {
-    const savedCollapsed = localStorage.getItem('sidebar_collapsed') === '1';
+    const savedCollapsed = safeLocalStorage.getItem('sidebar_collapsed') === '1';
     return getIsMobileView() ? true : savedCollapsed;
   });
   const [isRouteSwitching, setIsRouteSwitching] = useState(false);
@@ -47,7 +48,7 @@ const AppLayout = ({ children }) => {
         setCollapsed(true);
         return;
       }
-      const savedCollapsed = localStorage.getItem('sidebar_collapsed') === '1';
+      const savedCollapsed = safeLocalStorage.getItem('sidebar_collapsed') === '1';
       setCollapsed(savedCollapsed);
     };
 
@@ -62,7 +63,7 @@ const AppLayout = ({ children }) => {
 
   useEffect(() => {
     if (isMobileView) return;
-    localStorage.setItem('sidebar_collapsed', collapsed ? '1' : '0');
+    safeLocalStorage.setItem('sidebar_collapsed', collapsed ? '1' : '0');
   }, [collapsed, isMobileView]);
 
   useLayoutEffect(() => {
@@ -93,6 +94,7 @@ const AppLayout = ({ children }) => {
     body.style.width = '100%';
     body.style.overflow = 'hidden';
     body.style.touchAction = 'none';
+    const restoreScrollY = scrollY;
 
     return () => {
       body.classList.remove('sidebar-open');
@@ -103,7 +105,7 @@ const AppLayout = ({ children }) => {
       body.style.width = '';
       body.style.overflow = '';
       body.style.touchAction = '';
-      window.scrollTo(0, scrollLockRef.current.scrollY || 0);
+      window.scrollTo(0, restoreScrollY || 0);
     };
   }, [collapsed, isMobileView]);
 
@@ -113,17 +115,19 @@ const AppLayout = ({ children }) => {
       return undefined;
     }
 
-    if (isMobileView) {
-      setIsRouteSwitching(false);
-      return undefined;
-    }
+    if (isMobileView) return undefined;
 
-    setIsRouteSwitching(true);
-    const timer = window.setTimeout(() => {
+    const enterTimer = window.setTimeout(() => {
+      setIsRouteSwitching(true);
+    }, 0);
+    const exitTimer = window.setTimeout(() => {
       setIsRouteSwitching(false);
     }, 180);
 
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(enterTimer);
+      window.clearTimeout(exitTimer);
+    };
   }, [location.pathname, isMobileView]);
 
   useLayoutEffect(() => {
@@ -147,6 +151,8 @@ const AppLayout = ({ children }) => {
     if (isMobileView) setCollapsed(true);
   };
 
+  const showRouteSwitching = !isMobileView && isRouteSwitching;
+
   return (
     <div className={isDark ? 'theme-dark app-layout' : 'theme-light app-layout'}>
       <div className="app-shell">
@@ -162,7 +168,7 @@ const AppLayout = ({ children }) => {
         <main ref={mainRef} className="app-main">
           <Topbar collapsed={collapsed} onToggleSidebar={handleToggleSidebar} routeLabel={routeLabel} />
           {!isMobileView ? (
-            <div className={`app-route-indicator ${isRouteSwitching ? 'show' : ''}`} aria-live="polite" aria-atomic="true">
+            <div className={`app-route-indicator ${showRouteSwitching ? 'show' : ''}`} aria-live="polite" aria-atomic="true">
               <span className="app-route-indicator-dot" />
               <span>{routeLabel}</span>
             </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import AppLayout from '../layout/AppLayout';
@@ -8,50 +8,239 @@ import { DownloadIcon, EyeIcon, IconAction, PrintIcon, ShareIcon } from '../comp
 import { formatCurrency, formatDate } from '../utils/format';
 import { isSilentAuthError } from '../utils/apiErrors';
 import { downloadInvoicePdf, printInvoicePdf, shareInvoicePdf, viewInvoicePdf } from '../utils/pdf';
+import {
+  buildInvoicePdfArtifacts,
+  downloadBlob,
+  isSamsungInternet,
+  openPdfDataUrl,
+  printPdfDataUrl
+} from '../utils/pdfCompat';
 
 const InvoiceViewPage = () => {
   const { id } = useParams();
   const [invoice, setInvoice] = useState(null);
-  const [sharing, setSharing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [reloadTick, setReloadTick] = useState(0);
+  const [activeAction, setActiveAction] = useState('');
+  const [pdfArtifacts, setPdfArtifacts] = useState(null);
+  const [isPreparingPdf, setIsPreparingPdf] = useState(false);
+  const actionLockRef = useRef('');
+  const samsungInternet = isSamsungInternet();
 
   useEffect(() => {
-    api.get(`/invoices/${id}`).then((res) => setInvoice(res.data)).catch((error) => {
-      if (isSilentAuthError(error)) return;
-      toast.error('Could not load invoice');
-    });
-  }, [id]);
+    let active = true;
+
+    const loadInvoice = async () => {
+      setLoading(true);
+      setError('');
+
+      try {
+        const res = await api.get(`/invoices/${id}`);
+        if (active) {
+          setInvoice(res.data);
+        }
+      } catch (loadError) {
+        if (isSilentAuthError(loadError)) return;
+
+        const message = loadError?.response?.data?.message || 'Could not load invoice';
+        if (active) {
+          setInvoice(null);
+          setError(message);
+        }
+        toast.error(message);
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void loadInvoice();
+
+    return () => {
+      active = false;
+    };
+  }, [id, reloadTick]);
+
+  useEffect(() => {
+    if (!invoice || !samsungInternet) {
+      setPdfArtifacts(null);
+      setIsPreparingPdf(false);
+      return undefined;
+    }
+
+    let active = true;
+
+    const preparePdfArtifacts = async () => {
+      setIsPreparingPdf(true);
+      try {
+        const artifacts = await buildInvoicePdfArtifacts(invoice);
+        if (active) {
+          setPdfArtifacts(artifacts);
+        }
+      } catch {
+        if (active) {
+          setPdfArtifacts(null);
+        }
+      } finally {
+        if (active) {
+          setIsPreparingPdf(false);
+        }
+      }
+    };
+
+    void preparePdfArtifacts();
+
+    return () => {
+      active = false;
+    };
+  }, [invoice, samsungInternet]);
+
+  const runAction = async (name, action) => {
+    if (actionLockRef.current) return false;
+
+    actionLockRef.current = name;
+    setActiveAction(name);
+    try {
+      return await action();
+    } finally {
+      actionLockRef.current = '';
+      setActiveAction('');
+    }
+  };
+
+  if (loading) return <LoadingSpinner full />;
+
+  if (error) {
+    return (
+      <AppLayout>
+        <div className="row justify-content-center">
+          <div className="col-12 col-lg-8">
+            <div className="card shadow-sm">
+              <div className="card-body p-4 p-md-5 text-center">
+                <h1 className="h4 mb-2">Could not load invoice</h1>
+                <p className="text-muted mb-4">{error}</p>
+                <button type="button" className="btn btn-warning btn-lg" onClick={() => setReloadTick((value) => value + 1)}>
+                  Retry
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </AppLayout>
+    );
+    }
 
   if (!invoice) return <LoadingSpinner full />;
 
+  const invoicePdfName = `Invoice-${invoice.invoiceNumber}.pdf`;
+  const invoicePdfTitle = `Invoice #${invoice.invoiceNumber}`;
+  const hasSamsungPdfArtifacts = Boolean(pdfArtifacts?.blob && pdfArtifacts?.dataUrl);
+
   const downloadPdf = async () => {
-    await downloadInvoicePdf(invoice);
+    if (samsungInternet) {
+      if (!hasSamsungPdfArtifacts) {
+        toast.info('Preparing invoice PDF...');
+        return;
+      }
+
+      downloadBlob(pdfArtifacts.blob, invoicePdfName);
+      return;
+    }
+
+    await runAction('download', async () => {
+      await downloadInvoicePdf(invoice);
+    });
   };
 
   const viewPdf = async () => {
-    const opened = await viewInvoicePdf(invoice);
-    if (!opened) {
-      toast.info('Could not open a PDF preview here.');
+    if (samsungInternet) {
+      if (!hasSamsungPdfArtifacts) {
+        toast.info('Preparing invoice preview...');
+        return;
+      }
+
+      if (!openPdfDataUrl(pdfArtifacts.dataUrl, invoicePdfTitle)) {
+        toast.info('Could not open a PDF preview here.');
+      }
+      return;
     }
+
+    await runAction('view', async () => {
+      const opened = await viewInvoicePdf(invoice);
+      if (!opened) {
+        toast.info('Could not open a PDF preview here.');
+      }
+    });
   };
 
   const printPdf = async () => {
-    await printInvoicePdf(invoice);
+    if (samsungInternet) {
+      if (!hasSamsungPdfArtifacts) {
+        toast.info('Preparing invoice PDF...');
+        return;
+      }
+
+      if (!printPdfDataUrl(pdfArtifacts.dataUrl, invoicePdfTitle)) {
+        toast.info('Could not open print preview here.');
+      }
+      return;
+    }
+
+    await runAction('print', async () => {
+      await printInvoicePdf(invoice);
+    });
   };
 
   const sharePdf = async () => {
-    setSharing(true);
-    try {
-      const shared = await shareInvoicePdf(invoice);
-      if (!shared) {
+    if (samsungInternet) {
+      if (!hasSamsungPdfArtifacts) {
+        toast.info('Preparing invoice PDF...');
+        return;
+      }
+
+      try {
+        const file = new File([pdfArtifacts.blob], invoicePdfName, { type: 'application/pdf' });
+        if (typeof navigator.share === 'function') {
+          if (typeof navigator.canShare !== 'function' || navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              title: invoicePdfTitle,
+              text: `Invoice for ${factoryName}`,
+              files: [file]
+            });
+            return;
+          }
+        }
+        if (typeof navigator.share === 'function') {
+          await navigator.share({
+            title: invoicePdfTitle,
+            text: `Invoice for ${factoryName}`,
+            url: window.location.href
+          });
+          return;
+        }
         toast.info('Sharing not available here.');
+      } catch (shareError) {
+        if (shareError?.name !== 'AbortError') {
+          toast.error('Could not share invoice.');
+        }
       }
-    } catch (error) {
-      if (error?.name !== 'AbortError') {
-        toast.error('Could not share invoice.');
-      }
-    } finally {
-      setSharing(false);
+      return;
     }
+
+    await runAction('share', async () => {
+      try {
+        const shared = await shareInvoicePdf(invoice);
+        if (!shared) {
+          toast.info('Sharing not available here.');
+        }
+      } catch (shareError) {
+        if (shareError?.name !== 'AbortError') {
+          toast.error('Could not share invoice.');
+        }
+      }
+    });
   };
 
   const factoryName = invoice.customer?.factoryName || invoice.customer?.customerName || '-';
@@ -71,10 +260,38 @@ const InvoiceViewPage = () => {
           <p className="page-subtitle mb-0">Review, print, download or share this invoice instantly.</p>
         </div>
         <div className="hero-actions action-row-grid action-row-grid--buttons">
-          <IconAction type="button" icon={EyeIcon} label="View PDF" className="btn-outline-success btn-sm" onClick={viewPdf} />
-          <IconAction type="button" icon={DownloadIcon} label="Download PDF" className="btn-warning btn-sm" onClick={downloadPdf} />
-          <IconAction type="button" icon={PrintIcon} label="Print" className="btn-outline-dark btn-sm" onClick={printPdf} />
-          <IconAction type="button" icon={ShareIcon} label={sharing ? 'Sharing...' : 'Share'} className="btn-outline-primary btn-sm" onClick={sharePdf} disabled={sharing} />
+          <IconAction
+            type="button"
+            icon={EyeIcon}
+            label={samsungInternet && !hasSamsungPdfArtifacts ? 'Preparing preview...' : 'View PDF'}
+            className="btn-outline-success btn-sm"
+            onClick={viewPdf}
+            disabled={Boolean(activeAction) || (samsungInternet && isPreparingPdf)}
+          />
+          <IconAction
+            type="button"
+            icon={DownloadIcon}
+            label={samsungInternet && !hasSamsungPdfArtifacts ? 'Preparing download...' : 'Download PDF'}
+            className="btn-warning btn-sm"
+            onClick={downloadPdf}
+            disabled={Boolean(activeAction) || (samsungInternet && isPreparingPdf)}
+          />
+          <IconAction
+            type="button"
+            icon={PrintIcon}
+            label="Print"
+            className="btn-outline-dark btn-sm"
+            onClick={printPdf}
+            disabled={Boolean(activeAction) || (samsungInternet && isPreparingPdf)}
+          />
+          <IconAction
+            type="button"
+            icon={ShareIcon}
+            label={activeAction === 'share' ? 'Sharing...' : 'Share'}
+            className="btn-outline-primary btn-sm"
+            onClick={sharePdf}
+            disabled={Boolean(activeAction) || (samsungInternet && isPreparingPdf)}
+          />
         </div>
       </section>
 

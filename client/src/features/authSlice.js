@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { safeLocalStorage } from '../utils/browserStorage';
 
 const isStoredTokenExpired = (token) => {
   try {
@@ -16,12 +17,12 @@ const isStoredTokenExpired = (token) => {
 };
 
 const getStoredTheme = () => {
-  const storedTheme = localStorage.getItem('app_theme');
+  const storedTheme = safeLocalStorage.getItem('app_theme');
   if (storedTheme === 'dark' || storedTheme === 'light') {
     return storedTheme;
   }
 
-  const rawUser = localStorage.getItem('user');
+  const rawUser = safeLocalStorage.getItem('user');
   if (rawUser) {
     try {
       const parsedUser = JSON.parse(rawUser);
@@ -35,8 +36,8 @@ const getStoredTheme = () => {
 };
 
 const getStoredAuthState = () => {
-  const rawToken = localStorage.getItem('token');
-  const rawUser = localStorage.getItem('user');
+  const rawToken = safeLocalStorage.getItem('token');
+  const rawUser = safeLocalStorage.getItem('user');
 
   if (!rawToken || !rawUser) {
     return { user: null, token: null, isAuthenticated: false };
@@ -57,15 +58,15 @@ const getStoredAuthState = () => {
       isAuthenticated: true
     };
   } catch {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+    safeLocalStorage.removeItem('user');
+    safeLocalStorage.removeItem('token');
     return { user: null, token: null, isAuthenticated: false };
   }
 };
 
 const storedTheme = getStoredTheme();
-if (!localStorage.getItem('app_theme')) {
-  localStorage.setItem('app_theme', storedTheme);
+if (!safeLocalStorage.getItem('app_theme')) {
+  safeLocalStorage.setItem('app_theme', storedTheme);
 }
 const storedAuth = {
   ...getStoredAuthState(),
@@ -88,27 +89,27 @@ const authSlice = createSlice({
       state.user = authUser ? { ...authUser, theme: nextTheme } : authUser;
       if (authToken) {
         state.token = authToken;
-        localStorage.setItem('token', authToken);
+        safeLocalStorage.setItem('token', authToken);
       }
       state.isAuthenticated = Boolean(state.user && state.token);
-      localStorage.setItem('user', JSON.stringify(state.user));
-      localStorage.setItem('app_theme', nextTheme);
+      safeLocalStorage.setItem('user', JSON.stringify(state.user));
+      safeLocalStorage.setItem('app_theme', nextTheme);
     },
     clearCredentials: (state) => {
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
+      safeLocalStorage.removeItem('user');
+      safeLocalStorage.removeItem('token');
     },
     toggleTheme: (state) => {
       const nextTheme = state.theme === 'dark' ? 'light' : 'dark';
       state.theme = nextTheme;
       if (state.user) {
         state.user.theme = nextTheme;
-        localStorage.setItem('user', JSON.stringify(state.user));
+        safeLocalStorage.setItem('user', JSON.stringify(state.user));
       }
-      localStorage.setItem('app_theme', nextTheme);
+      safeLocalStorage.setItem('app_theme', nextTheme);
     }
   }
 });

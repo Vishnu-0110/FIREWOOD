@@ -1,6 +1,7 @@
 import axios from "axios";
 import { store } from "../app/store";
 import { clearCredentials } from "../features/authSlice";
+import { safeLocalStorage } from "../utils/browserStorage";
 
 const stripTrailingSlash = (value) => String(value || "").replace(/\/+$/, "");
 
@@ -49,15 +50,15 @@ const isTokenExpired = (token) => {
 };
 
 const clearLocalSession = () => {
-  localStorage.removeItem("user");
-  localStorage.removeItem("token");
+  safeLocalStorage.removeItem("user");
+  safeLocalStorage.removeItem("token");
 };
 
 const redirectToLogin = () => {
   if (typeof window === "undefined" || window.location.pathname === "/login") {
     return;
   }
-  window.location.href = "/login";
+  window.location.replace("/login");
 };
 
 const api = axios.create({
@@ -67,7 +68,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = safeLocalStorage.getItem("token");
   const requestUrl = config?.url || "";
   const isPublicAuthRequest = requestUrl.includes("/auth/login") || requestUrl.includes("/auth/register");
 

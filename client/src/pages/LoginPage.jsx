@@ -142,7 +142,13 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-3">
               <label className="form-label">Email</label>
-              <input className="form-control" {...register('email', { required: 'Email is required' })} />
+              <input
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                className="form-control"
+                {...register('email', { required: 'Email is required' })}
+              />
               {errors.email && <small className="field-error">{errors.email.message}</small>}
             </div>
             <div className="mb-3">
@@ -150,6 +156,7 @@ const LoginPage = () => {
               <div className="login-password-field">
                 <input
                   type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
                   className="form-control login-password-input"
                   {...register('password', { required: 'Password is required' })}
                 />

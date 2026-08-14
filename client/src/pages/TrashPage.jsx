@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
@@ -15,32 +15,35 @@ const TrashPage = () => {
   const [deletedInvoices, setDeletedInvoices] = useState(emptyPage);
   const [loading, setLoading] = useState(true);
 
-  const loadDeletedCustomers = async (next = customerFilters) => {
+  const loadDeletedCustomers = useCallback(async (next) => {
     const response = await api.get(`/customers/deleted?${queryParams(next)}`);
     setDeletedCustomers(response.data);
-  };
+  }, []);
 
-  const loadDeletedInvoices = async (next = invoiceFilters) => {
+  const loadDeletedInvoices = useCallback(async (next) => {
     const response = await api.get(`/invoices/deleted?${queryParams(next)}`);
     setDeletedInvoices(response.data);
-  };
-
-  const loadAll = async () => {
-    setLoading(true);
-    try {
-      await Promise.all([loadDeletedCustomers(), loadDeletedInvoices()]);
-    } catch (error) {
-      if (!isSilentAuthError(error)) {
-        toast.error(error?.response?.data?.message || 'Could not load deleted items');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, []);
 
   useEffect(() => {
+    const loadAll = async () => {
+      setLoading(true);
+      try {
+        await Promise.all([
+          loadDeletedCustomers({ q: '', page: 1, limit: 8 }),
+          loadDeletedInvoices({ q: '', page: 1, limit: 8 })
+        ]);
+      } catch (error) {
+        if (!isSilentAuthError(error)) {
+          toast.error(error?.response?.data?.message || 'Could not load deleted items');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
     void loadAll();
-  }, []);
+  }, [loadDeletedCustomers, loadDeletedInvoices]);
 
   const refreshCustomers = async (next) => {
     const merged = next || customerFilters;

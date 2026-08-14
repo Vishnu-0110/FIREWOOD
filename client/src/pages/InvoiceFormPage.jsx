@@ -9,12 +9,22 @@ import { CheckIcon, CloseIcon, IconAction, TemplateIcon } from '../components/Ap
 import { formatCurrency } from '../utils/format';
 import { isSilentAuthError } from '../utils/apiErrors';
 import { downloadInvoiceTemplatePdf } from '../utils/pdf';
+import {
+  buildInvoiceTemplatePdfArtifacts,
+  downloadBlob,
+  getTemplateFilename,
+  isSamsungInternet
+} from '../utils/pdfCompat';
 
 const InvoiceFormPage = () => {
   const { id } = useParams();
   const isEdit = Boolean(id);
   const navigate = useNavigate();
   const [factories, setFactories] = useState([]);
+  const [isDownloadingTemplate, setIsDownloadingTemplate] = useState(false);
+  const [templateArtifacts, setTemplateArtifacts] = useState(null);
+  const [isPreparingTemplate, setIsPreparingTemplate] = useState(false);
+  const samsungInternet = isSamsungInternet();
 
   const {
     register,
@@ -33,6 +43,40 @@ const InvoiceFormPage = () => {
   useEffect(() => {
     api.get('/customers?page=1&limit=1000').then((res) => setFactories(res.data.items)).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!samsungInternet) {
+      setTemplateArtifacts(null);
+      setIsPreparingTemplate(false);
+      return undefined;
+    }
+
+    let active = true;
+
+    const prepareTemplateArtifacts = async () => {
+      setIsPreparingTemplate(true);
+      try {
+        const artifacts = await buildInvoiceTemplatePdfArtifacts();
+        if (active) {
+          setTemplateArtifacts(artifacts);
+        }
+      } catch {
+        if (active) {
+          setTemplateArtifacts(null);
+        }
+      } finally {
+        if (active) {
+          setIsPreparingTemplate(false);
+        }
+      }
+    };
+
+    void prepareTemplateArtifacts();
+
+    return () => {
+      active = false;
+    };
+  }, [samsungInternet]);
 
   useEffect(() => {
     if (isEdit) {
@@ -75,7 +119,26 @@ const InvoiceFormPage = () => {
   };
 
   const downloadTemplate = async () => {
-    await downloadInvoiceTemplatePdf();
+    if (isDownloadingTemplate) return;
+
+    if (samsungInternet) {
+      if (!templateArtifacts?.blob) {
+        toast.info('Preparing template PDF...');
+        return;
+      }
+
+      downloadBlob(templateArtifacts.blob, getTemplateFilename());
+      return;
+    }
+
+    setIsDownloadingTemplate(true);
+    try {
+      await downloadInvoiceTemplatePdf();
+    } catch {
+      toast.error('Could not download template');
+    } finally {
+      setIsDownloadingTemplate(false);
+    }
   };
 
   return (
@@ -90,9 +153,18 @@ const InvoiceFormPage = () => {
           <IconAction
             type="button"
             icon={TemplateIcon}
-            label="Download Template"
+            label={
+              samsungInternet
+                ? isPreparingTemplate
+                  ? 'Preparing...'
+                  : 'Download Template'
+                : isDownloadingTemplate
+                  ? 'Downloading...'
+                  : 'Download Template'
+            }
             className="btn-outline-secondary btn-sm"
             onClick={downloadTemplate}
+            disabled={isDownloadingTemplate || (samsungInternet && isPreparingTemplate)}
           />
         </div>
       </section>
@@ -106,12 +178,12 @@ const InvoiceFormPage = () => {
           <form className="row g-3" onSubmit={handleSubmit(onSubmit)}>
             <div className="col-12 col-lg-4">
               <label className="form-label">Invoice Number (optional, per factory)</label>
-              <input className="form-control" {...register('invoiceNumber')} />
+              <input className="form-control" inputMode="numeric" autoComplete="off" {...register('invoiceNumber')} />
               <small className="text-muted">If left empty, next number is auto-generated from this factory's previous invoice.</small>
             </div>
             <div className="col-6 col-lg-4">
               <label className="form-label">Date</label>
-              <input type="date" className="form-control" {...register('date', { required: 'Date is required' })} />
+              <input type="date" autoComplete="off" className="form-control" {...register('date', { required: 'Date is required' })} />
               {errors.date && <small className="field-error">{errors.date.message}</small>}
             </div>
             <div className="col-6 col-lg-4">
@@ -126,7 +198,7 @@ const InvoiceFormPage = () => {
             </div>
             <div className="col-12 col-lg-4">
               <label className="form-label">Vehicle Number</label>
-              <input className="form-control" {...register('vehicleNumber', { required: 'Vehicle number is required' })} />
+              <input className="form-control" autoComplete="off" {...register('vehicleNumber', { required: 'Vehicle number is required' })} />
               {errors.vehicleNumber && <small className="field-error">{errors.vehicleNumber.message}</small>}
             </div>
             <div className="col-6 col-lg-4">
@@ -134,6 +206,7 @@ const InvoiceFormPage = () => {
               <input
                 type="number"
                 step="0.001"
+                inputMode="decimal"
                 className="form-control"
                 {...register('grossWeight', {
                   required: 'Gross weight is required',
@@ -147,6 +220,7 @@ const InvoiceFormPage = () => {
               <input
                 type="number"
                 step="0.001"
+                inputMode="decimal"
                 className="form-control"
                 {...register('tareWeight', {
                   required: 'Tare weight is required',
@@ -160,6 +234,7 @@ const InvoiceFormPage = () => {
               <input
                 type="number"
                 step="0.01"
+                inputMode="decimal"
                 className="form-control"
                 {...register('ratePerTon', {
                   required: 'Rate is required',

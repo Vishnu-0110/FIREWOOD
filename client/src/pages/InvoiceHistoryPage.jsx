@@ -12,14 +12,20 @@ const InvoiceHistoryPage = () => {
   const [factories, setFactories] = useState([]);
   const [filters, setFilters] = useState({ q: '', customer: '', startDate: '', endDate: '', page: 1, limit: 10 });
   const [data, setData] = useState({ items: [], total: 0, page: 1, pages: 1 });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isExportingCurrent, setIsExportingCurrent] = useState(false);
+  const [isExportingServer, setIsExportingServer] = useState(false);
 
   const load = async (next = filters) => {
+    setIsLoading(true);
     try {
       const response = await api.get(`/invoices?${queryParams(next)}`);
       setData(response.data);
     } catch (error) {
       if (isSilentAuthError(error)) return;
       toast.error(error?.response?.data?.message || 'Could not load invoices');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -73,22 +79,34 @@ const InvoiceHistoryPage = () => {
   };
 
   const exportCurrent = async () => {
-    const rows = data.items.map((item) => ({
-      invoiceNumber: item.invoiceNumber,
-      date: formatDate(item.date),
-      factory: item.customer?.factoryName || item.customer?.customerName || '-',
-      vehicle: item.vehicleNumber,
-      netWeight: item.netWeight,
-      totalAmount: item.totalAmount
-    }));
-    const XLSX = await import('xlsx');
-    const ws = XLSX.utils.json_to_sheet(rows);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Invoices');
-    XLSX.writeFile(wb, 'invoice_history.xlsx');
+    if (isExportingCurrent) return;
+
+    setIsExportingCurrent(true);
+    try {
+      const rows = data.items.map((item) => ({
+        invoiceNumber: item.invoiceNumber,
+        date: formatDate(item.date),
+        factory: item.customer?.factoryName || item.customer?.customerName || '-',
+        vehicle: item.vehicleNumber,
+        netWeight: item.netWeight,
+        totalAmount: item.totalAmount
+      }));
+      const XLSX = await import('xlsx');
+      const ws = XLSX.utils.json_to_sheet(rows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Invoices');
+      XLSX.writeFile(wb, 'invoice_history.xlsx');
+    } catch {
+      toast.error('Export failed');
+    } finally {
+      setIsExportingCurrent(false);
+    }
   };
 
   const downloadServerExcel = async () => {
+    if (isExportingServer) return;
+
+    setIsExportingServer(true);
     try {
       const response = await api.get('/invoices/export/excel', { responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -102,6 +120,8 @@ const InvoiceHistoryPage = () => {
     } catch (error) {
       if (isSilentAuthError(error)) return;
       toast.error(error?.response?.data?.message || 'Export failed');
+    } finally {
+      setIsExportingServer(false);
     }
   };
 
@@ -155,9 +175,9 @@ const InvoiceHistoryPage = () => {
               />
             </div>
             <div className="col-12 col-lg-3 d-flex gap-2 page-actions-row action-row-grid action-row-grid--buttons">
-              <IconAction type="button" icon={FilterIcon} label="Filter" className="btn-warning btn-sm" onClick={() => updateFilters({ q: filters.q, page: 1 })} />
-              <IconAction type="button" icon={DownloadIcon} label="Export Excel" className="btn-outline-success btn-sm" onClick={exportCurrent} />
-              <IconAction type="button" icon={DownloadIcon} label="Server Export" className="btn-outline-dark btn-sm" onClick={downloadServerExcel} />
+              <IconAction type="button" icon={FilterIcon} label="Filter" className="btn-warning btn-sm" onClick={() => updateFilters({ q: filters.q, page: 1 })} disabled={isLoading} />
+              <IconAction type="button" icon={DownloadIcon} label={isExportingCurrent ? 'Exporting...' : 'Export Excel'} className="btn-outline-success btn-sm" onClick={exportCurrent} disabled={isLoading || isExportingCurrent || isExportingServer} />
+              <IconAction type="button" icon={DownloadIcon} label={isExportingServer ? 'Downloading...' : 'Server Export'} className="btn-outline-dark btn-sm" onClick={downloadServerExcel} disabled={isLoading || isExportingCurrent || isExportingServer} />
             </div>
           </div>
         </div>
@@ -207,7 +227,7 @@ const InvoiceHistoryPage = () => {
               icon={LeftIcon}
               label="Previous page"
               className="btn-outline-secondary btn-sm"
-              disabled={data.page <= 1}
+              disabled={data.page <= 1 || isLoading}
               onClick={() => updateFilters({ page: data.page - 1 })}
             />
             <span className="small align-self-center">{data.page} / {data.pages}</span>
@@ -216,7 +236,7 @@ const InvoiceHistoryPage = () => {
               icon={RightIcon}
               label="Next page"
               className="btn-outline-secondary btn-sm"
-              disabled={data.page >= data.pages}
+              disabled={data.page >= data.pages || isLoading}
               onClick={() => updateFilters({ page: data.page + 1 })}
             />
           </div>

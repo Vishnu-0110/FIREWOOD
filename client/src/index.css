@@ -280,6 +280,15 @@ button:active {
   letter-spacing: -0.01em;
 }
 
+.detail-value,
+.info-tile strong,
+.page-subtitle,
+.sidebar-link-text,
+.table-mobile-stack td {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .app-main {
   flex: 1;
   min-width: 0;
@@ -2176,9 +2185,27 @@ body.app-theme-dark .app-toast-body {
 }
 
 @media (max-width: 576px) {
+  .app-topbar {
+    padding-top: calc(0.38rem + env(safe-area-inset-top));
+  }
+
   .page-hero {
     padding: 0.92rem;
     border-radius: 20px;
+  }
+
+  .hero-actions.action-row-grid--buttons,
+  .page-actions-row.action-row-grid--buttons,
+  .form-action-row.action-row-grid--buttons {
+    grid-auto-flow: row;
+    grid-template-columns: minmax(0, 1fr);
+    justify-content: stretch;
+  }
+
+  .hero-actions.action-row-grid--search,
+  .page-actions-row.action-row-grid--search,
+  .form-action-row.action-row-grid--search {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .page-title {
@@ -2219,6 +2246,24 @@ body.app-theme-dark .app-toast-body {
     left: 0.9rem;
     top: 0.52rem;
     width: auto;
+  }
+
+  .modal-dialog {
+    margin: 0.75rem;
+  }
+
+  .modal-content {
+    max-height: calc(var(--app-viewport-height) - 1.5rem);
+    overflow: hidden;
+    border-radius: 18px;
+  }
+
+  .modal-body {
+    overflow: auto;
+  }
+
+  .modal-footer {
+    flex-wrap: wrap;
   }
 }
 

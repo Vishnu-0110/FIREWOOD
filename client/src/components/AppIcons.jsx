@@ -155,11 +155,13 @@ export const TemplateIcon = () => (
   </IconShell>
 );
 
-export const IconAction = ({ as: Component = 'button', icon: Icon, label, className = '', children, ...props }) => {
+export const IconAction = ({ as, icon: Icon, label, className = '', children, ...props }) => {
+  const Component = as || 'button';
   const resolvedClassName = ['btn', 'btn-icon', className].filter(Boolean).join(' ');
+  const defaultButtonType = Component === 'button' && !props.type ? { type: 'button' } : {};
 
   return (
-    <Component className={resolvedClassName} aria-label={label} title={label} {...props}>
+    <Component className={resolvedClassName} aria-label={label} title={label} {...defaultButtonType} {...props}>
       {Icon ? <Icon /> : null}
       <span className="visually-hidden">{label}</span>
       {children}

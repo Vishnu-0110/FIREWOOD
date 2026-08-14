@@ -72,6 +72,7 @@ const CustomerFormPage = () => {
             <div className="col-12 col-lg-8">
               <label className="form-label">Factory Name</label>
               <input
+                autoComplete="organization"
                 className={`form-control ${errors.factoryName ? 'is-invalid' : ''}`}
                 {...register('factoryName', {
                   required: 'Factory name is required',
@@ -82,11 +83,11 @@ const CustomerFormPage = () => {
             </div>
             <div className="col-12 col-lg-4">
               <label className="form-label">GST Number</label>
-              <input className="form-control" {...register('gstNumber')} />
+              <input autoComplete="off" className="form-control" {...register('gstNumber')} />
             </div>
             <div className="col-12 col-lg-4">
               <label className="form-label">Phone</label>
-              <input className="form-control" {...register('phone')} />
+              <input type="tel" inputMode="tel" autoComplete="tel" className="form-control" {...register('phone')} />
             </div>
             <div className="col-12">
               <label className="form-label">Address</label>

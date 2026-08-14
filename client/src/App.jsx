@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LoadingSpinner from './components/LoadingSpinner';
 import api from './api/axiosClient';
 import { clearCredentials, setCredentials } from './features/authSlice';
+import { safeSessionStorage } from './utils/browserStorage';
 
 const NotFound = () => <div className="p-4">Page not found</div>;
 const CHUNK_RETRY_KEY_PREFIX = 'firewood-route-chunk-retry';
@@ -18,9 +19,7 @@ const isChunkLoadError = (error) => {
 const getRetryKey = (routeKey) => `${CHUNK_RETRY_KEY_PREFIX}:${routeKey}`;
 
 const shouldRetryChunkLoad = (routeKey) => {
-  if (typeof window === 'undefined') return false;
-
-  const raw = window.sessionStorage.getItem(getRetryKey(routeKey));
+  const raw = safeSessionStorage.getItem(getRetryKey(routeKey));
   if (!raw) return true;
 
   try {
@@ -33,8 +32,7 @@ const shouldRetryChunkLoad = (routeKey) => {
 };
 
 const markChunkRetry = (routeKey) => {
-  if (typeof window === 'undefined') return;
-  window.sessionStorage.setItem(getRetryKey(routeKey), JSON.stringify({ timestamp: Date.now() }));
+  safeSessionStorage.setItem(getRetryKey(routeKey), JSON.stringify({ timestamp: Date.now() }));
 };
 
 const lazyRoute = (loader, routeKey) => lazy(async () => {

@@ -11,29 +11,38 @@ import { isSilentAuthError } from '../utils/apiErrors';
 const CustomerListPage = () => {
   const [state, setState] = useState({ items: [], page: 1, pages: 1, total: 0 });
   const [q, setQ] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const load = async (page = 1, search = q) => {
+    if (isLoading) return;
+
+    setIsLoading(true);
     try {
       const response = await api.get(`/customers?q=${encodeURIComponent(search)}&page=${page}&limit=10`);
       setState(response.data);
     } catch (error) {
       if (isSilentAuthError(error)) return;
       toast.error(error?.response?.data?.message || 'Could not load factories');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     const init = async () => {
+      setIsLoading(true);
       try {
         const response = await api.get('/customers?q=&page=1&limit=10');
         setState(response.data);
       } catch (error) {
         if (isSilentAuthError(error)) return;
         toast.error(error?.response?.data?.message || 'Could not load factories');
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    init();
+    void init();
   }, []);
 
   const onDelete = async (id, label) => {
@@ -82,7 +91,7 @@ const CustomerListPage = () => {
               onChange={(e) => setQ(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && load(1, q)}
             />
-            <IconAction type="button" icon={SearchIcon} label="Search" className="btn-warning btn-sm" onClick={() => load(1, q)} />
+            <IconAction type="button" icon={SearchIcon} label="Search" className="btn-warning btn-sm" onClick={() => load(1, q)} disabled={isLoading} />
             <IconAction as={Link} to="/customers/new" icon={PlusIcon} label="Add Factory" className="btn-dark btn-sm" />
           </div>
         </div>
@@ -125,7 +134,7 @@ const CustomerListPage = () => {
               icon={LeftIcon}
               label="Previous page"
               className="btn-outline-secondary btn-sm"
-              disabled={state.page <= 1}
+              disabled={state.page <= 1 || isLoading}
               onClick={() => load(state.page - 1, q)}
             />
             <span className="small align-self-center">{state.page} / {state.pages}</span>
@@ -134,7 +143,7 @@ const CustomerListPage = () => {
               icon={RightIcon}
               label="Next page"
               className="btn-outline-secondary btn-sm"
-              disabled={state.page >= state.pages}
+              disabled={state.page >= state.pages || isLoading}
               onClick={() => load(state.page + 1, q)}
             />
           </div>

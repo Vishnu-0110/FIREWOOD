@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
-import { CloseIcon, DownloadIcon, EditIcon, EyeIcon, FilterIcon, IconAction, LeftIcon, RightIcon, TrashIcon } from '../components/AppIcons';
+import { CloseIcon, EditIcon, EyeIcon, FilterIcon, IconAction, LeftIcon, RightIcon, TrashIcon } from '../components/AppIcons';
 import { formatCurrency, formatDate, queryParams } from '../utils/format';
 import { showDeleteUndoToast } from '../utils/deleteUndoToast';
 import { isSilentAuthError } from '../utils/apiErrors';
@@ -16,8 +16,6 @@ const InvoiceHistoryPage = () => {
   const [draftFilters, setDraftFilters] = useState(defaultFilters);
   const [data, setData] = useState({ items: [], total: 0, page: 1, pages: 1 });
   const [isLoading, setIsLoading] = useState(true);
-  const [isExportingCurrent, setIsExportingCurrent] = useState(false);
-  const [isExportingServer, setIsExportingServer] = useState(false);
   const activeFilterCount = [draftFilters.q, draftFilters.customer, draftFilters.startDate, draftFilters.endDate].filter(Boolean).length;
 
   const load = async (next = filters) => {
@@ -57,12 +55,8 @@ const InvoiceHistoryPage = () => {
     load(normalized);
   };
 
-  const syncFilters = (patch) => {
-    const next = { ...draftFilters, ...patch };
-    const normalized = { ...next, page: 1 };
-    setDraftFilters(next);
-    setFilters(normalized);
-    load(normalized);
+  const updateDraftFilters = (patch) => {
+    setDraftFilters((current) => ({ ...current, ...patch }));
   };
 
   const resetFilters = () => {
@@ -102,53 +96,6 @@ const InvoiceHistoryPage = () => {
     }
   };
 
-  const exportCurrent = async () => {
-    if (isExportingCurrent) return;
-
-    setIsExportingCurrent(true);
-    try {
-      const rows = data.items.map((item) => ({
-        invoiceNumber: item.invoiceNumber,
-        date: formatDate(item.date),
-        factory: item.customer?.factoryName || item.customer?.customerName || '-',
-        vehicle: item.vehicleNumber,
-        netWeight: item.netWeight,
-        totalAmount: item.totalAmount
-      }));
-      const XLSX = await import('xlsx');
-      const ws = XLSX.utils.json_to_sheet(rows);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Invoices');
-      XLSX.writeFile(wb, 'invoice_history.xlsx');
-    } catch {
-      toast.error('Export failed');
-    } finally {
-      setIsExportingCurrent(false);
-    }
-  };
-
-  const downloadServerExcel = async () => {
-    if (isExportingServer) return;
-
-    setIsExportingServer(true);
-    try {
-      const response = await api.get('/invoices/export/excel', { responseType: 'blob' });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'invoices.xlsx');
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      if (isSilentAuthError(error)) return;
-      toast.error(error?.response?.data?.message || 'Export failed');
-    } finally {
-      setIsExportingServer(false);
-    }
-  };
-
   return (
     <AppLayout>
       <section className="page-hero mb-3">
@@ -174,11 +121,11 @@ const InvoiceHistoryPage = () => {
                 className="form-control"
                 placeholder="Search invoice/factory/vehicle"
                 value={draftFilters.q}
-                onChange={(e) => syncFilters({ q: e.target.value })}
+                onChange={(e) => updateDraftFilters({ q: e.target.value })}
               />
             </div>
             <div className="col-6 col-lg-2">
-              <select className="form-select" value={draftFilters.customer} onChange={(e) => syncFilters({ customer: e.target.value })}>
+              <select className="form-select" value={draftFilters.customer} onChange={(e) => updateDraftFilters({ customer: e.target.value })}>
                 <option value="">All Factories</option>
                 {factories.map((c) => <option key={c._id} value={c._id}>{c.factoryName || c.customerName}</option>)}
               </select>
@@ -190,7 +137,7 @@ const InvoiceHistoryPage = () => {
                 type="date"
                 className="form-control"
                 value={draftFilters.startDate}
-                onChange={(e) => syncFilters({ startDate: e.target.value })}
+                onChange={(e) => updateDraftFilters({ startDate: e.target.value })}
               />
             </div>
             <div className="col-6 col-lg-2">
@@ -200,7 +147,7 @@ const InvoiceHistoryPage = () => {
                 type="date"
                 className="form-control"
                 value={draftFilters.endDate}
-                onChange={(e) => syncFilters({ endDate: e.target.value })}
+                onChange={(e) => updateDraftFilters({ endDate: e.target.value })}
               />
             </div>
             <div className="col-12 col-xl-6">
@@ -223,12 +170,6 @@ const InvoiceHistoryPage = () => {
                   />
                 </div>
                 <small className="text-muted d-block mt-2">Edit the filters, then press Apply Filters to refresh the table.</small>
-              </div>
-            </div>
-            <div className="col-12 col-xl-6">
-              <div className="page-actions-row action-row-grid action-row-grid--buttons justify-content-xl-end">
-                <IconAction type="button" icon={DownloadIcon} label={isExportingCurrent ? 'Exporting...' : 'Export Excel'} className="btn-outline-success btn-sm" onClick={exportCurrent} disabled={isLoading || isExportingCurrent || isExportingServer} />
-                <IconAction type="button" icon={DownloadIcon} label={isExportingServer ? 'Downloading...' : 'Server Export'} className="btn-outline-dark btn-sm" onClick={downloadServerExcel} disabled={isLoading || isExportingCurrent || isExportingServer} />
               </div>
             </div>
           </form>

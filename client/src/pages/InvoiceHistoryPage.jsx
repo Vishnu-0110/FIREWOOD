@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import AppLayout from '../layout/AppLayout';
@@ -14,6 +14,10 @@ const InvoiceHistoryPage = () => {
   const [factories, setFactories] = useState([]);
   const [filters, setFilters] = useState(defaultFilters);
   const [draftFilters, setDraftFilters] = useState(defaultFilters);
+  const searchRef = useRef(null);
+  const customerRef = useRef(null);
+  const startDateRef = useRef(null);
+  const endDateRef = useRef(null);
   const [data, setData] = useState({ items: [], total: 0, page: 1, pages: 1 });
   const [isLoading, setIsLoading] = useState(true);
   const activeFilterCount = [draftFilters.q, draftFilters.customer, draftFilters.startDate, draftFilters.endDate].filter(Boolean).length;
@@ -65,6 +69,14 @@ const InvoiceHistoryPage = () => {
     load(defaultFilters);
   };
 
+  const readDraftFilters = () => ({
+    q: searchRef.current?.value ?? draftFilters.q,
+    customer: customerRef.current?.value ?? draftFilters.customer,
+    startDate: startDateRef.current?.value ?? draftFilters.startDate,
+    endDate: endDateRef.current?.value ?? draftFilters.endDate,
+    limit: draftFilters.limit
+  });
+
   const goToPage = (page) => {
     const next = { ...filters, page };
     setFilters(next);
@@ -109,29 +121,20 @@ const InvoiceHistoryPage = () => {
       <div className="card shadow-sm">
         <div className="card-header">Search and Filters</div>
         <div className="card-body border-bottom">
-          <form
+          <div
             className="row g-2 align-items-end"
-            onSubmit={(event) => {
-              event.preventDefault();
-              applyFilters();
-            }}
           >
             <div className="col-12 col-lg-3">
               <input
                 className="form-control"
                 placeholder="Search invoice/factory/vehicle"
                 value={draftFilters.q}
+                ref={searchRef}
                 onChange={(e) => updateDraftFilters({ q: e.target.value })}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    applyFilters();
-                  }
-                }}
               />
             </div>
             <div className="col-6 col-lg-2">
-              <select className="form-select" value={draftFilters.customer} onChange={(e) => updateDraftFilters({ customer: e.target.value })}>
+              <select className="form-select" value={draftFilters.customer} ref={customerRef} onChange={(e) => updateDraftFilters({ customer: e.target.value })}>
                 <option value="">All Factories</option>
                 {factories.map((c) => <option key={c._id} value={c._id}>{c.factoryName || c.customerName}</option>)}
               </select>
@@ -143,6 +146,7 @@ const InvoiceHistoryPage = () => {
                 type="date"
                 className="form-control"
                 value={draftFilters.startDate}
+                ref={startDateRef}
                 onChange={(e) => updateDraftFilters({ startDate: e.target.value })}
               />
             </div>
@@ -153,6 +157,7 @@ const InvoiceHistoryPage = () => {
                 type="date"
                 className="form-control"
                 value={draftFilters.endDate}
+                ref={endDateRef}
                 onChange={(e) => updateDraftFilters({ endDate: e.target.value })}
               />
             </div>
@@ -164,7 +169,7 @@ const InvoiceHistoryPage = () => {
                     icon={FilterIcon}
                     label={activeFilterCount ? `Apply Filters (${activeFilterCount})` : 'Apply Filters'}
                     className="btn-warning btn-sm filter-apply-btn"
-                    onClick={() => applyFilters()}
+                    onClick={() => applyFilters(readDraftFilters())}
                     disabled={isLoading}
                   />
                   <IconAction
@@ -179,7 +184,7 @@ const InvoiceHistoryPage = () => {
                 <small className="text-muted d-block mt-2">Edit the filters, then press Apply Filters to refresh the table.</small>
               </div>
             </div>
-          </form>
+          </div>
         </div>
         <div className="table-responsive">
           <table className="table table-striped table-mobile-stack mb-0">

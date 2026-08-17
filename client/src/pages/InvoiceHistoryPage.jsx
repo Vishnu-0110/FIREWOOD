@@ -47,6 +47,8 @@ const InvoiceHistoryPage = () => {
       } catch (error) {
         if (isSilentAuthError(error)) return;
         toast.error(error?.response?.data?.message || 'Could not load invoices');
+      } finally {
+        setIsLoading(false);
       }
     };
 

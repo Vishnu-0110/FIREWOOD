@@ -122,6 +122,12 @@ const InvoiceHistoryPage = () => {
                 placeholder="Search invoice/factory/vehicle"
                 value={draftFilters.q}
                 onChange={(e) => updateDraftFilters({ q: e.target.value })}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    applyFilters();
+                  }
+                }}
               />
             </div>
             <div className="col-6 col-lg-2">
@@ -154,10 +160,11 @@ const InvoiceHistoryPage = () => {
               <div className="filter-actions-block">
                 <div className="page-actions-row action-row-grid action-row-grid--buttons">
                   <IconAction
-                    type="submit"
+                    type="button"
                     icon={FilterIcon}
                     label={activeFilterCount ? `Apply Filters (${activeFilterCount})` : 'Apply Filters'}
                     className="btn-warning btn-sm filter-apply-btn"
+                    onClick={() => applyFilters()}
                     disabled={isLoading}
                   />
                   <IconAction

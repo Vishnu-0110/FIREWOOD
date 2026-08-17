@@ -3,18 +3,22 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import AppLayout from '../layout/AppLayout';
 import api from '../api/axiosClient';
-import { DownloadIcon, EditIcon, EyeIcon, FilterIcon, IconAction, LeftIcon, RightIcon, TrashIcon } from '../components/AppIcons';
+import { CloseIcon, DownloadIcon, EditIcon, EyeIcon, FilterIcon, IconAction, LeftIcon, RightIcon, TrashIcon } from '../components/AppIcons';
 import { formatCurrency, formatDate, queryParams } from '../utils/format';
 import { showDeleteUndoToast } from '../utils/deleteUndoToast';
 import { isSilentAuthError } from '../utils/apiErrors';
 
+const defaultFilters = { q: '', customer: '', startDate: '', endDate: '', page: 1, limit: 10 };
+
 const InvoiceHistoryPage = () => {
   const [factories, setFactories] = useState([]);
-  const [filters, setFilters] = useState({ q: '', customer: '', startDate: '', endDate: '', page: 1, limit: 10 });
+  const [filters, setFilters] = useState(defaultFilters);
+  const [draftFilters, setDraftFilters] = useState(defaultFilters);
   const [data, setData] = useState({ items: [], total: 0, page: 1, pages: 1 });
   const [isLoading, setIsLoading] = useState(true);
   const [isExportingCurrent, setIsExportingCurrent] = useState(false);
   const [isExportingServer, setIsExportingServer] = useState(false);
+  const activeFilterCount = [draftFilters.q, draftFilters.customer, draftFilters.startDate, draftFilters.endDate].filter(Boolean).length;
 
   const load = async (next = filters) => {
     setIsLoading(true);
@@ -47,10 +51,26 @@ const InvoiceHistoryPage = () => {
     init();
   }, []);
 
-  const updateFilters = (patch) => {
-    const next = { ...filters, ...patch };
+  const applyFilters = (next = draftFilters) => {
+    const normalized = { ...next, page: 1 };
+    setFilters(normalized);
+    load(normalized);
+  };
+
+  const resetFilters = () => {
+    setDraftFilters(defaultFilters);
+    setFilters(defaultFilters);
+    load(defaultFilters);
+  };
+
+  const goToPage = (page) => {
+    const next = { ...filters, page };
     setFilters(next);
     load(next);
+  };
+
+  const updateDraftFilters = (patch) => {
+    setDraftFilters((current) => ({ ...current, ...patch }));
   };
 
   const deleteInvoice = async (id, label) => {
@@ -138,18 +158,23 @@ const InvoiceHistoryPage = () => {
       <div className="card shadow-sm">
         <div className="card-header">Search and Filters</div>
         <div className="card-body border-bottom">
-          <div className="row g-2 align-items-end">
+          <form
+            className="row g-2 align-items-end"
+            onSubmit={(event) => {
+              event.preventDefault();
+              applyFilters();
+            }}
+          >
             <div className="col-12 col-lg-3">
               <input
                 className="form-control"
                 placeholder="Search invoice/factory/vehicle"
-                value={filters.q}
-                onChange={(e) => setFilters((p) => ({ ...p, q: e.target.value }))}
-                onKeyDown={(e) => e.key === 'Enter' && updateFilters({ q: filters.q, page: 1 })}
+                value={draftFilters.q}
+                onChange={(e) => updateDraftFilters({ q: e.target.value })}
               />
             </div>
             <div className="col-6 col-lg-2">
-              <select className="form-select" value={filters.customer} onChange={(e) => updateFilters({ customer: e.target.value, page: 1 })}>
+              <select className="form-select" value={draftFilters.customer} onChange={(e) => updateDraftFilters({ customer: e.target.value })}>
                 <option value="">All Factories</option>
                 {factories.map((c) => <option key={c._id} value={c._id}>{c.factoryName || c.customerName}</option>)}
               </select>
@@ -160,8 +185,8 @@ const InvoiceHistoryPage = () => {
                 id="invoice-history-start-date"
                 type="date"
                 className="form-control"
-                value={filters.startDate}
-                onChange={(e) => updateFilters({ startDate: e.target.value, page: 1 })}
+                value={draftFilters.startDate}
+                onChange={(e) => updateDraftFilters({ startDate: e.target.value })}
               />
             </div>
             <div className="col-6 col-lg-2">
@@ -170,16 +195,39 @@ const InvoiceHistoryPage = () => {
                 id="invoice-history-end-date"
                 type="date"
                 className="form-control"
-                value={filters.endDate}
-                onChange={(e) => updateFilters({ endDate: e.target.value, page: 1 })}
+                value={draftFilters.endDate}
+                onChange={(e) => updateDraftFilters({ endDate: e.target.value })}
               />
             </div>
-            <div className="col-12 col-lg-3 d-flex gap-2 page-actions-row action-row-grid action-row-grid--buttons">
-              <IconAction type="button" icon={FilterIcon} label="Filter" className="btn-warning btn-sm" onClick={() => updateFilters({ q: filters.q, page: 1 })} disabled={isLoading} />
-              <IconAction type="button" icon={DownloadIcon} label={isExportingCurrent ? 'Exporting...' : 'Export Excel'} className="btn-outline-success btn-sm" onClick={exportCurrent} disabled={isLoading || isExportingCurrent || isExportingServer} />
-              <IconAction type="button" icon={DownloadIcon} label={isExportingServer ? 'Downloading...' : 'Server Export'} className="btn-outline-dark btn-sm" onClick={downloadServerExcel} disabled={isLoading || isExportingCurrent || isExportingServer} />
+            <div className="col-12 col-xl-6">
+              <div className="filter-actions-block">
+                <div className="page-actions-row action-row-grid action-row-grid--buttons">
+                  <IconAction
+                    type="submit"
+                    icon={FilterIcon}
+                    label={activeFilterCount ? `Apply Filters (${activeFilterCount})` : 'Apply Filters'}
+                    className="btn-warning btn-sm filter-apply-btn"
+                    disabled={isLoading}
+                  />
+                  <IconAction
+                    type="button"
+                    icon={CloseIcon}
+                    label="Reset Filters"
+                    className="btn-outline-secondary btn-sm"
+                    onClick={resetFilters}
+                    disabled={isLoading || !activeFilterCount}
+                  />
+                </div>
+                <small className="text-muted d-block mt-2">Edit the filters, then press Apply Filters to refresh the table.</small>
+              </div>
             </div>
-          </div>
+            <div className="col-12 col-xl-6">
+              <div className="page-actions-row action-row-grid action-row-grid--buttons justify-content-xl-end">
+                <IconAction type="button" icon={DownloadIcon} label={isExportingCurrent ? 'Exporting...' : 'Export Excel'} className="btn-outline-success btn-sm" onClick={exportCurrent} disabled={isLoading || isExportingCurrent || isExportingServer} />
+                <IconAction type="button" icon={DownloadIcon} label={isExportingServer ? 'Downloading...' : 'Server Export'} className="btn-outline-dark btn-sm" onClick={downloadServerExcel} disabled={isLoading || isExportingCurrent || isExportingServer} />
+              </div>
+            </div>
+          </form>
         </div>
         <div className="table-responsive">
           <table className="table table-striped table-mobile-stack mb-0">
@@ -228,7 +276,7 @@ const InvoiceHistoryPage = () => {
               label="Previous page"
               className="btn-outline-secondary btn-sm"
               disabled={data.page <= 1 || isLoading}
-              onClick={() => updateFilters({ page: data.page - 1 })}
+              onClick={() => goToPage(data.page - 1)}
             />
             <span className="small align-self-center">{data.page} / {data.pages}</span>
             <IconAction
@@ -237,7 +285,7 @@ const InvoiceHistoryPage = () => {
               label="Next page"
               className="btn-outline-secondary btn-sm"
               disabled={data.page >= data.pages || isLoading}
-              onClick={() => updateFilters({ page: data.page + 1 })}
+              onClick={() => goToPage(data.page + 1)}
             />
           </div>
         </div>

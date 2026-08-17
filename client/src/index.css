@@ -474,6 +474,16 @@ button:active {
   min-height: 36px;
 }
 
+.filter-actions-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.filter-actions-block .page-actions-row.action-row-grid--buttons {
+  justify-content: flex-start;
+}
+
 .login-submit-btn,
 .form-submit-btn {
   display: inline-flex;

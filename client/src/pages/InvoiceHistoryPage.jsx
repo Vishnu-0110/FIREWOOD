@@ -57,6 +57,14 @@ const InvoiceHistoryPage = () => {
     load(normalized);
   };
 
+  const syncFilters = (patch) => {
+    const next = { ...draftFilters, ...patch };
+    const normalized = { ...next, page: 1 };
+    setDraftFilters(next);
+    setFilters(normalized);
+    load(normalized);
+  };
+
   const resetFilters = () => {
     setDraftFilters(defaultFilters);
     setFilters(defaultFilters);
@@ -67,10 +75,6 @@ const InvoiceHistoryPage = () => {
     const next = { ...filters, page };
     setFilters(next);
     load(next);
-  };
-
-  const updateDraftFilters = (patch) => {
-    setDraftFilters((current) => ({ ...current, ...patch }));
   };
 
   const deleteInvoice = async (id, label) => {
@@ -170,11 +174,11 @@ const InvoiceHistoryPage = () => {
                 className="form-control"
                 placeholder="Search invoice/factory/vehicle"
                 value={draftFilters.q}
-                onChange={(e) => updateDraftFilters({ q: e.target.value })}
+                onChange={(e) => syncFilters({ q: e.target.value })}
               />
             </div>
             <div className="col-6 col-lg-2">
-              <select className="form-select" value={draftFilters.customer} onChange={(e) => updateDraftFilters({ customer: e.target.value })}>
+              <select className="form-select" value={draftFilters.customer} onChange={(e) => syncFilters({ customer: e.target.value })}>
                 <option value="">All Factories</option>
                 {factories.map((c) => <option key={c._id} value={c._id}>{c.factoryName || c.customerName}</option>)}
               </select>
@@ -186,7 +190,7 @@ const InvoiceHistoryPage = () => {
                 type="date"
                 className="form-control"
                 value={draftFilters.startDate}
-                onChange={(e) => updateDraftFilters({ startDate: e.target.value })}
+                onChange={(e) => syncFilters({ startDate: e.target.value })}
               />
             </div>
             <div className="col-6 col-lg-2">
@@ -196,7 +200,7 @@ const InvoiceHistoryPage = () => {
                 type="date"
                 className="form-control"
                 value={draftFilters.endDate}
-                onChange={(e) => updateDraftFilters({ endDate: e.target.value })}
+                onChange={(e) => syncFilters({ endDate: e.target.value })}
               />
             </div>
             <div className="col-12 col-xl-6">
